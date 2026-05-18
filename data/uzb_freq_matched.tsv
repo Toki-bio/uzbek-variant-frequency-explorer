@@ -1,0 +1,53 @@
+rsID	gene	panel	chr_pos	hgvs_c	clinvar_sig	UZB_AF_final	R2	confidence	source	allele_type_flag	gnomad_NFE	gnomad_SAS	delta_final_NFE	cpic_level	cpic_drug	star_allele	pheno
+rs334	HBB	Carrier	11:5225464	c.20A>T	Pathogenic	0.000925	0.335	LOW_IMPUTED	IMPUTED	SNP_OK	0.0001	0.001	0.0008				Sickle Cell Disease / HbSS
+rs35979231	HBB	Carrier	11:5225333	c.315+1G>A	Pathogenic	0.096365	0.875	HIGH_IMPUTED	IMPUTED	SNP_OK	5E-05	0.006	0.096315				Beta-Thalassemia
+rs33950507	HBB	Carrier	11:5246696	c.79G>A	Pathogenic	0.002443	0.5544	MEDIUM_IMPUTED	IMPUTED	SNP_OK	5E-05	0.0002	0.0024				HbC Disease
+rs5030858	PAH	Carrier	12:102836264	c.1222C>T	Pathogenic	0.000547	0.8064	HIGH_IMPUTED	IMPUTED	SNP_OK	0.008	0.001	-0.0075				Phenylketonuria
+rs76763715	GBA	Carrier	1:155235252	c.1226A>G	Pathogenic	0.00194	0.5673	MEDIUM_IMPUTED	IMPUTED	SNP_OK	0.002	0.0005	-0.0001				Gaucher Disease Type 1
+rs121912706	GALE	Carrier	1:23804040	c.404C>T	Pathogenic	0.000164	0.1583	LOW_IMPUTED	IMPUTED	SNP_OK	0.00015	2E-05	0.0				Galactose Epimerase Deficiency
+rs77931234	ACADM	Carrier	1:75902429	c.985A>G	Pathogenic	0.002622	0.7905	MEDIUM_IMPUTED	IMPUTED	SNP_OK	0.016	0.001	-0.0134				MCAD Deficiency
+rs116928232	LIPA	Carrier	10:91012234	c.894G>A	Pathogenic	0.001479	0.5938	MEDIUM_IMPUTED	IMPUTED	SNP_OK	0.0003	5E-05	0.0012				Lysosomal Acid Lipase Deficiency (Wolman/CESD)
+rs80338943	GJB2	Carrier	13:20189562	c.35delG	Pathogenic	0.002097	0.6739	MEDIUM_IMPUTED	IMPUTED	INDEL_IMPUTED	0.025	0.003	-0.0229				Non-syndromic Hearing Loss DFNB1
+rs80338902	USH2A	Carrier	1:215796178	c.2299delG	Pathogenic	0.025501	1.0	HIGH_IMPUTED	IMPUTED	INDEL_PROXY	0.01	0.002	0.0155				Usher Syndrome Type 2A
+rs28929474	SERPINA1	Carrier	14:94376311	c.1096G>A	Pathogenic	0.004229	0.8281	HIGH_IMPUTED	IMPUTED	SNP_OK	0.024	0.001	-0.0198				Alpha-1 Antitrypsin Deficiency
+rs118192058	ABCB11	Carrier	2:168915682	c.3084G>T	Pathogenic	0.002172	0.3262	LOW_IMPUTED	IMPUTED	SNP_OK	0.0005	5E-05	0.0017				Progressive Familial Intrahepatic Cholestasis Type 2
+rs193922621	ABCC8	Carrier	11:17425284	c.3989-9G>A	Pathogenic	0.000749	0.7312	MEDIUM_IMPUTED	IMPUTED	SNP_OK	0.0004	5E-05	0.0003				Familial Hyperinsulinism
+rs80357906	BRCA1	Oncology	17:43094464	c.5266dupC	Pathogenic	0.037785	0.9703	HIGH_IMPUTED	IMPUTED	INDEL_PROXY	0.0005	5E-05	0.0373				Hereditary Breast and Ovarian Cancer
+rs28909982	CHEK2	Oncology	22:28695868	c.1100delC	Pathogenic	0.000823	0.1728	LOW_IMPUTED	IMPUTED	INDEL_IMPUTED	0.007	0.0002	-0.0062				CHEK2-associated Breast Cancer
+rs147021839	RAD51C	Oncology	17:58695868	c.706-2A>G	Pathogenic	1E-06	0.0017	LOW_IMPUTED	IMPUTED	SNP_OK	8E-05	1E-05	-0.0001				RAD51C-associated Ovarian Cancer
+rs146544075	BARD1	Oncology	2:215628730	c.1690C>T	Pathogenic	0.008164	0.7985	MEDIUM_IMPUTED	IMPUTED	SNP_OK	8E-05	1E-05	0.0081				BARD1-associated Breast Cancer
+rs1801166	APC	Oncology	5:112839356	c.1528T>C	Pathogenic	0.003257	0.9787	HIGH_IMPUTED	IMPUTED	SNP_OK	8E-05	1E-05	0.0032				Familial Adenomatous Polyposis
+rs34612342	MUTYH	Oncology	1:45330649	c.536A>G	Pathogenic	0.040528	1.0	HIGH_IMPUTED	IMPUTED	SNP_OK	0.01	0.0002	0.0305				MUTYH-Associated Polyposis (MAP)
+rs36053993	MUTYH	Oncology	1:45330550	c.1187G>A	Pathogenic	0.006563	0.7005	MEDIUM_IMPUTED	IMPUTED	SNP_OK	0.007	0.0001	-0.0004				MUTYH-Associated Polyposis (MAP)
+rs11515	CDKN2A	Oncology	9:21975006	c.301G>T	Pathogenic	0.118699	0.8538	HIGH_IMPUTED	IMPUTED	SNP_OK	8E-05	1E-05	0.118619				Familial Atypical Mole-Malignant Melanoma (FAMMM)
+rs139656604	BAP1	Oncology	3:52435023	c.1977del	Pathogenic	0.009853	0.9321	HIGH_IMPUTED	IMPUTED	INDEL_PROXY	8E-05	1E-05	0.0098				BAP1 Tumour Predisposition Syndrome
+rs35742686	CYP2D6	PGx	22:42126499	c.100C>T	Pathogenic	0.005112	0.7571	MEDIUM_IMPUTED	IMPUTED	SNP_OK	0.012	0.003	-0.0069	A	Codeine; Tamoxifen; Tricyclics; Antipsychotics; SSRIs	*4	CYP2D6 Poor Metabolizer
+rs16947	CYP2D6	PGx	22:42128945	c.886C>T	Pathogenic	0.364071	0.9777	HIGH_IMPUTED	IMPUTED	SNP_OK	0.018	0.005	0.3461	A	Codeine; Tamoxifen; Beta-blockers; Antidepressants	*2	CYP2D6 Reduced Function
+rs28371706	CYP2D6	PGx	22:42126499	c.1023C>T	Pathogenic	0.002303	0.9468	HIGH_IMPUTED	IMPUTED	SNP_OK	0.03	0.008	-0.0277	A	Codeine; Tricyclics; Antipsychotics	*10	CYP2D6 Reduced Function
+rs4244285	CYP2C19	PGx	10:94781859	c.681G>A	Pathogenic	0.15767	0.9994	HIGH_IMPUTED	IMPUTED	SNP_OK	0.1	0.2	0.0577	A	Clopidogrel; Omeprazole; Antidepressants; Voriconazole	*2	CYP2C19 Poor Metabolizer
+rs4986893	CYP2C19	PGx	10:94781858	c.636G>A	Pathogenic	0.021207	0.9883	HIGH_IMPUTED	IMPUTED	SNP_OK	0.01	0.05	0.0112	A	Clopidogrel; PPIs; Escitalopram	*3	CYP2C19 Poor Metabolizer
+rs12248560	CYP2C19	PGx	10:94781858	c.-806C>T	Likely Pathogenic	0.167586	0.9982	HIGH_IMPUTED	IMPUTED	SNP_OK	0.25	0.18	-0.0824	A	Clopidogrel; PPIs; Antidepressants	*17	CYP2C19 Ultrarapid Metabolizer
+rs1799853	CYP2C9	PGx	10:94942290	c.430C>T	Pathogenic	0.054743	0.9933	HIGH_IMPUTED	IMPUTED	SNP_OK	0.11	0.02	-0.0553	A	Warfarin; NSAIDs; Phenytoin; Glipizide	*2	CYP2C9 Reduced Metabolizer
+rs1057910	CYP2C9	PGx	10:94981296	c.1075A>C	Pathogenic	0.082113	0.9983	HIGH_IMPUTED	IMPUTED	SNP_OK	0.12	0.015	-0.0379	A	Warfarin; NSAIDs; Phenytoin; Sulfonylureas	*3	CYP2C9 Poor Metabolizer
+rs776746	CYP3A5	PGx	7:99646258	c.219-237A>G	Pathogenic	0.889499	0.9974	HIGH_IMPUTED	IMPUTED	SNP_OK	0.7	0.35	0.1895	B	Tacrolimus; Cyclosporine; Statins	*3	CYP3A5 Non-expresser
+rs3745274	CYP2B6	PGx	19:40991390	c.516G>T	Pathogenic	0.271762	0.9983	HIGH_IMPUTED	IMPUTED	SNP_OK	0.2	0.25	0.0718	B	Efavirenz; Bupropion; Methadone; Cyclophosphamide	*6	CYP2B6 Reduced Metabolizer
+rs762551	CYP1A2	PGx	15:75011853	c.-163C>A	Likely Pathogenic	0.633157	0.9927	HIGH_IMPUTED	IMPUTED	SNP_OK	0.7	0.62	-0.0668	B	Clozapine; Theophylline; Caffeine; Olanzapine	*1F	CYP1A2 Rapid/Ultrarapid Inducer
+rs3918290	DPYD	PGx	1:97981343	c.1905+1G>A	Pathogenic	0.003627	0.7137	MEDIUM_IMPUTED	IMPUTED	SNP_OK	0.008	0.001	-0.0044	A	5-Fluorouracil; Capecitabine; Tegafur	*2A	DPYD Deficiency / 5-FU Toxicity
+rs67376798	DPYD	PGx	1:97915614	c.2846A>T	Likely Pathogenic	0.001255	0.6085	MEDIUM_IMPUTED	IMPUTED	SNP_OK	0.01	0.002	-0.0087	A	5-Fluorouracil; Capecitabine	c.2846A>T	DPYD Reduced Function / 5-FU Toxicity
+rs75017182	DPYD	PGx	1:97040071	c.1236G>A	Likely Pathogenic	0.010633	0.9869	HIGH_IMPUTED	IMPUTED	SNP_OK	0.02	0.006	-0.0094	A	5-Fluorouracil; Capecitabine	HapB3	DPYD Reduced Function / 5-FU Toxicity
+rs1800462	TPMT	PGx	6:18155073	c.238G>C	Pathogenic	0.001963	0.4607	MEDIUM_IMPUTED	IMPUTED	SNP_OK	0.005	0.001	-0.003	A	Azathioprine; 6-Mercaptopurine; Thioguanine	*2	TPMT Deficiency / Thiopurine Toxicity
+rs1800460	TPMT	PGx	6:18130918	c.460G>A	Pathogenic	0.016268	0.9887	HIGH_IMPUTED	IMPUTED	SNP_OK	0.05	0.015	-0.0337	A	Azathioprine; 6-Mercaptopurine; Thioguanine	*3A/*3B	TPMT Deficiency / Thiopurine Toxicity
+rs1142345	TPMT	PGx	6:18130919	c.719A>G	Pathogenic	0.019881	0.9932	HIGH_IMPUTED	IMPUTED	SNP_OK	0.05	0.015	-0.0301	A	Azathioprine; 6-MP; Thioguanine	*3A/*3C	TPMT Deficiency / Thiopurine Toxicity
+rs116855232	NUDT15	PGx	13:48037748	c.415C>T	Pathogenic	0.064159	0.9721	HIGH_IMPUTED	IMPUTED	SNP_OK	0.002	0.03	0.0622	A	Azathioprine; 6-Mercaptopurine; Thioguanine	*2	NUDT15 Deficiency / Thiopurine Toxicity
+rs3064744	UGT1A1	PGx	2:233760233	c.-41_-40insTA	Pathogenic	0.290655	0.9916	HIGH_IMPUTED	IMPUTED	INDEL_IMPUTED	0.28	0.2	0.0107	A	Irinotecan; Atazanavir; Nilotinib; Belinostat	*28	Gilbert Syndrome / Irinotecan Toxicity
+rs4149056	SLCO1B1	PGx	12:21349098	c.521T>C	Pathogenic	0.135081	0.9961	HIGH_IMPUTED	IMPUTED	SNP_OK	0.15	0.1	-0.0149	A	Simvastatin; Atorvastatin; Rosuvastatin; Repaglinide	*5	SLCO1B1 Reduced Function / Statin Myopathy
+rs9923231	VKORC1	PGx	16:31102321	c.-1639G>A	Pathogenic	0.576709	0.9994	HIGH_IMPUTED	IMPUTED	SNP_OK	0.42	0.25	0.1567	A	Warfarin; Acenocoumarol; Phenprocoumon	*2 (H1)	VKORC1 Low-Expression / Warfarin Sensitivity
+rs6025	F5	PGx	1:169519049	c.1601G>A	Pathogenic	0.023387	0.977	HIGH_IMPUTED	IMPUTED	SNP_OK	0.05	0.005	-0.0266	B	Oral Contraceptives; HRT; Thromboembolism prophylaxis		Factor V Leiden Thrombophilia
+rs1799963	F2	PGx	11:46761055	c.*97G>A	Pathogenic	0.008608	0.9269	HIGH_IMPUTED	IMPUTED	SNP_OK	0.035	0.005	-0.0264	B	OCP; HRT; Thromboprophylaxis		Prothrombin G20210A Thrombophilia
+rs1801133	MTHFR	PGx	1:11796321	c.665C>T	Likely Pathogenic	0.305443	0.9783	HIGH_IMPUTED	IMPUTED	SNP_OK	0.4	0.3	-0.0946	B	Methotrexate; Folate supplementation guidance	C677T	MTHFR Thermolabile Variant
+rs1801131	MTHFR	PGx	1:11794419	c.1286A>C	Likely Pathogenic	0.327175	0.997	HIGH_IMPUTED	IMPUTED	SNP_OK	0.25	0.18	0.0772	B	Methotrexate; Folate	A1298C	MTHFR Reduced Activity
+rs4680	COMT	PGx	22:19962223	c.472G>A	Likely Pathogenic	0.438439	0.9941	HIGH_IMPUTED	IMPUTED	SNP_OK	0.52	0.38	-0.0816	C	Levodopa; Opioids; Tolcapone; Pain sensitivity	Val158Met	COMT Met/Val Phenotype
+rs6311	HTR2A	PGx	13:46985155	c.-1438G>A	Likely Pathogenic	0.397291	0.9979	HIGH_IMPUTED	IMPUTED	SNP_OK	0.45	0.38	-0.0527	C	Antipsychotics; Antidepressants (SSRIs; mirtazapine)		HTR2A Serotonin 2A Receptor Variant
+rs1799971	OPRM1	PGx	6:154360623	c.118A>G	Likely Pathogenic	0.224759	0.9889	HIGH_IMPUTED	IMPUTED	SNP_OK	0.12	0.2	0.1048	C	Opioids (Morphine; Codeine; Methadone); Naloxone; Alcohol		OPRM1 A118G / Opioid Response
+rs429358	APOE	PGx	19:44908684	c.388T>C	Likely Pathogenic	0.12135	0.9763	HIGH_IMPUTED	IMPUTED	SNP_OK	0.15	0.08	-0.0286	B	Statins; Cholinesterase inhibitors; Fibrates	ε4	APOE ε4 Allele / Alzheimer Risk / Statin Response
+rs12979860	IFNL3	PGx	19:39742686	c.53C>T	Likely Pathogenic	0.23829	0.9973	HIGH_IMPUTED	IMPUTED	SNP_OK	0.27	0.35	-0.0317	A	Peginterferon-alfa; Ribavirin (HCV treatment)		IFNL3 PEG-IFN/RBV Response (HCV)
