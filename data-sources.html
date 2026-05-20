@@ -19,3 +19,290 @@ h1{font-size:20px;font-weight:700;color:#111}h1 span{color:#2563eb}
 .sl{font-size:10px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.5px}
 .sv{font-size:13px;color:#111;font-weight:600}
 .sv.mono{font-family:"SF Mono","Fira Code",monospace;font-size:12px}
+.ds{background:#fff;border:1px solid #e5e7eb;border-radius:8px;margin-bottom:16px;overflow:hidden}
+.dsh{padding:14px 18px;display:flex;align-items:flex-start;gap:14px;cursor:pointer;user-select:none}
+.dsh:hover{background:#fafafa}
+.dsi{width:36px;height:36px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.ic1{background:#dbeafe}.ic2{background:#fce7f3}.ic3{background:#d1fae5}.ic4{background:#fef3c7}
+.dsm{flex:1;min-width:0}
+.dsn{font-size:14px;font-weight:700;color:#111}
+.dst{font-size:12px;color:#6b7280;margin-top:2px}
+.pills{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.pill{font-size:10px;padding:2px 8px;border-radius:12px;font-weight:600;white-space:nowrap}
+.pb{background:#dbeafe;color:#1e40af}.pg{background:#d1fae5;color:#065f46}
+.po{background:#fef3c7;color:#92400e}.pp{background:#ede9fe;color:#5b21b6}
+.pk{background:#fce7f3;color:#9d174d}.pz{background:#f3f4f6;color:#374151}
+.arr{font-size:14px;color:#9ca3af;transition:transform .2s;flex-shrink:0;margin-top:2px}
+.arr.open{transform:rotate(90deg)}
+.dsb{display:none;border-top:1px solid #f3f4f6}
+.dsb.open{display:block}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));border-bottom:1px solid #f3f4f6}
+.cell{padding:12px 18px;border-right:1px solid #f3f4f6}
+.cell:last-child{border-right:none}
+.cl{font-size:10px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.cv{font-size:12px;color:#111}
+.cv.mono{font-family:"SF Mono","Fira Code",monospace;font-size:11px;word-break:break-all}
+.cv.big{font-size:18px;font-weight:700;color:#2563eb}
+.tree{padding:12px 18px;background:#fafafa;font-family:"SF Mono","Fira Code",monospace;font-size:11px;color:#374151;line-height:1.9;border-bottom:1px solid #f3f4f6}
+.tree .d{color:#2563eb;font-weight:600}.tree .dim{color:#9ca3af}
+.desc-sec{padding:14px 18px}
+.desc-sec h4{font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.dbox{width:100%;min-height:80px;border:1px solid #e5e7eb;border-radius:5px;padding:8px 10px;font-size:12px;font-family:inherit;color:#374151;background:#fff;resize:vertical;transition:border-color .15s}
+.dbox:focus{outline:none;border-color:#2563eb}
+.bsm{padding:4px 10px;font-size:11px;border-radius:4px;background:#2563eb;color:#fff;border:none;cursor:pointer}
+.bsm:hover{background:#1d4ed8}
+.snote{font-size:10px;color:#16a34a;margin-left:6px}
+.sub-ds{margin:0 18px 14px;border:1px solid #e5e7eb;border-radius:6px;overflow:hidden}
+.sdh{padding:10px 14px;background:#f9fafb;cursor:pointer;font-size:12px;font-weight:600;color:#374151;display:flex;align-items:center;gap:8px}
+.sdh:hover{background:#f3f4f6}
+.sarr{font-size:12px;color:#9ca3af;transition:transform .2s}
+.sarr.open{transform:rotate(90deg)}
+.sdb{display:none;border-top:1px solid #e5e7eb;background:#fff}
+.sdb.open{display:block}
+footer{margin-top:32px;padding-top:16px;border-top:1px solid #e5e7eb;font-size:11px;color:#9ca3af;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div>
+    <h1><span>ALSU</span> Genomics &mdash; Data Sources</h1>
+    <p class="sub">DRAGEN server data inventory &nbsp;&middot;&nbsp; Last scanned: 2026-05-19</p>
+  </div>
+  <a class="back" href="index.html">&larr; Back to Variant Explorer</a>
+</header>
+
+<div class="srv">
+  <div class="si"><span class="sl">Server</span><span class="sv">biotech2024 (DRAGEN)</span></div>
+  <div class="si"><span class="sl">IP (Tailscale)</span><span class="sv mono">100.104.25.22</span></div>
+  <div class="si"><span class="sl">OS</span><span class="sv">RHEL 8.6</span></div>
+  <div class="si"><span class="sl">DRAGEN</span><span class="sv">v4.4.4</span></div>
+  <div class="si"><span class="sl">RAM</span><span class="sv">503 GB</span></div>
+  <div class="si"><span class="sl">Storage /staging</span><span class="sv">14 TB &nbsp;<span style="color:#16a34a;font-size:11px;font-weight:400">7.1 TB free</span></span></div>
+</div>
+
+<!-- ALSU -->
+<div class="ds">
+  <div class="dsh" onclick="tog('alsu')">
+    <div class="dsi ic1">&#129516;</div>
+    <div class="dsm">
+      <div class="dsn">ALSU &mdash; Uzbek Population Cohort</div>
+      <div class="dst">GSA raw scan output, 53 chip positions, 1,074 samples total post-QC</div>
+      <div class="pills">
+        <span class="pill pb">Genotyping Array</span><span class="pill pg">Illumina GSA v3</span>
+        <span class="pill pp">hg38</span><span class="pill pz">Jun 2025</span>
+      </div>
+    </div>
+    <span class="arr" id="a-alsu">&#9654;</span>
+  </div>
+  <div class="dsb" id="b-alsu">
+    <div class="grid">
+      <div class="cell"><div class="cl">Path</div><div class="cv mono">/staging/ALSU/OUTPUT/</div></div>
+      <div class="cell"><div class="cl">Chip positions</div><div class="cv big">53</div></div>
+      <div class="cell"><div class="cl">Total files</div><div class="cv big">24,258</div></div>
+      <div class="cell"><div class="cl">Total size</div><div class="cv big">61 GB</div></div>
+      <div class="cell"><div class="cl">Date</div><div class="cv">June 13, 2025</div></div>
+      <div class="cell"><div class="cl">Data type</div><div class="cv">Raw scan: intensity XML + QC TXT + JPEG scan images per chip</div></div>
+      <div class="cell"><div class="cl">Sample ID range</div><div class="cv mono">207585740001 &ndash; 207591080022</div></div>
+      <div class="cell"><div class="cl">Downstream</div><div class="cv">GenomeStudio &rarr; PLINK QC &rarr; Michigan Imputation &rarr; GWAS</div></div>
+    </div>
+    <div class="tree">
+      <span class="d">/staging/ALSU/OUTPUT/</span><br>
+      &nbsp;&nbsp;<span class="d">207585740001/</span> <span class="dim">&mdash; per-chip folder (53 total)</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span>207585740001_qc.txt</span> <span class="dim">&mdash; QC metrics</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span>207585740001_R01C01_1_Green.xml</span> <span class="dim">&mdash; green channel intensities</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span>207585740001_R01C01_1_Red.xml</span> <span class="dim">&mdash; red channel intensities</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span>207585740001_R01C01_1-Swath1_Grn.jpg</span> <span class="dim">&mdash; scan image</span><br>
+      &nbsp;&nbsp;<span class="dim">... 52 more chip folders</span>
+    </div>
+    <div class="desc-sec">
+      <h4>Notes <button class="bsm" onclick="save('alsu')">Save</button><span class="snote" id="sn-alsu"></span></h4>
+      <textarea class="dbox" id="d-alsu">Uzbek cohort genotyped on Illumina Global Screening Array v3 (~700k SNPs). Raw scan output per chip position. Processed through GenomeStudio for genotype calling, then PLINK QC pipeline and imputation to ~10M variants via Michigan Imputation Server (Minimac4, HRC reference). Final cohort: 1,074 unrelated individuals after QC. Primary dataset for ALSU GWAS project on reproductive outcomes (pregnancy loss). 3 confirmed sample swaps identified by concordance analysis.</textarea>
+    </div>
+  </div>
+</div>
+
+<!-- CARDIO -->
+<div class="ds">
+  <div class="dsh" onclick="tog('cardio')">
+    <div class="dsi ic2">&#10084;&#65039;</div>
+    <div class="dsm">
+      <div class="dsn">Cardio &mdash; Sophia Cardiac Genomics Project</div>
+      <div class="dst">WGS FASTQ: cardiac cases, healthy controls, transplant patients + DRAGEN variant annotations</div>
+      <div class="pills">
+        <span class="pill pk">Whole Genome Sequencing</span><span class="pill pg">FASTQ / VCF</span>
+        <span class="pill pp">hg38</span><span class="pill pz">Aug&ndash;Oct 2025</span>
+      </div>
+    </div>
+    <span class="arr" id="a-cardio">&#9654;</span>
+  </div>
+  <div class="dsb" id="b-cardio">
+    <div style="padding:12px 18px 4px;font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.5px">Sub-datasets</div>
+
+    <div class="sub-ds">
+      <div class="sdh" onclick="stog('co')">
+        <span class="sarr" id="sa-co">&#9654;</span>
+        October 2025 &mdash; 12 clinical samples (VCF + archives)
+        <span class="pill pk" style="margin-left:auto">13 GB</span>
+      </div>
+      <div class="sdb" id="sb-co">
+        <div class="grid" style="margin:0">
+          <div class="cell"><div class="cl">Path</div><div class="cv mono">/staging/cardio/sophia/october2025-12samples/</div></div>
+          <div class="cell"><div class="cl">Samples</div><div class="cv big">12</div></div>
+          <div class="cell"><div class="cl">Size</div><div class="cv big">13 GB</div></div>
+          <div class="cell"><div class="cl">Date</div><div class="cv">October 23, 2025</div></div>
+          <div class="cell"><div class="cl">Contents</div><div class="cv">Per-sample ZIP archives (x2 each) + full_variant_table VCF</div></div>
+          <div class="cell"><div class="cl">Samples</div><div class="cv mono" style="font-size:10px">DjorayevEldor, Egamberdiyeva, Hidirova, IronovaNasiba, IshkulatovaMadina, Raximova, RiskiyevaAziza, Soatova, SoyFoman, Sundetkin + 2 more</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-ds">
+      <div class="sdh" onclick="stog('ch')">
+        <span class="sarr" id="sa-ch">&#9654;</span>
+        Healthy controls &mdash; WGS FASTQ
+        <span class="pill pg" style="margin-left:auto">39 GB</span>
+      </div>
+      <div class="sdb" id="sb-ch">
+        <div class="grid" style="margin:0">
+          <div class="cell"><div class="cl">Path</div><div class="cv mono">/staging/cardio/sophia/fastq/healthy/</div></div>
+          <div class="cell"><div class="cl">Samples</div><div class="cv big">11</div></div>
+          <div class="cell"><div class="cl">Size</div><div class="cv big">39 GB</div></div>
+          <div class="cell"><div class="cl">Date</div><div class="cv">August 12, 2025</div></div>
+          <div class="cell"><div class="cl">Format</div><div class="cv">Paired-end FASTQ.gz (R1 + R2)</div></div>
+          <div class="cell"><div class="cl">Sample IDs</div><div class="cv mono">25, 27, 32, 36, 39, 40, 41, 827, 838, 839, 843</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-ds" style="margin-bottom:14px">
+      <div class="sdh" onclick="stog('cc')">
+        <span class="sarr" id="sa-cc">&#9654;</span>
+        Cases (cardiac) + Transplant &mdash; WGS FASTQ + DRAGEN results
+        <span class="pill pk" style="margin-left:auto">86 GB total</span>
+      </div>
+      <div class="sdb" id="sb-cc">
+        <div class="grid" style="margin:0">
+          <div class="cell"><div class="cl">Path</div><div class="cv mono">/staging/cardio/sophia/fastq/</div></div>
+          <div class="cell"><div class="cl">Case FASTQ samples</div><div class="cv big">14</div></div>
+          <div class="cell"><div class="cl">Transplant samples</div><div class="cv big">~40</div></div>
+          <div class="cell"><div class="cl">Total size</div><div class="cv big">86 GB</div></div>
+          <div class="cell"><div class="cl">DRAGEN results</div><div class="cv">results/, results_pangenome_cases/, annotations/, annotations_transplant/</div></div>
+          <div class="cell"><div class="cl">Aggregated output</div><div class="cv mono" style="font-size:10px">aggregated_pathogenic_variants.json, all_samples_pathogenic_variants.tsv</div></div>
+        </div>
+        <div class="tree" style="margin:0;border-top:1px solid #f3f4f6">
+          <span class="d">fastq/</span><br>
+          &nbsp;&nbsp;<span>1_S1 &ndash; 14_S14 R[12].fastq.gz</span> <span class="dim">&mdash; 14 cardiac cases</span><br>
+          &nbsp;&nbsp;<span class="d">healthy/</span> <span class="dim">&mdash; 11 controls</span><br>
+          &nbsp;&nbsp;<span class="d">transplant/</span> <span class="dim">&mdash; ~40 samples + DRAGEN BAM/VCF</span><br>
+          &nbsp;&nbsp;<span class="d">results/</span> <span class="dim">&mdash; DRAGEN pipeline output (cases)</span><br>
+          &nbsp;&nbsp;<span class="d">results_pangenome_cases/</span><br>
+          &nbsp;&nbsp;<span class="d">annotations/</span> <span class="dim">&mdash; pathogenic variant annotations</span><br>
+          &nbsp;&nbsp;<span class="d">annotations_transplant/</span><br>
+          &nbsp;&nbsp;<span>run_dragen.sh, run_dragen_transplant.sh</span> <span class="dim">&mdash; pipeline scripts</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="desc-sec">
+      <h4>Notes <button class="bsm" onclick="save('cardio')">Save</button><span class="snote" id="sn-cardio"></span></h4>
+      <textarea class="dbox" id="d-cardio">Cardiac genomics WGS project (PI: Sophia). Three cohorts: healthy controls, cardiac cases, and transplant patients. Illumina sequencing, aligned to hg38 via DRAGEN. Includes pangenome alignment for cases. Pathogenic variants aggregated into JSON/TSV annotation files. October 2025 batch: 12 additional clinical samples delivered as per-sample ZIP archives.</textarea>
+    </div>
+  </div>
+</div>
+
+<!-- GWAS96 -->
+<div class="ds">
+  <div class="dsh" onclick="tog('gwas')">
+    <div class="dsi ic3">&#129516;</div>
+    <div class="dsm">
+      <div class="dsn">GWAS 2026 &mdash; New IDAT Batch (96 samples, 4 chips)</div>
+      <div class="dst">Replacement run for 2 failed ALSU chips; pending GenomeStudio processing and QC merge</div>
+      <div class="pills">
+        <span class="pill pb">Genotyping Array</span><span class="pill pg">Illumina GSA v3</span>
+        <span class="pill po">ALSU extension</span><span class="pill pz">May 2026</span>
+      </div>
+    </div>
+    <span class="arr" id="a-gwas">&#9654;</span>
+  </div>
+  <div class="dsb" id="b-gwas">
+    <div class="grid">
+      <div class="cell"><div class="cl">Path</div><div class="cv mono">/staging/GWAS2026/GWAS_IDAT/</div></div>
+      <div class="cell"><div class="cl">Chip positions</div><div class="cv big">4</div></div>
+      <div class="cell"><div class="cl">Expected samples</div><div class="cv big">~96</div></div>
+      <div class="cell"><div class="cl">Size</div><div class="cv big">3.6 GB</div></div>
+      <div class="cell"><div class="cl">Date</div><div class="cv">May 13, 2026</div></div>
+      <div class="cell"><div class="cl">Data type</div><div class="cv">Raw scan: XML intensity + QC TXT + scan images</div></div>
+      <div class="cell"><div class="cl">Chip IDs</div><div class="cv mono" style="font-size:10px">208993030058, 208993030083, 209422280033, 209422280035</div></div>
+      <div class="cell"><div class="cl">Status</div><div class="cv" style="color:#d97706;font-weight:600">Pending: GenomeStudio &rarr; QC &rarr; merge with ALSU</div></div>
+    </div>
+    <div class="tree">
+      <span class="d">/staging/GWAS2026/GWAS_IDAT/</span><br>
+      &nbsp;&nbsp;<span class="d">208993030058/</span> <span class="dim">&mdash; chip 1 (24 samples)</span><br>
+      &nbsp;&nbsp;<span class="d">208993030083/</span> <span class="dim">&mdash; chip 2 (24 samples)</span><br>
+      &nbsp;&nbsp;<span class="d">209422280033/</span> <span class="dim">&mdash; chip 3 (24 samples)</span><br>
+      &nbsp;&nbsp;<span class="d">209422280035/</span> <span class="dim">&mdash; chip 4 (24 samples)</span><br>
+      &nbsp;&nbsp;<span class="d">diag/</span> <span class="dim">&mdash; diagnostic output</span>
+    </div>
+    <div class="desc-sec">
+      <h4>Notes <button class="bsm" onclick="save('gwas')">Save</button><span class="snote" id="sn-gwas"></span></h4>
+      <textarea class="dbox" id="d-gwas">Replacement genotyping batch (2026) for 2 failed ALSU chips (208993030034 and 208993030080, 48 samples). 4 new chip positions scanned May 2026. Pending: GenomeStudio genotype calling, sample QC, concordance check against original ALSU calls, and integration into main PLINK dataset before imputation and GWAS.</textarea>
+    </div>
+  </div>
+</div>
+
+<!-- 48 REDONE -->
+<div class="ds">
+  <div class="dsh" onclick="tog('rescan')">
+    <div class="dsi ic4">&#128260;</div>
+    <div class="dsm">
+      <div class="dsn">ALSU 48 Redone &mdash; Rescan Batch</div>
+      <div class="dst">Targeted rescan of 48 ALSU samples for QC validation, 2 chips, May 18 2026</div>
+      <div class="pills">
+        <span class="pill po">Rescan / QC</span><span class="pill pb">Genotyping Array</span>
+        <span class="pill pz">May 18, 2026</span>
+      </div>
+    </div>
+    <span class="arr" id="a-rescan">&#9654;</span>
+  </div>
+  <div class="dsb" id="b-rescan">
+    <div class="grid">
+      <div class="cell"><div class="cl">Path</div><div class="cv mono">/staging/GWAS2026/48redone/</div></div>
+      <div class="cell"><div class="cl">Samples</div><div class="cv big">48</div></div>
+      <div class="cell"><div class="cl">Chip positions</div><div class="cv big">2</div></div>
+      <div class="cell"><div class="cl">Size</div><div class="cv big">1.8 GB</div></div>
+      <div class="cell"><div class="cl">Date</div><div class="cv">May 18, 2026</div></div>
+      <div class="cell"><div class="cl">Chip IDs</div><div class="cv mono">209422280005, 209422280032</div></div>
+      <div class="cell"><div class="cl">Sample sheet</div><div class="cv mono" style="font-size:11px">48_rescan_sample_sheet_18052026.xlsx</div></div>
+      <div class="cell"><div class="cl">Status</div><div class="cv" style="color:#d97706;font-weight:600">Pending: concordance analysis vs original calls</div></div>
+    </div>
+    <div class="tree">
+      <span class="d">/staging/GWAS2026/48redone/</span><br>
+      &nbsp;&nbsp;<span>48_rescan_sample_sheet_18052026.xlsx</span> <span class="dim">&mdash; sample manifest</span><br>
+      &nbsp;&nbsp;<span class="d">ALSU rescan/</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="d">209422280005/</span> <span class="dim">&mdash; chip 1 (24 samples)</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="d">209422280032/</span> <span class="dim">&mdash; chip 2 (24 samples)</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="d">diag/</span>
+    </div>
+    <div class="desc-sec">
+      <h4>Notes <button class="bsm" onclick="save('rescan')">Save</button><span class="snote" id="sn-rescan"></span></h4>
+      <textarea class="dbox" id="d-rescan">Targeted rescan of 48 ALSU samples (2 chips: 209422280005 and 209422280032) performed May 18, 2026. Purpose: QC validation and concordance checking for samples with suspected issues from the original ALSU run. Pending concordance analysis against original genotype calls to confirm or resolve discrepancies.</textarea>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span>DRAGEN server: biotech2024 &nbsp;/&nbsp; Inventory scanned: 2026-05-19</span>
+  <span>Notes saved in your browser locally &nbsp;&middot;&nbsp; <a href="index.html">Variant Explorer</a></span>
+</footer>
+</div>
+
+<script>
+function tog(id){var b=document.getElementById('b-'+id),a=document.getElementById('a-'+id);var o=b.classList.toggle('open');a.classList.toggle('open',o);}
+function stog(id){var b=document.getElementById('sb-'+id),a=document.getElementById('sa-'+id);var o=b.classList.toggle('open');a.classList.toggle('open',o);}
+var IDS=['alsu','cardio','gwas','rescan'];
+function save(id){localStorage.setItem('note-'+id,document.getElementById('d-'+id).value);var n=document.getElementById('sn-'+id);n.textContent='Saved';setTimeout(function(){n.textContent='';},2000);}
+window.addEventListener('load',function(){IDS.forEach(function(id){var v=localStorage.getItem('note-'+id);if(v)document.getElementById('d-'+id).value=v;});tog('alsu');});
+</script>
+</body>
+</html>
