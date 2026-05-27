@@ -17,8 +17,8 @@
 <body>
 <div class="app">
 <header>
-  <div><h1>ALSU Variant <span>Freq</span> Explorer</h1>
-  <p class="sub">179 panel variants embedded &middot; Live DRAGEN UZB lookup &middot; gnomAD v4 &middot; ClinVar &middot; 1000G</p></div>
+  <div><h1>UZB Variant <span>Freq</span> Explorer</h1>
+  <p class="sub" id="pageSubtitle">Uzbek population variant frequency database &middot; gnomAD v4 &middot; ClinVar &middot; 1000 Genomes</p></div>
   <div class="srv" onclick="checkServer(true)" title="Click to recheck DRAGEN">
     <span class="dot chk" id="sdot"></span><span id="slbl">Checking DRAGEN...</span>
   </div>
@@ -26,72 +26,80 @@
 <details id="setup-section" style="background:#fff;border:1px solid #e5e7eb;border-radius:8px;margin-bottom:14px">
 <summary style="padding:12px 16px;cursor:pointer;font-size:13px;font-weight:600;color:#374151;list-style:none;display:flex;align-items:center;gap:8px;user-select:none">
   <span style="font-size:16px;transition:transform .2s" id="setup-arrow">&#9654;</span>
-  Connection &amp; Setup Guide
-  <span style="font-size:11px;font-weight:400;color:#6b7280;margin-left:4px">-- standalone, DRAGEN live, multi-PC</span>
+  Connection &amp; Setup
+  <span style="font-size:11px;font-weight:400;color:#6b7280;margin-left:4px">-- how to use this tool with or without the DRAGEN server</span>
 </summary>
 <div style="padding:0 16px 16px 16px;border-top:1px solid #f3f4f6">
   <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:14px">
 
     <div style="flex:1;min-width:220px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:6px;padding:14px">
-      <div style="font-size:12px;font-weight:700;color:#111;margin-bottom:6px">Standalone -- any PC</div>
-      <div style="font-size:12px;color:#374151;line-height:1.6">Open this HTML file in any browser. All 179 panel variants are embedded with full data. gnomAD v4, ClinVar, and 1000G queries work on any PC with internet. DRAGEN live lookup will show red (offline) but all embedded data is fully functional.</div>
-      <div style="margin-top:8px;font-size:11px;font-weight:700;color:#16a34a">No setup required</div>
+      <div style="font-size:12px;font-weight:700;color:#111;margin-bottom:6px">Without DRAGEN (default)</div>
+      <div style="font-size:12px;color:#374151;line-height:1.6">Open this file in any browser. All panel variants load from embedded data. Frequency lookups use public APIs: gnomAD v4, ClinVar, and 1000 Genomes. No setup required.</div>
+      <div style="margin-top:8px;padding:4px 10px;background:#f0fdf4;border-radius:4px;font-size:11px;font-weight:600;color:#166534;display:inline-block">Works offline for embedded data</div>
     </div>
 
     <div style="flex:1;min-width:220px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:6px;padding:14px">
-      <div style="font-size:12px;font-weight:700;color:#111;margin-bottom:6px">DRAGEN Live -- JULIE (same PC)</div>
-      <div style="font-size:12px;color:#374151;line-height:1.6">Start the server on DRAGEN, then open plink tunnel including port 8765. Connects to <code style="background:#f3f4f6;padding:1px 4px;border-radius:3px;font-size:11px">localhost:8765</code>.</div>
+      <div style="font-size:12px;font-weight:700;color:#111;margin-bottom:6px">With DRAGEN (live UZB data)</div>
+      <div style="font-size:12px;color:#374151;line-height:1.6">Connects to the DRAGEN server to query UZB allele frequencies for any variant -- not just the built-in panel. Requires the frequency server running on DRAGEN and an SSH tunnel or Tailscale connection.</div>
       <div style="margin-top:10px">
-        <div style="font-size:11px;font-weight:700;color:#374151;margin-bottom:4px">1. Start server on DRAGEN:</div>
-        <pre style="background:#1e293b;color:#e2e8f0;padding:8px 10px;border-radius:4px;font-size:11px;overflow-x:auto;white-space:pre-wrap;margin:0">nohup python3 /staging/ALSU-analysis/admixture_analysis/uzb_freq/uzb_freq_server.py &gt; uzb_server.log 2&gt;&amp;1 &amp;</pre>
-        <div style="font-size:11px;font-weight:700;color:#374151;margin:8px 0 4px">2. Tunnel (adds 8765 alongside 2222):</div>
-        <pre style="background:#1e293b;color:#e2e8f0;padding:8px 10px;border-radius:4px;font-size:11px;overflow-x:auto;white-space:pre-wrap;margin:0">plink.exe -batch -i id_ed25519.ppk -N -L 2222:localhost:22 -L 8765:localhost:8765 copilot@100.104.25.22</pre>
+        <div style="font-size:11px;font-weight:700;color:#374151;margin-bottom:4px">Start the frequency server on DRAGEN:</div>
+        <pre style="background:#1e293b;color:#e2e8f0;padding:8px 10px;border-radius:4px;font-size:11px;overflow-x:auto;white-space:pre-wrap;word-break:break-all;margin:0">nohup python3 /staging/ALSU-analysis/admixture_analysis/uzb_freq/uzb_freq_server.py &gt; uzb_server.log 2&gt;&amp;1 &amp;</pre>
+        <div style="font-size:11px;font-weight:700;color:#374151;margin:8px 0 4px">Open SSH tunnel from your PC:</div>
+        <pre style="background:#1e293b;color:#e2e8f0;padding:8px 10px;border-radius:4px;font-size:11px;overflow-x:auto;white-space:pre-wrap;word-break:break-all;margin:0">plink.exe -batch -i id_ed25519.ppk -N -L 8765:localhost:8765 copilot@100.104.25.22</pre>
       </div>
     </div>
 
     <div style="flex:1;min-width:220px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:6px;padding:14px">
-      <div style="font-size:12px;font-weight:700;color:#111;margin-bottom:6px">DRAGEN Live -- any Tailscale PC</div>
-      <div style="font-size:12px;color:#374151;line-height:1.6">Make server listen on all interfaces. Any PC on Tailscale can connect directly -- no tunnel needed.</div>
+      <div style="font-size:12px;font-weight:700;color:#111;margin-bottom:6px">From another PC (Tailscale)</div>
+      <div style="font-size:12px;color:#374151;line-height:1.6">Any PC on the same Tailscale network can reach the server directly without a tunnel. Change the server bind address once and set the URL below.</div>
       <div style="margin-top:10px">
-        <div style="font-size:11px;font-weight:700;color:#374151;margin-bottom:4px">1. One-time server change:</div>
-        <pre style="background:#1e293b;color:#e2e8f0;padding:8px 10px;border-radius:4px;font-size:11px;overflow-x:auto;white-space:pre-wrap;margin:0">sed -i "s/127.0.0.1/0.0.0.0/" uzb_freq_server.py</pre>
-        <div style="font-size:11px;font-weight:700;color:#374151;margin:8px 0 4px">2. Set DRAGEN URL (update and click Apply):</div>
-        <div style="display:flex;gap:6px;align-items:center;margin-top:4px">
-          <input type="text" id="dragenUrlInput" value="http://127.0.0.1:8765" style="flex:1;border:1px solid #d1d5db;border-radius:4px;padding:5px 8px;font-size:12px;font-family:monospace;background:#fff">
-          <button onclick="applyDragenUrl()" style="padding:5px 10px;background:#2563eb;color:#fff;border:none;border-radius:4px;font-size:11px;font-weight:600;cursor:pointer">Apply</button>
+        <div style="font-size:11px;font-weight:700;color:#374151;margin-bottom:4px">One-time server change:</div>
+        <pre style="background:#1e293b;color:#e2e8f0;padding:8px 10px;border-radius:4px;font-size:11px;overflow-x:auto;white-space:pre-wrap;word-break:break-all;margin:0">sed -i "s/127.0.0.1/0.0.0.0/" uzb_freq_server.py</pre>
+        <div style="font-size:11px;font-weight:700;color:#374151;margin:8px 0 4px">Set server address:</div>
+        <div style="display:flex;gap:6px;align-items:center">
+          <input type="text" id="dragenUrlInput" value="http://127.0.0.1:8765"
+            style="flex:1;border:1px solid #d1d5db;border-radius:4px;padding:5px 8px;font-size:12px;font-family:monospace;min-width:0">
+          <button onclick="applyDragenUrl()" style="padding:5px 10px;background:#2563eb;color:#fff;border:none;border-radius:4px;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap">Apply</button>
         </div>
-        <div style="font-size:10px;color:#6b7280;margin-top:4px">Tunnel mode: http://127.0.0.1:8765 (default)<br>Tailscale direct: http://100.104.25.22:8765</div>
+        <div style="font-size:10px;color:#6b7280;margin-top:5px">
+          Local tunnel: http://127.0.0.1:8765<br>
+          Tailscale direct: http://100.104.25.22:8765
+        </div>
       </div>
     </div>
-
   </div>
 
-  <div style="margin-top:12px;padding:10px 14px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
-    <div>
-      <div style="font-size:11px;font-weight:700;color:#166534;margin-bottom:3px">Server API endpoints</div>
-      <code style="font-size:11px;color:#374151">/api/health</code> &nbsp;
-      <code style="font-size:11px;color:#374151">/api/panel</code> &nbsp;
-      <code style="font-size:11px;color:#374151">/api/uzb?rsid=rs334</code> &nbsp;
-      <code style="font-size:11px;color:#374151">/api/region?chrom=11&amp;start=5000000&amp;end=5500000</code>
+  <div style="margin-top:12px;padding:10px 14px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:6px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+    <div style="flex:1;min-width:200px">
+      <div style="font-size:11px;font-weight:600;color:#374151;margin-bottom:4px">Connection status</div>
+      <div style="font-size:11px;color:#6b7280">Click the status indicator in the header to check. Green = server reachable and UZB live queries enabled. Red = offline, using public APIs only.</div>
     </div>
-    <div style="margin-left:auto;display:flex;gap:8px;flex-wrap:wrap">
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
       <button onclick="checkServer(true)" style="padding:5px 12px;background:#fff;border:1px solid #d1d5db;border-radius:4px;font-size:11px;cursor:pointer">Recheck connection</button>
-      <a id="healthLink" href="http://127.0.0.1:8765/api/health" target="_blank" style="padding:5px 12px;background:#fff;border:1px solid #d1d5db;border-radius:4px;font-size:11px;color:#374151;text-decoration:none">Open /api/health</a>
+      <a id="healthLink" href="http://127.0.0.1:8765/api/health" target="_blank" style="padding:5px 12px;background:#fff;border:1px solid #d1d5db;border-radius:4px;font-size:11px;color:#374151;text-decoration:none">Server health page</a>
     </div>
   </div>
 
-  <div style="margin-top:10px;font-size:11px;color:#6b7280;line-height:1.8">
-    <b style="color:#374151">Key files on DRAGEN</b>
-    (<code>/staging/ALSU-analysis/admixture_analysis/uzb_freq/</code>):<br>
-    <code>uzb_freq_server.py</code> -- HTTP server (port 8765) &nbsp;|&nbsp;
-    <code>UZB_full_annotated_freq.tsv</code> -- 48.9M variants, 4.4 GB, lazy-loaded on first non-panel query &nbsp;|&nbsp;
-    <code>panel_data.json</code> -- 179-variant panel (embedded in this file) &nbsp;|&nbsp;
-    <code>panel_freq_comparison_final.tsv</code> -- full annotated comparison table &nbsp;|&nbsp;
-    <code>build_html.py</code> + <code>explorer_logic.js</code> -- rebuild this HTML after data updates
+  <div style="margin-top:10px;font-size:11px;color:#6b7280;line-height:1.9">
+    <b style="color:#374151">DRAGEN server data</b> &mdash;
+    frequency data and server scripts are in <code>/staging/ALSU-analysis/admixture_analysis/uzb_freq/</code> on biotech2024 (100.104.25.22).
+    See <a href="data-sources.html" style="color:#2563eb">Data Sources</a> for full dataset inventory.
   </div>
-
 </div>
 </details>
+<script>
+document.getElementById("setup-section").addEventListener("toggle", function() {
+  document.getElementById("setup-arrow").style.transform = this.open ? "rotate(90deg)" : "";
+});
+function applyDragenUrl() {
+  var val = document.getElementById("dragenUrlInput").value.trim().replace(/\/$/, "");
+  if (!val.startsWith("http")) { alert("URL must start with http://"); return; }
+  DRAGEN_URL = val;
+  document.getElementById("dragenUrlInput").style.borderColor = "#16a34a";
+  document.getElementById("healthLink").href = val + "/api/health";
+  checkServer(true);
+}
+</script>
 
 <script>
 document.getElementById("setup-section").addEventListener("toggle", function() {
@@ -107,89 +115,7 @@ function applyDragenUrl() {
 }
 </script>
 
-<details id="setup-section" style="background:#fff;border:1px solid #e5e7eb;border-radius:8px;margin-bottom:14px">
-<summary style="padding:12px 16px;cursor:pointer;font-size:13px;font-weight:600;color:#374151;list-style:none;display:flex;align-items:center;gap:8px;user-select:none">
-  <span style="font-size:16px;transition:transform .2s" id="setup-arrow">&#9654;</span>
-  Connection &amp; Setup Guide
-  <span style="font-size:11px;font-weight:400;color:#6b7280;margin-left:4px">-- standalone, DRAGEN live, multi-PC</span>
-</summary>
-<div style="padding:0 16px 16px 16px;border-top:1px solid #f3f4f6">
-  <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:14px">
 
-    <div style="flex:1;min-width:220px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:6px;padding:14px">
-      <div style="font-size:12px;font-weight:700;color:#111;margin-bottom:6px">Standalone -- any PC</div>
-      <div style="font-size:12px;color:#374151;line-height:1.6">Open this HTML file in any browser. All 179 panel variants are embedded with full data. gnomAD v4, ClinVar, and 1000G queries work on any PC with internet. DRAGEN live lookup will show red (offline) but all embedded data is fully functional.</div>
-      <div style="margin-top:8px;font-size:11px;font-weight:700;color:#16a34a">No setup required</div>
-    </div>
-
-    <div style="flex:1;min-width:220px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:6px;padding:14px">
-      <div style="font-size:12px;font-weight:700;color:#111;margin-bottom:6px">DRAGEN Live -- JULIE (same PC)</div>
-      <div style="font-size:12px;color:#374151;line-height:1.6">Start the server on DRAGEN, then open plink tunnel including port 8765. Connects to <code style="background:#f3f4f6;padding:1px 4px;border-radius:3px;font-size:11px">localhost:8765</code>.</div>
-      <div style="margin-top:10px">
-        <div style="font-size:11px;font-weight:700;color:#374151;margin-bottom:4px">1. Start server on DRAGEN:</div>
-        <pre style="background:#1e293b;color:#e2e8f0;padding:8px 10px;border-radius:4px;font-size:11px;overflow-x:auto;white-space:pre-wrap;margin:0">nohup python3 /staging/ALSU-analysis/admixture_analysis/uzb_freq/uzb_freq_server.py &gt; uzb_server.log 2&gt;&amp;1 &amp;</pre>
-        <div style="font-size:11px;font-weight:700;color:#374151;margin:8px 0 4px">2. Tunnel (adds 8765 alongside 2222):</div>
-        <pre style="background:#1e293b;color:#e2e8f0;padding:8px 10px;border-radius:4px;font-size:11px;overflow-x:auto;white-space:pre-wrap;margin:0">plink.exe -batch -i id_ed25519.ppk -N -L 2222:localhost:22 -L 8765:localhost:8765 copilot@100.104.25.22</pre>
-      </div>
-    </div>
-
-    <div style="flex:1;min-width:220px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:6px;padding:14px">
-      <div style="font-size:12px;font-weight:700;color:#111;margin-bottom:6px">DRAGEN Live -- any Tailscale PC</div>
-      <div style="font-size:12px;color:#374151;line-height:1.6">Make server listen on all interfaces. Any PC on Tailscale can connect directly -- no tunnel needed.</div>
-      <div style="margin-top:10px">
-        <div style="font-size:11px;font-weight:700;color:#374151;margin-bottom:4px">1. One-time server change:</div>
-        <pre style="background:#1e293b;color:#e2e8f0;padding:8px 10px;border-radius:4px;font-size:11px;overflow-x:auto;white-space:pre-wrap;margin:0">sed -i "s/127.0.0.1/0.0.0.0/" uzb_freq_server.py</pre>
-        <div style="font-size:11px;font-weight:700;color:#374151;margin:8px 0 4px">2. Set DRAGEN URL (update and click Apply):</div>
-        <div style="display:flex;gap:6px;align-items:center;margin-top:4px">
-          <input type="text" id="dragenUrlInput" value="http://127.0.0.1:8765" style="flex:1;border:1px solid #d1d5db;border-radius:4px;padding:5px 8px;font-size:12px;font-family:monospace;background:#fff">
-          <button onclick="applyDragenUrl()" style="padding:5px 10px;background:#2563eb;color:#fff;border:none;border-radius:4px;font-size:11px;font-weight:600;cursor:pointer">Apply</button>
-        </div>
-        <div style="font-size:10px;color:#6b7280;margin-top:4px">Tunnel mode: http://127.0.0.1:8765 (default)<br>Tailscale direct: http://100.104.25.22:8765</div>
-      </div>
-    </div>
-
-  </div>
-
-  <div style="margin-top:12px;padding:10px 14px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
-    <div>
-      <div style="font-size:11px;font-weight:700;color:#166534;margin-bottom:3px">Server API endpoints</div>
-      <code style="font-size:11px;color:#374151">/api/health</code> &nbsp;
-      <code style="font-size:11px;color:#374151">/api/panel</code> &nbsp;
-      <code style="font-size:11px;color:#374151">/api/uzb?rsid=rs334</code> &nbsp;
-      <code style="font-size:11px;color:#374151">/api/region?chrom=11&amp;start=5000000&amp;end=5500000</code>
-    </div>
-    <div style="margin-left:auto;display:flex;gap:8px;flex-wrap:wrap">
-      <button onclick="checkServer(true)" style="padding:5px 12px;background:#fff;border:1px solid #d1d5db;border-radius:4px;font-size:11px;cursor:pointer">Recheck connection</button>
-      <a id="healthLink" href="http://127.0.0.1:8765/api/health" target="_blank" style="padding:5px 12px;background:#fff;border:1px solid #d1d5db;border-radius:4px;font-size:11px;color:#374151;text-decoration:none">Open /api/health</a>
-    </div>
-  </div>
-
-  <div style="margin-top:10px;font-size:11px;color:#6b7280;line-height:1.8">
-    <b style="color:#374151">Key files on DRAGEN</b>
-    (<code>/staging/ALSU-analysis/admixture_analysis/uzb_freq/</code>):<br>
-    <code>uzb_freq_server.py</code> -- HTTP server (port 8765) &nbsp;|&nbsp;
-    <code>UZB_full_annotated_freq.tsv</code> -- 48.9M variants, 4.4 GB, lazy-loaded on first non-panel query &nbsp;|&nbsp;
-    <code>panel_data.json</code> -- 179-variant panel (embedded in this file) &nbsp;|&nbsp;
-    <code>panel_freq_comparison_final.tsv</code> -- full annotated comparison table &nbsp;|&nbsp;
-    <code>build_html.py</code> + <code>explorer_logic.js</code> -- rebuild this HTML after data updates
-  </div>
-
-</div>
-</details>
-
-<script>
-document.getElementById("setup-section").addEventListener("toggle", function() {
-  document.getElementById("setup-arrow").style.transform = this.open ? "rotate(90deg)" : "";
-});
-function applyDragenUrl() {
-  var val = document.getElementById("dragenUrlInput").value.trim().replace(/\/$/, "");
-  if (!val.startsWith("http")) { alert("URL must start with http"); return; }
-  DRAGEN_URL = val;
-  document.getElementById("dragenUrlInput").style.borderColor = "#16a34a";
-  document.getElementById("healthLink").href = val + "/api/health";
-  checkServer(true);
-}
-</script>
 
 
 <div class="panel" id="inputPanel">
@@ -1111,5 +1037,5 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 </script>
-</body>
+<script>window.addEventListener("load",function(){var el=document.getElementById("pageSubtitle");if(el&&typeof PANEL!=="undefined"){el.textContent=PANEL.length+" panel variants · Uzbek population frequency database · gnomAD v4 · ClinVar · 1000 Genomes";}});</script></body>
 </html>
