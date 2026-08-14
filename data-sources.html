@@ -63,6 +63,7 @@ td{padding:8px 12px;vertical-align:middle}
 .badge{font-size:10px;padding:1px 6px;border-radius:2px;font-weight:500;white-space:nowrap}
 .b-array{background:#e0e7ff;color:#3730a3}
 .b-wgs{background:#d1fae5;color:#065f46}
+.b-wes{background:#fef3c7;color:#92400e}
 .sv{font-size:11px;display:flex;align-items:center;gap:5px;white-space:nowrap}
 .dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
 .d-ok{background:#16a34a}.d-pend{background:#f59e0b}
@@ -112,6 +113,7 @@ footer{margin-top:22px;font-size:11px;color:#9ca3af;display:flex;justify-content
       <option value="">All technologies</option>
       <option value="array">Array</option>
       <option value="wgs">WGS</option>
+      <option value="wes">WES</option>
     </select>
     <select class="fsel" id="fstatus" onchange="applyFilters()">
       <option value="">All statuses</option>
@@ -210,7 +212,16 @@ var DATA=[
    path:'/staging/GWAS2026/48redone/',gb:1.8,sl:'1.8 GB',status:'pending',
    kv:{'Chip IDs':'209422280005, 209422280032','Sample sheet':'48_rescan_sample_sheet_18052026.xlsx',
        'Purpose':'QC validation and concordance checking','Next step':'Concordance analysis vs original ALSU calls'},
-   tree:'/staging/GWAS2026/48redone/\n  48_rescan_sample_sheet_18052026.xlsx\n  ALSU rescan/\n    209422280005/  [24 samples]\n    209422280032/  [24 samples]\n    diag/',note:''}
+   tree:'/staging/GWAS2026/48redone/\n  48_rescan_sample_sheet_18052026.xlsx\n  ALSU rescan/\n    209422280005/  [24 samples]\n    209422280032/  [24 samples]\n    diag/',note:''},
+  {id:'pavel_wes_saidkarimova',date:'2026-08-04',name:'Isolated WES — Saidkarimova Guzalkhan',desc:'Single individual whole exome sequence, unrelated to ALSU/GWAS cohorts',
+   n:1,nl:'1',tech:'wes',tl:'WES',
+   path:'/staging/Pavel/26-BB-107431 127 Саидкаримова Гузалхан/',gb:11.3,sl:'11.3 GB',status:'pending',
+   kv:{'Sample ID':'26-BB-107431 (127)','Individual':'Саидкаримова Гузалхан (Saidkarimova Guzalkhan)',
+       'Assay':'Whole exome sequencing (per submitter; not independently re-verified from the read data)',
+       'Platform':'MGI/BGI DNBSEQ (flowcell V350418124)','Read length':'~111 bp paired-end (verified from FASTQ header)',
+       'Files':'2 FASTQ.gz (R1/R2), 5.7 GB + 5.6 GB','Relation to cohort':'Standalone isolated sample — not part of ALSU, GWAS2026, GWAS2026-2, or 48redone; no known relatedness to any existing cohort member'},
+   tree:'/staging/Pavel/26-BB-107431 127 Саидкаримова Гузалхан/\n  V350418124_L03_127_1.fq.gz\n  V350418124_L03_127_2.fq.gz',
+   note:'Found under /staging/Pavel, a directory not previously catalogued in this tracker. Added as a separate, unrelated entry per explicit request 2026-08-14. Not yet aligned or processed — raw FASTQ only.'}
 ];
 
 var vis=DATA.slice(),sCol='date',sDir=1,dragSrc=null;
@@ -253,7 +264,7 @@ function render(){
   var tb=document.getElementById('tbody');
   tb.innerHTML='';
   sorted.forEach(function(d){
-    var tc=d.tech==='wgs'?'b-wgs':'b-array';
+    var tc=d.tech==='wgs'?'b-wgs':d.tech==='wes'?'b-wes':'b-array';
     var stHtml=d.status==='complete'
       ?'<span class="dot d-ok"></span>Complete'
       :'<span class="dot d-pend"></span>Pending';
