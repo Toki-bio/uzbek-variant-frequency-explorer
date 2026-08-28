@@ -25,7 +25,7 @@ Interactive clinical genomics tool for comparing allele frequencies of disease-a
 | `data/uzb_freq_matched.tsv` | 52 variants with UZB imputation frequency + R2 |
 
 ### Uzbek cohort (ALSU)
-- N = 1,074 unrelated individuals
+- N = 1,256 unrelated individuals (spring2026 expanded imputed cohort (N=1256))
 - Genotyped on Illumina GSA v3 array (hg38)
 - Imputed to ~10M variants via Michigan Imputation Server (Minimac4)
 - UZB allele frequencies are **imputed** (not directly sequenced) for most variants
