@@ -1,0 +1,6 @@
+{
+  "cardio_wes_v350432671": {"glob": "/staging/WES_sarek/clinical_reports/*.bcftools.annotated.vcf.gz"},
+  "cardio_main_cases": {"glob": "/staging/cardio/sophia/fastq/results/Cardio[0-9]*.hard-filtered.vcf.gz"},
+  "cardio_main_controls": {"glob": "/staging/cardio/sophia/fastq/healthy/results/Cardio*.hard-filtered.vcf.gz"},
+  "cardio_main_transplant": {"glob": "/staging/cardio/sophia/fastq/transplant/Cardio*.hard-filtered.vcf.gz"}
+}

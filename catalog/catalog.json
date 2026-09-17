@@ -1,0 +1,1088 @@
+{
+  "generated_note": "sample counts, file inventories, and status are LIVE - re-derived from disk on every generation run via scan_wes.py/scan_gsa.py. Only id/name/date/type/root_path/description/detail_url come from the hand-maintained registry.json.",
+  "datasets": [
+    {
+      "id": "alsu",
+      "name": "ALSU (original cohort - RPL GWAS)",
+      "date": "2025-06-13",
+      "type": "gsa",
+      "n_claimed": 1074,
+      "root_path": "/staging/ALSU/OUTPUT/",
+      "processed_path": "/staging/ALSU-analysis/winter2025/",
+      "path_note": "root_path is the raw GenomeStudio export (24,258 files, 61GB - confirmed by direct audit) and correctly has no PLINK output; processed_path holds the real QC/imputation pipeline output. This is NOT stale/superseded data - per the project's own source-of-truth doc (COHORT_EXPANSION_2026_08_INTEGRATION_NOTES.md in the ALSU-analysis repo), this original 1,074/1,047-sample cohort is DELIBERATELY kept separate and used exclusively for the RPL (recurrent pregnancy loss) GWAS (Step 16), by explicit user decision, while a separate expanded cohort (see 'alsu_expanded') is used for population-genetics analyses. Two valid current datasets for two different purposes, not one dataset with a stale and a current version.",
+      "description": "1,074 post-QC samples (1,047 in the GWAS-eligible subset after phenotype mapping), 53 chip positions, general Uzbek population reference cohort. Scope: RPL (recurrent pregnancy loss) GWAS - kept intentionally separate from the expanded population-genetics cohort.",
+      "detail_url": "https://toki-bio.github.io/ALSU-analysis/index.html",
+      "detail_note": "Dedicated deep-dive site for this cohort's population-genetics workflow. Note the site documents BOTH cohorts (original + expanded) - see also 'alsu_expanded' in this catalog.",
+      "live_scan": {
+        "root_path": "/staging/ALSU-analysis/winter2025",
+        "plink_filesets_found": 210,
+        "best_fileset": "/staging/ALSU-analysis/winter2025/3_post-imputation/ConvSK_final_clean",
+        "best_fileset_extensions": [
+          ".bed",
+          ".bim",
+          ".fam",
+          ".frq",
+          ".het",
+          ".hwe",
+          ".imiss",
+          ".lmiss"
+        ],
+        "inferred_stage": "post_imputation_qc_complete",
+        "equally_or_more_complete_alternatives": [
+          "/staging/ALSU-analysis/winter2025/PLINK_301125_0312/ConvSK_mind20_dedup_snpqc"
+        ],
+        "qc_side_files_found": 77
+      },
+      "discrepancies": []
+    },
+    {
+      "id": "alsu_expanded",
+      "name": "ALSU (expanded cohort - population genetics)",
+      "date": "2026-08-01",
+      "type": "gsa",
+      "n_claimed": 1268,
+      "n_claimed_note": "Per COHORT_EXPANSION_2026_08_INTEGRATION_NOTES.md: combined raw merge of ALSU original (1,247) + 48redone (48) + GWAS2026 wave 1 / gwas96 (95) + GWAS2026-2 (95) = 1,485 raw samples, QC'd down to 1,268 final (mind 0.20 -> 1,384; IBD dedup -> 1,326; het/KING -> 1,268). Popgen re-analysis (Steps 7-15) uses 1,256 of these post-imputation. Explicitly scoped to population-structure analyses only (PCA/ADMIXTURE/Fst/PBS/relatedness) - the RPL GWAS (Step 16) deliberately excludes this expansion and stays on the original 'alsu' cohort.",
+      "root_path": "/staging/ALSU-analysis/spring2026/full_expanded_cohort/",
+      "processed_path": "/staging/ALSU-analysis/spring2026/full_expanded_cohort/imputation_results/hq_filtered/",
+      "status_note": "IN PROGRESS as of the source doc's writing - ADMIXTURE full parity (Uzbek-only panel + 5-seed replicates) and sNMF validation still being redone; site pages not yet updated with expanded-cohort numbers. Do not treat as a finished deliverable.",
+      "description": "Population-genetics track only: original ALSU + 3 newer GSA batches (48redone, gwas96, gwas2026_2) merged, jointly QC'd and imputed as one cohort for PCA/ADMIXTURE/Fst/PBS. Distinct from and complementary to the 'alsu' entry (RPL GWAS), not a replacement for it.",
+      "detail_url": "https://toki-bio.github.io/ALSU-analysis/index.html",
+      "detail_note": "Same site as 'alsu' - covers both cohorts.",
+      "live_scan": {
+        "root_path": "/staging/ALSU-analysis/spring2026/full_expanded_cohort/imputation_results/hq_filtered",
+        "plink_filesets_found": 3,
+        "best_fileset": "/staging/ALSU-analysis/spring2026/full_expanded_cohort/imputation_results/hq_filtered/UZB_imputed_HQ_clean",
+        "best_fileset_extensions": [
+          ".bed",
+          ".bim",
+          ".fam"
+        ],
+        "inferred_stage": "post_imputation_qc_complete",
+        "equally_or_more_complete_alternatives": [
+          "/staging/ALSU-analysis/spring2026/full_expanded_cohort/imputation_results/hq_filtered/UZB_imputed_HQ_qc",
+          "/staging/ALSU-analysis/spring2026/full_expanded_cohort/imputation_results/hq_filtered/UZB_imputed_HQ_unique"
+        ],
+        "qc_side_files_found": 1
+      },
+      "discrepancies": []
+    },
+    {
+      "id": "cardio_oct",
+      "name": "Cardio - October 2025",
+      "date": "2025-10-23",
+      "type": "wgs",
+      "n_claimed": 12,
+      "root_path": "/staging/cardio/sophia/october2025-12samples/",
+      "description": "12 WGS samples, cardiomyopathy pilot cohort, aggregate VCF (not per-sample).",
+      "live_scan": {
+        "root_path": "/staging/cardio/sophia/october2025-12samples",
+        "sample_count": 12,
+        "samples_complete": 12,
+        "samples_incomplete": 0,
+        "status": "complete",
+        "samples": {
+          "DjorayevEldor": {
+            "file_count": 2,
+            "convention": "unrecognized",
+            "expected_present": [],
+            "expected_missing": [],
+            "complete": true,
+            "files": [
+              "sample_DjorayevEldor (1).zip",
+              "sample_DjorayevEldor.zip"
+            ]
+          },
+          "Egamberdiyeva": {
+            "file_count": 2,
+            "convention": "unrecognized",
+            "expected_present": [],
+            "expected_missing": [],
+            "complete": true,
+            "files": [
+              "sample_Egamberdiyeva (1).zip",
+              "sample_Egamberdiyeva.zip"
+            ]
+          },
+          "Hidirova": {
+            "file_count": 2,
+            "convention": "unrecognized",
+            "expected_present": [],
+            "expected_missing": [],
+            "complete": true,
+            "files": [
+              "sample_Hidirova (1).zip",
+              "sample_Hidirova.zip"
+            ]
+          },
+          "IronovaNasiba": {
+            "file_count": 2,
+            "convention": "unrecognized",
+            "expected_present": [],
+            "expected_missing": [],
+            "complete": true,
+            "files": [
+              "sample_IronovaNasiba (1).zip",
+              "sample_IronovaNasiba.zip"
+            ]
+          },
+          "IshkulatovaMadina": {
+            "file_count": 2,
+            "convention": "unrecognized",
+            "expected_present": [],
+            "expected_missing": [],
+            "complete": true,
+            "files": [
+              "sample_IshkulatovaMadina (1).zip",
+              "sample_IshkulatovaMadina.zip"
+            ]
+          },
+          "Raximova": {
+            "file_count": 2,
+            "convention": "unrecognized",
+            "expected_present": [],
+            "expected_missing": [],
+            "complete": true,
+            "files": [
+              "sample_Raximova (1).zip",
+              "sample_Raximova.zip"
+            ]
+          },
+          "RiskiyevaAziza": {
+            "file_count": 2,
+            "convention": "unrecognized",
+            "expected_present": [],
+            "expected_missing": [],
+            "complete": true,
+            "files": [
+              "sample_RiskiyevaAziza (1).zip",
+              "sample_RiskiyevaAziza.zip"
+            ]
+          },
+          "Soatova": {
+            "file_count": 2,
+            "convention": "unrecognized",
+            "expected_present": [],
+            "expected_missing": [],
+            "complete": true,
+            "files": [
+              "sample_Soatova (1).zip",
+              "sample_Soatova.zip"
+            ]
+          },
+          "SoyFoman": {
+            "file_count": 2,
+            "convention": "unrecognized",
+            "expected_present": [],
+            "expected_missing": [],
+            "complete": true,
+            "files": [
+              "sample_SoyFoman (1).zip",
+              "sample_SoyFoman.zip"
+            ]
+          },
+          "Sundetkin": {
+            "file_count": 2,
+            "convention": "unrecognized",
+            "expected_present": [],
+            "expected_missing": [],
+            "complete": true,
+            "files": [
+              "sample_Sundetkin (1).zip",
+              "sample_Sundetkin.zip"
+            ]
+          },
+          "Ulkanova": {
+            "file_count": 2,
+            "convention": "unrecognized",
+            "expected_present": [],
+            "expected_missing": [],
+            "complete": true,
+            "files": [
+              "sample_Ulkanova (1).zip",
+              "sample_Ulkanova.zip"
+            ]
+          },
+          "Yulchiyeva": {
+            "file_count": 2,
+            "convention": "unrecognized",
+            "expected_present": [],
+            "expected_missing": [],
+            "complete": true,
+            "files": [
+              "sample_Yulchiyeva (1).zip",
+              "sample_Yulchiyeva.zip"
+            ]
+          }
+        },
+        "cohort_level_files": [
+          "full_variant_table_IshkulatovaMadina.vcf",
+          "ФИО.docx"
+        ]
+      },
+      "discrepancies": []
+    },
+    {
+      "id": "cardio_main",
+      "name": "Cardio - Cases / Controls / Transplant",
+      "date": "2025-08-12",
+      "type": "wgs",
+      "n_claimed": 25,
+      "n_claimed_note": "CORRECTED from the original catalog's claimed n=65, which has no basis found anywhere on disk. Verified authoritative count: annotations/cases.tsv=12, annotations/controls.tsv=12, plus 1 separate transplant sample (Cardio1017) tracked in annotations_transplant/ - total 25. The case/control pathogenic-variant aggregation (annotations/aggregated_pathogenic_variants.json) itself reports case_count:12/control_count:12 consistently across every variant, confirming 24 for that aggregation; +1 transplant = 25 total processed samples.",
+      "root_path": "/staging/cardio/sophia/fastq/",
+      "sub_paths": {
+        "cases": "/staging/cardio/sophia/fastq/results/",
+        "controls": "/staging/cardio/sophia/fastq/healthy/results/"
+      },
+      "sub_paths_note": "cases/controls counted from these two dirs only (transplant and annotations dirs deliberately excluded from counting - transplant is 1 known sample already reflected in n_claimed, and annotations/ describes the SAME 25 samples rather than being a new batch, so scanning it too would double-count). Known caveat not yet resolved: results/ physically contains 14 sample outputs (Cardio1-12 + Cardio1017 transplant + CardioUndetermined demux leftover) rather than exactly the 12 true cases - a correct count requires filtering by annotations/cases.tsv's authoritative sample list, which this scanner does not yet do. Other real output dirs not yet counted: results_pangenome_cases/, healthy/results_pangenome_controls/ (pangenome-reference reruns of the same samples), transplant/, annotations_transplant/.",
+      "description": "WGS DRAGEN germline pipeline (native single-sample naming CardioN.*, NOT the sarek/bcftools convention used by cardio_wes_v350432671). 12 cases + 12 controls + 1 transplant sample = 25 total, each with full DRAGEN output (BAM, hard-filtered VCF, coverage/QC metrics, ROH) and most also reprocessed against a pangenome reference. Pathogenic-variant aggregation exists and is real (annotations/aggregated_pathogenic_variants.json), covering the 12+12 case/control set; transplant sample annotated separately, not yet merged into the aggregation.",
+      "live_scan": {
+        "root_path": "/staging/cardio/sophia/fastq",
+        "sample_count": 0,
+        "samples_complete": 0,
+        "samples_incomplete": 0,
+        "status": "raw_data_only_not_yet_processed",
+        "samples": {},
+        "cohort_level_files": [
+          "1017_S12_L001_R1_001.fastq.gz",
+          "1017_S12_L001_R2_001.fastq.gz",
+          "10_S10_L001_R1_001.fastq.gz",
+          "10_S10_L001_R2_001.fastq.gz",
+          "11_S11_L001_R1_001.fastq.gz",
+          "11_S11_L001_R2_001.fastq.gz",
+          "12_S12_L001_R1_001.fastq.gz",
+          "12_S12_L001_R2_001.fastq.gz",
+          "1_S1_L001_R1_001.fastq.gz",
+          "1_S1_L001_R2_001.fastq.gz",
+          "2_S2_L001_R1_001.fastq.gz",
+          "2_S2_L001_R2_001.fastq.gz",
+          "3_S3_L001_R1_001.fastq.gz",
+          "3_S3_L001_R1_001_fastqc.html",
+          "3_S3_L001_R1_001_fastqc.zip",
+          "3_S3_L001_R2_001.fastq.gz",
+          "4_S4_L001_R1_001.fastq.gz",
+          "4_S4_L001_R2_001.fastq.gz",
+          "5_S5_L001_R1_001.fastq.gz",
+          "5_S5_L001_R2_001.fastq.gz",
+          "6_S6_L001_R1_001.fastq.gz",
+          "6_S6_L001_R2_001.fastq.gz",
+          "7_S7_L001_R1_001.fastq.gz",
+          "7_S7_L001_R2_001.fastq.gz",
+          "8_S8_L001_R1_001.fastq.gz",
+          "8_S8_L001_R2_001.fastq.gz",
+          "9_S9_L001_R1_001.fastq.gz",
+          "9_S9_L001_R2_001.fastq.gz",
+          "Undetermined_S0_L001_R1_001.fastq.gz",
+          "Undetermined_S0_L001_R2_001.fastq.gz",
+          "run_dragen.sh",
+          "run_dragen_transplant.sh",
+          "run_dragen_undetermined.sh"
+        ],
+        "raw_fastq_samples_detected": 14,
+        "sub_path_scans": {
+          "cases": {
+            "root_path": "/staging/cardio/sophia/fastq/results",
+            "sample_count": 13,
+            "samples_complete": 13,
+            "samples_incomplete": 0,
+            "status": "complete",
+            "samples": {
+              "Cardio1": {
+                "file_count": 31,
+                "convention": "dragen_native",
+                "expected_present": [
+                  ".bam",
+                  ".hard-filtered.vcf.gz",
+                  ".hard-filtered.vcf.annotated.json.gz",
+                  ".wgs_coverage_metrics.csv",
+                  ".roh.bed"
+                ],
+                "expected_missing": [],
+                "complete": true
+              },
+              "Cardio10": {
+                "file_count": 31,
+                "convention": "dragen_native",
+                "expected_present": [
+                  ".bam",
+                  ".hard-filtered.vcf.gz",
+                  ".hard-filtered.vcf.annotated.json.gz",
+                  ".wgs_coverage_metrics.csv",
+                  ".roh.bed"
+                ],
+                "expected_missing": [],
+                "complete": true
+              },
+              "Cardio1017": {
+                "file_count": 31,
+                "convention": "dragen_native",
+                "expected_present": [
+                  ".bam",
+                  ".hard-filtered.vcf.gz",
+                  ".hard-filtered.vcf.annotated.json.gz",
+                  ".wgs_coverage_metrics.csv",
+                  ".roh.bed"
+                ],
+                "expected_missing": [],
+                "complete": true
+              },
+              "Cardio11": {
+                "file_count": 31,
+                "convention": "dragen_native",
+                "expected_present": [
+                  ".bam",
+                  ".hard-filtered.vcf.gz",
+                  ".hard-filtered.vcf.annotated.json.gz",
+                  ".wgs_coverage_metrics.csv",
+                  ".roh.bed"
+                ],
+                "expected_missing": [],
+                "complete": true
+              },
+              "Cardio12": {
+                "file_count": 31,
+                "convention": "dragen_native",
+                "expected_present": [
+                  ".bam",
+                  ".hard-filtered.vcf.gz",
+                  ".hard-filtered.vcf.annotated.json.gz",
+                  ".wgs_coverage_metrics.csv",
+                  ".roh.bed"
+                ],
+                "expected_missing": [],
+                "complete": true
+              },
+              "Cardio2": {
+                "file_count": 31,
+                "convention": "dragen_native",
+                "expected_present": [
+                  ".bam",
+                  ".hard-filtered.vcf.gz",
+                  ".hard-filtered.vcf.annotated.json.gz",
+                  ".wgs_coverage_metrics.csv",
+                  ".roh.bed"
+                ],
+                "expected_missing": [],
+                "complete": true
+              },
+              "Cardio3": {
+                "file_count": 31,
+                "convention": "dragen_native",
+                "expected_present": [
+                  ".bam",
+                  ".hard-filtered.vcf.gz",
+                  ".hard-filtered.vcf.annotated.json.gz",
+                  ".wgs_coverage_metrics.csv",
+                  ".roh.bed"
+                ],
+                "expected_missing": [],
+                "complete": true
+              },
+              "Cardio4": {
+                "file_count": 31,
+                "convention": "dragen_native",
+                "expected_present": [
+                  ".bam",
+                  ".hard-filtered.vcf.gz",
+                  ".hard-filtered.vcf.annotated.json.gz",
+                  ".wgs_coverage_metrics.csv",
+                  ".roh.bed"
+                ],
+                "expected_missing": [],
+                "complete": true
+              },
+              "Cardio5": {
+                "file_count": 31,
+                "convention": "dragen_native",
+                "expected_present": [
+                  ".bam",
+                  ".hard-filtered.vcf.gz",
+                  ".hard-filtered.vcf.annotated.json.gz",
+                  ".wgs_coverage_metrics.csv",
+                  ".roh.bed"
+                ],
+                "expected_missing": [],
+                "complete": true
+              },
+              "Cardio6": {
+                "file_count": 31,
+                "convention": "dragen_native",
+                "expected_present": [
+                  ".bam",
+                  ".hard-filtered.vcf.gz",
+                  ".hard-filtered.vcf.annotated.json.gz",
+                  ".wgs_coverage_metrics.csv",
+                  ".roh.bed"
+                ],
+                "expected_missing": [],
+                "complete": true
+              },
+              "Cardio7": {
+                "file_count": 31,
+                "convention": "dragen_native",
+                "expected_present": [
+                  ".bam",
+                  ".hard-filtered.vcf.gz",
+                  ".hard-filtered.vcf.annotated.json.gz",
+                  ".wgs_coverage_metrics.csv",
+                  ".roh.bed"
+                ],
+                "expected_missing": [],
+                "complete": true
+              },
+              "Cardio8": {
+                "file_count": 31,
+                "convention": "dragen_native",
+                "expected_present": [
+                  ".bam",
+                  ".hard-filtered.vcf.gz",
+                  ".hard-filtered.vcf.annotated.json.gz",
+                  ".wgs_coverage_metrics.csv",
+                  ".roh.bed"
+                ],
+                "expected_missing": [],
+                "complete": true
+              },
+              "Cardio9": {
+                "file_count": 31,
+                "convention": "dragen_native",
+                "expected_present": [
+                  ".bam",
+                  ".hard-filtered.vcf.gz",
+                  ".hard-filtered.vcf.annotated.json.gz",
+                  ".wgs_coverage_metrics.csv",
+                  ".roh.bed"
+                ],
+                "expected_missing": [],
+                "complete": true
+              }
+            },
+            "cohort_level_files": [
+              "2130069BJ08L_10196_usage.txt",
+              "2130069BJ08L_1103147_usage.txt",
+              "2130069BJ08L_11816_usage.txt",
+              "2130069BJ08L_14691_usage.txt",
+              "2130069BJ08L_16938_usage.txt",
+              "2130069BJ08L_18536_usage.txt",
+              "2130069BJ08L_20111_usage.txt",
+              "2130069BJ08L_21701_usage.txt",
+              "2130069BJ08L_23582_usage.txt",
+              "2130069BJ08L_25146_usage.txt",
+              "2130069BJ08L_26842_usage.txt",
+              "2130069BJ08L_274649_usage.txt",
+              "2130069BJ08L_30636_usage.txt",
+              "2130069BJ08L_32228_usage.txt",
+              "2130069BJ08L_33785_usage.txt",
+              "2130069BJ08L_35363_usage.txt",
+              "2130069BJ08L_37212_usage.txt",
+              "2130069BJ08L_38776_usage.txt",
+              "2130069BJ08L_40425_usage.txt",
+              "2130069BJ08L_42036_usage.txt",
+              "2130069BJ08L_43578_usage.txt",
+              "2130069BJ08L_45141_usage.txt",
+              "2130069BJ08L_46715_usage.txt",
+              "2130069BJ08L_48293_usage.txt",
+              "2130069BJ08L_7922_usage.txt",
+              "Cardio1-replay.json",
+              "Cardio10-replay.json",
+              "Cardio1017-replay.json",
+              "Cardio11-replay.json",
+              "Cardio12-replay.json",
+              "Cardio2-replay.json",
+              "Cardio3-replay.json",
+              "Cardio4-replay.json",
+              "Cardio5-replay.json",
+              "Cardio6-replay.json",
+              "Cardio7-replay.json",
+              "Cardio8-replay.json",
+              "Cardio9-replay.json",
+              "CardioUndetermined-replay.json",
+              "CardioUndetermined.allele_transition_noise_metrics.csv",
+              "CardioUndetermined.baf.bw",
+              "CardioUndetermined.bam",
+              "CardioUndetermined.bam.bai",
+              "CardioUndetermined.bam.md5sum",
+              "CardioUndetermined.fastqc_metrics.csv",
+              "CardioUndetermined.fragment_length_hist.csv",
+              "CardioUndetermined.hard-filtered.baf.bw",
+              "CardioUndetermined.hard-filtered.vcf.annotated.json.gz",
+              "CardioUndetermined.hard-filtered.vcf.annotated.json.gz.jsi",
+              "CardioUndetermined.hard-filtered.vcf.gz",
+              "CardioUndetermined.hard-filtered.vcf.gz.md5sum",
+              "CardioUndetermined.hard-filtered.vcf.gz.tbi",
+              "CardioUndetermined.insert-stats.tab",
+              "CardioUndetermined.mapping_metrics.csv",
+              "CardioUndetermined.metrics.json",
+              "CardioUndetermined.pcr-model-0.log",
+              "CardioUndetermined.pcr-model.log",
+              "CardioUndetermined.ploidy_estimation_metrics.csv",
+              "CardioUndetermined.roh.bed",
+              "CardioUndetermined.roh_metrics.csv",
+              "CardioUndetermined.snperror-sampler.log",
+              "CardioUndetermined.time_metrics.csv",
+              "CardioUndetermined.trimmer_metrics.csv",
+              "CardioUndetermined.vc_hethom_ratio_metrics.csv",
+              "CardioUndetermined.vc_metrics.csv",
+              "CardioUndetermined.wgs_contig_mean_cov.csv",
+              "CardioUndetermined.wgs_coverage_metrics.csv",
+              "CardioUndetermined.wgs_fine_hist.csv",
+              "CardioUndetermined.wgs_hist.csv",
+              "CardioUndetermined.wgs_overall_mean_cov.csv",
+              "all_variants.tsv",
+              "cardiac_variants.tsv",
+              "clinical_report.tsv",
+              "hi",
+              "hipass",
+              "hipassnotbenign",
+              "rare_potential_pathogenic.tsv",
+              "variants_report.csv"
+            ]
+          },
+          "controls": {
+            "root_path": "/staging/cardio/sophia/fastq/healthy/results",
+            "sample_count": 12,
+            "samples_complete": 12,
+            "samples_incomplete": 0,
+            "status": "complete",
+            "samples": {
+              "Cardio25": {
+                "file_count": 31,
+                "convention": "dragen_native",
+                "expected_present": [
+                  ".bam",
+                  ".hard-filtered.vcf.gz",
+                  ".hard-filtered.vcf.annotated.json.gz",
+                  ".wgs_coverage_metrics.csv",
+                  ".roh.bed"
+                ],
+                "expected_missing": [],
+                "complete": true
+              },
+              "Cardio27": {
+                "file_count": 31,
+                "convention": "dragen_native",
+                "expected_present": [
+                  ".bam",
+                  ".hard-filtered.vcf.gz",
+                  ".hard-filtered.vcf.annotated.json.gz",
+                  ".wgs_coverage_metrics.csv",
+                  ".roh.bed"
+                ],
+                "expected_missing": [],
+                "complete": true
+              },
+              "Cardio32": {
+                "file_count": 31,
+                "convention": "dragen_native",
+                "expected_present": [
+                  ".bam",
+                  ".hard-filtered.vcf.gz",
+                  ".hard-filtered.vcf.annotated.json.gz",
+                  ".wgs_coverage_metrics.csv",
+                  ".roh.bed"
+                ],
+                "expected_missing": [],
+                "complete": true
+              },
+              "Cardio36": {
+                "file_count": 31,
+                "convention": "dragen_native",
+                "expected_present": [
+                  ".bam",
+                  ".hard-filtered.vcf.gz",
+                  ".hard-filtered.vcf.annotated.json.gz",
+                  ".wgs_coverage_metrics.csv",
+                  ".roh.bed"
+                ],
+                "expected_missing": [],
+                "complete": true
+              },
+              "Cardio39": {
+                "file_count": 31,
+                "convention": "dragen_native",
+                "expected_present": [
+                  ".bam",
+                  ".hard-filtered.vcf.gz",
+                  ".hard-filtered.vcf.annotated.json.gz",
+                  ".wgs_coverage_metrics.csv",
+                  ".roh.bed"
+                ],
+                "expected_missing": [],
+                "complete": true
+              },
+              "Cardio40": {
+                "file_count": 31,
+                "convention": "dragen_native",
+                "expected_present": [
+                  ".bam",
+                  ".hard-filtered.vcf.gz",
+                  ".hard-filtered.vcf.annotated.json.gz",
+                  ".wgs_coverage_metrics.csv",
+                  ".roh.bed"
+                ],
+                "expected_missing": [],
+                "complete": true
+              },
+              "Cardio41": {
+                "file_count": 31,
+                "convention": "dragen_native",
+                "expected_present": [
+                  ".bam",
+                  ".hard-filtered.vcf.gz",
+                  ".hard-filtered.vcf.annotated.json.gz",
+                  ".wgs_coverage_metrics.csv",
+                  ".roh.bed"
+                ],
+                "expected_missing": [],
+                "complete": true
+              },
+              "Cardio827": {
+                "file_count": 31,
+                "convention": "dragen_native",
+                "expected_present": [
+                  ".bam",
+                  ".hard-filtered.vcf.gz",
+                  ".hard-filtered.vcf.annotated.json.gz",
+                  ".wgs_coverage_metrics.csv",
+                  ".roh.bed"
+                ],
+                "expected_missing": [],
+                "complete": true
+              },
+              "Cardio838": {
+                "file_count": 31,
+                "convention": "dragen_native",
+                "expected_present": [
+                  ".bam",
+                  ".hard-filtered.vcf.gz",
+                  ".hard-filtered.vcf.annotated.json.gz",
+                  ".wgs_coverage_metrics.csv",
+                  ".roh.bed"
+                ],
+                "expected_missing": [],
+                "complete": true
+              },
+              "Cardio839": {
+                "file_count": 31,
+                "convention": "dragen_native",
+                "expected_present": [
+                  ".bam",
+                  ".hard-filtered.vcf.gz",
+                  ".hard-filtered.vcf.annotated.json.gz",
+                  ".wgs_coverage_metrics.csv",
+                  ".roh.bed"
+                ],
+                "expected_missing": [],
+                "complete": true
+              },
+              "Cardio906": {
+                "file_count": 31,
+                "convention": "dragen_native",
+                "expected_present": [
+                  ".bam",
+                  ".hard-filtered.vcf.gz",
+                  ".hard-filtered.vcf.annotated.json.gz",
+                  ".wgs_coverage_metrics.csv",
+                  ".roh.bed"
+                ],
+                "expected_missing": [],
+                "complete": true
+              },
+              "Cardio998": {
+                "file_count": 31,
+                "convention": "dragen_native",
+                "expected_present": [
+                  ".bam",
+                  ".hard-filtered.vcf.gz",
+                  ".hard-filtered.vcf.annotated.json.gz",
+                  ".wgs_coverage_metrics.csv",
+                  ".roh.bed"
+                ],
+                "expected_missing": [],
+                "complete": true
+              }
+            },
+            "cohort_level_files": [
+              "2130069BJ08L_1002678_usage.txt",
+              "2130069BJ08L_1013288_usage.txt",
+              "2130069BJ08L_1023513_usage.txt",
+              "2130069BJ08L_1034201_usage.txt",
+              "2130069BJ08L_1044338_usage.txt",
+              "2130069BJ08L_1048565_usage.txt",
+              "2130069BJ08L_1050188_usage.txt",
+              "2130069BJ08L_1051817_usage.txt",
+              "2130069BJ08L_1053493_usage.txt",
+              "2130069BJ08L_1055078_usage.txt",
+              "2130069BJ08L_1056707_usage.txt",
+              "2130069BJ08L_1058336_usage.txt",
+              "Cardio25-replay.json",
+              "Cardio27-replay.json",
+              "Cardio32-replay.json",
+              "Cardio36-replay.json",
+              "Cardio39-replay.json",
+              "Cardio40-replay.json",
+              "Cardio41-replay.json",
+              "Cardio827-replay.json",
+              "Cardio838-replay.json",
+              "Cardio839-replay.json",
+              "Cardio906-replay.json",
+              "Cardio998-replay.json"
+            ]
+          }
+        },
+        "sample_count_including_sub_paths": 25
+      },
+      "discrepancies": []
+    },
+    {
+      "id": "gwas96",
+      "name": "GWAS 2026 wave 1 - IDAT batch",
+      "date": "2026-05-13",
+      "type": "gsa",
+      "n_claimed": 96,
+      "root_path": "/staging/GWAS2026/GWAS_IDAT/",
+      "processed_path": "/staging/ALSU-analysis/admixture_analysis/temp/dragen_array_test_20260513/gwas2026/plink/",
+      "path_note": "CORRECTED from 'pending QC' - this WAS genotype-called (DRAGEN Array, May 2026, per COHORT_EXPANSION_2026_08_INTEGRATION_NOTES.md) and has full staged QC output (raw/sampleqc/geno10/varqc), same convention as gwas2026_2. root_path only has raw IDATs; processed_path has the real output, just parked in someone's admixture_analysis/temp/ working directory rather than a proper deliverable path. Also folded into the 'alsu_expanded' combined cohort (95 of these 96 samples).",
+      "description": "96 samples, 4x24 GSA chips. Case/control design for an unstated study (per source docs, purpose not yet resolved with the study team) - confirmed to have no bearing on its use in population-genetics analyses (ascertainment on an unrelated trait doesn't distort PCA/ADMIXTURE/Fst).",
+      "live_scan": {
+        "root_path": "/staging/ALSU-analysis/admixture_analysis/temp/dragen_array_test_20260513/gwas2026/plink",
+        "plink_filesets_found": 4,
+        "best_fileset": "/staging/ALSU-analysis/admixture_analysis/temp/dragen_array_test_20260513/gwas2026/plink/gwas2026_raw",
+        "best_fileset_extensions": [
+          ".bed",
+          ".bim",
+          ".fam"
+        ],
+        "inferred_stage": "plink_fileset_present_no_full_qc",
+        "equally_or_more_complete_alternatives": [
+          "/staging/ALSU-analysis/admixture_analysis/temp/dragen_array_test_20260513/gwas2026/plink/gwas2026_geno10",
+          "/staging/ALSU-analysis/admixture_analysis/temp/dragen_array_test_20260513/gwas2026/plink/gwas2026_sampleqc",
+          "/staging/ALSU-analysis/admixture_analysis/temp/dragen_array_test_20260513/gwas2026/plink/gwas2026_varqc"
+        ],
+        "qc_side_files_found": 0
+      },
+      "discrepancies": []
+    },
+    {
+      "id": "gwas2026_2",
+      "name": "GWAS 2026-2 - IDAT batch",
+      "date": "2026-07-30",
+      "type": "gsa",
+      "n_claimed": 87,
+      "root_path": "/staging/GWAS2026-2/",
+      "description": "87/96 post-QC samples, full PLINK+QC trail complete.",
+      "live_scan": {
+        "root_path": "/staging/GWAS2026-2",
+        "plink_filesets_found": 6,
+        "best_fileset": "/staging/GWAS2026-2/plink/gwas2026_2_raw",
+        "best_fileset_extensions": [
+          ".bed",
+          ".bim",
+          ".fam"
+        ],
+        "inferred_stage": "post_imputation_qc_complete",
+        "equally_or_more_complete_alternatives": [
+          "/staging/GWAS2026-2/plink/gwas2026_2_geno10",
+          "/staging/GWAS2026-2/plink/gwas2026_2_sampleqc",
+          "/staging/GWAS2026-2/plink/gwas2026_2_varqc"
+        ],
+        "qc_side_files_found": 17
+      },
+      "discrepancies": []
+    },
+    {
+      "id": "rescan48",
+      "name": "ALSU 48 Redone",
+      "date": "2026-05-18",
+      "type": "gsa",
+      "n_claimed": 48,
+      "root_path": "/staging/GWAS2026/48redone/",
+      "processed_path": "/staging/ALSU-analysis/admixture_analysis/temp/dragen_array_test_20260513/gwas48redone/plink/",
+      "path_note": "CORRECTED from 'pending' - this WAS genotype-called (DRAGEN Array, 48/48 GTCs succeeded - a better rate than gwas2026_2's 95/96 - per COHORT_EXPANSION_2026_08_INTEGRATION_NOTES.md) and has real PLINK raw output. root_path only has raw IDATs; processed_path has the real output, parked in someone's admixture_analysis/temp/ working directory. These are rescans of specific original-cohort members whose chips catastrophically failed (verified via exact sample-sheet ID match against the original cohort). Folded into the 'alsu_expanded' combined cohort - this batch does not have a separate standalone final deliverable beyond that merge.",
+      "description": "48 samples, 2x24 GSA chips - rescans of ALSU original-cohort members whose original chips failed. Not a new/independent cohort; its downstream product is the merged 'alsu_expanded' dataset.",
+      "live_scan": {
+        "root_path": "/staging/ALSU-analysis/admixture_analysis/temp/dragen_array_test_20260513/gwas48redone/plink",
+        "plink_filesets_found": 1,
+        "best_fileset": "/staging/ALSU-analysis/admixture_analysis/temp/dragen_array_test_20260513/gwas48redone/plink/gwas48redone_raw",
+        "best_fileset_extensions": [
+          ".bed",
+          ".bim",
+          ".fam"
+        ],
+        "inferred_stage": "plink_fileset_present_no_full_qc",
+        "equally_or_more_complete_alternatives": [],
+        "qc_side_files_found": 0
+      },
+      "discrepancies": []
+    },
+    {
+      "id": "pavel_wes_saidkarimova",
+      "name": "Isolated WES - Saidkarimova Guzalkhan",
+      "date": "2026-08-04",
+      "type": "wes",
+      "n_claimed": 1,
+      "root_path": "/staging/Pavel/26-BB-107431 127 Саидкаримова Гузалхан/",
+      "description": "1 sample, raw FASTQ only, pending processing.",
+      "live_scan": {
+        "root_path": "/staging/Pavel/26-BB-107431 127 Саидкаримова Гузалхан",
+        "sample_count": 0,
+        "samples_complete": 0,
+        "samples_incomplete": 0,
+        "status": "raw_data_only_not_yet_processed",
+        "samples": {},
+        "cohort_level_files": [
+          "V350418124_L03_127_1.fq.gz",
+          "V350418124_L03_127_2.fq.gz"
+        ],
+        "raw_fastq_samples_detected": 1
+      },
+      "discrepancies": []
+    },
+    {
+      "id": "cardio_wes_v350432671",
+      "name": "Cardiomyopathy WES - 16-sample cohort (V350432671)",
+      "date": "2026-09-17",
+      "date_confidence": "low - looks like a last-edited stamp, needs human confirmation of the true run date",
+      "type": "wes",
+      "n_claimed": 16,
+      "root_path": "/staging/WES_sarek/clinical_reports/",
+      "description": "16-sample whole-exome cardiomyopathy cohort, full Sarek-style pipeline. Note: /staging/WES_sarek/ top level is a cluttered working dir with 60+ leftover scripts; clinical_reports/ subdir is the clean output root.",
+      "live_scan": {
+        "root_path": "/staging/WES_sarek/clinical_reports",
+        "sample_count": 16,
+        "samples_complete": 16,
+        "samples_incomplete": 0,
+        "status": "complete",
+        "samples": {
+          "sample01": {
+            "file_count": 15,
+            "convention": "bcftools_sarek",
+            "expected_present": [
+              ".bcftools.raw.vcf.gz",
+              ".bcftools.hard-filtered.vcf.gz",
+              ".bcftools.annotated.vcf.gz",
+              ".markdup.cram",
+              ".case.pathogenic.jsonl",
+              ".report.html"
+            ],
+            "expected_missing": [],
+            "complete": true
+          },
+          "sample02": {
+            "file_count": 15,
+            "convention": "bcftools_sarek",
+            "expected_present": [
+              ".bcftools.raw.vcf.gz",
+              ".bcftools.hard-filtered.vcf.gz",
+              ".bcftools.annotated.vcf.gz",
+              ".markdup.cram",
+              ".case.pathogenic.jsonl",
+              ".report.html"
+            ],
+            "expected_missing": [],
+            "complete": true
+          },
+          "sample03": {
+            "file_count": 15,
+            "convention": "bcftools_sarek",
+            "expected_present": [
+              ".bcftools.raw.vcf.gz",
+              ".bcftools.hard-filtered.vcf.gz",
+              ".bcftools.annotated.vcf.gz",
+              ".markdup.cram",
+              ".case.pathogenic.jsonl",
+              ".report.html"
+            ],
+            "expected_missing": [],
+            "complete": true
+          },
+          "sample04": {
+            "file_count": 15,
+            "convention": "bcftools_sarek",
+            "expected_present": [
+              ".bcftools.raw.vcf.gz",
+              ".bcftools.hard-filtered.vcf.gz",
+              ".bcftools.annotated.vcf.gz",
+              ".markdup.cram",
+              ".case.pathogenic.jsonl",
+              ".report.html"
+            ],
+            "expected_missing": [],
+            "complete": true
+          },
+          "sample05": {
+            "file_count": 15,
+            "convention": "bcftools_sarek",
+            "expected_present": [
+              ".bcftools.raw.vcf.gz",
+              ".bcftools.hard-filtered.vcf.gz",
+              ".bcftools.annotated.vcf.gz",
+              ".markdup.cram",
+              ".case.pathogenic.jsonl",
+              ".report.html"
+            ],
+            "expected_missing": [],
+            "complete": true
+          },
+          "sample06": {
+            "file_count": 15,
+            "convention": "bcftools_sarek",
+            "expected_present": [
+              ".bcftools.raw.vcf.gz",
+              ".bcftools.hard-filtered.vcf.gz",
+              ".bcftools.annotated.vcf.gz",
+              ".markdup.cram",
+              ".case.pathogenic.jsonl",
+              ".report.html"
+            ],
+            "expected_missing": [],
+            "complete": true
+          },
+          "sample07": {
+            "file_count": 15,
+            "convention": "bcftools_sarek",
+            "expected_present": [
+              ".bcftools.raw.vcf.gz",
+              ".bcftools.hard-filtered.vcf.gz",
+              ".bcftools.annotated.vcf.gz",
+              ".markdup.cram",
+              ".case.pathogenic.jsonl",
+              ".report.html"
+            ],
+            "expected_missing": [],
+            "complete": true
+          },
+          "sample08": {
+            "file_count": 15,
+            "convention": "bcftools_sarek",
+            "expected_present": [
+              ".bcftools.raw.vcf.gz",
+              ".bcftools.hard-filtered.vcf.gz",
+              ".bcftools.annotated.vcf.gz",
+              ".markdup.cram",
+              ".case.pathogenic.jsonl",
+              ".report.html"
+            ],
+            "expected_missing": [],
+            "complete": true
+          },
+          "sample09": {
+            "file_count": 15,
+            "convention": "bcftools_sarek",
+            "expected_present": [
+              ".bcftools.raw.vcf.gz",
+              ".bcftools.hard-filtered.vcf.gz",
+              ".bcftools.annotated.vcf.gz",
+              ".markdup.cram",
+              ".case.pathogenic.jsonl",
+              ".report.html"
+            ],
+            "expected_missing": [],
+            "complete": true
+          },
+          "sample10": {
+            "file_count": 15,
+            "convention": "bcftools_sarek",
+            "expected_present": [
+              ".bcftools.raw.vcf.gz",
+              ".bcftools.hard-filtered.vcf.gz",
+              ".bcftools.annotated.vcf.gz",
+              ".markdup.cram",
+              ".case.pathogenic.jsonl",
+              ".report.html"
+            ],
+            "expected_missing": [],
+            "complete": true
+          },
+          "sample11": {
+            "file_count": 15,
+            "convention": "bcftools_sarek",
+            "expected_present": [
+              ".bcftools.raw.vcf.gz",
+              ".bcftools.hard-filtered.vcf.gz",
+              ".bcftools.annotated.vcf.gz",
+              ".markdup.cram",
+              ".case.pathogenic.jsonl",
+              ".report.html"
+            ],
+            "expected_missing": [],
+            "complete": true
+          },
+          "sample12": {
+            "file_count": 15,
+            "convention": "bcftools_sarek",
+            "expected_present": [
+              ".bcftools.raw.vcf.gz",
+              ".bcftools.hard-filtered.vcf.gz",
+              ".bcftools.annotated.vcf.gz",
+              ".markdup.cram",
+              ".case.pathogenic.jsonl",
+              ".report.html"
+            ],
+            "expected_missing": [],
+            "complete": true
+          },
+          "sample13": {
+            "file_count": 15,
+            "convention": "bcftools_sarek",
+            "expected_present": [
+              ".bcftools.raw.vcf.gz",
+              ".bcftools.hard-filtered.vcf.gz",
+              ".bcftools.annotated.vcf.gz",
+              ".markdup.cram",
+              ".case.pathogenic.jsonl",
+              ".report.html"
+            ],
+            "expected_missing": [],
+            "complete": true
+          },
+          "sample14": {
+            "file_count": 15,
+            "convention": "bcftools_sarek",
+            "expected_present": [
+              ".bcftools.raw.vcf.gz",
+              ".bcftools.hard-filtered.vcf.gz",
+              ".bcftools.annotated.vcf.gz",
+              ".markdup.cram",
+              ".case.pathogenic.jsonl",
+              ".report.html"
+            ],
+            "expected_missing": [],
+            "complete": true
+          },
+          "sample15": {
+            "file_count": 15,
+            "convention": "bcftools_sarek",
+            "expected_present": [
+              ".bcftools.raw.vcf.gz",
+              ".bcftools.hard-filtered.vcf.gz",
+              ".bcftools.annotated.vcf.gz",
+              ".markdup.cram",
+              ".case.pathogenic.jsonl",
+              ".report.html"
+            ],
+            "expected_missing": [],
+            "complete": true
+          },
+          "sample16": {
+            "file_count": 15,
+            "convention": "bcftools_sarek",
+            "expected_present": [
+              ".bcftools.raw.vcf.gz",
+              ".bcftools.hard-filtered.vcf.gz",
+              ".bcftools.annotated.vcf.gz",
+              ".markdup.cram",
+              ".case.pathogenic.jsonl",
+              ".report.html"
+            ],
+            "expected_missing": [],
+            "complete": true
+          }
+        },
+        "cohort_level_files": [
+          "aggregated_pathogenic_variants.json"
+        ]
+      },
+      "discrepancies": []
+    }
+  ]
+}
