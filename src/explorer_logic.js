@@ -1,8 +1,17 @@
 // explorer_logic.js - all JS for ALSU Variant Explorer
-// Injected by build_html.py after PANEL= data constant
+// Injected by build_html.py after PANEL= (and WES_CARDIO_COHORT=) data constants
 
-const DRAGEN_URL = 'http://127.0.0.1:8765';
+let DRAGEN_URL = 'http://127.0.0.1:8765';
 let dragenOk = false, shownRows = [], dragSrc = null;
+
+// Cardiomyopathy WES cohort (n=16) - embedded static data, same pattern as PANEL.
+// Computed by properly genotyping all 16 samples (bcftools call -m, not -mv - the
+// latter silently omits hom-ref samples from the denominator) at each of this
+// cohort's 33 pathogenic/likely-pathogenic ClinVar positions. This is a
+// disease-ascertained cohort (all 16 diagnosed with cardiomyopathy), not a general
+// population reference - see each entry's cohort_note for that caveat.
+const WES_CARDIO_MAP = (typeof WES_CARDIO_COHORT !== 'undefined' ? WES_CARDIO_COHORT : [])
+  .reduce((m, v) => { m[v.chr_pos] = v; return m; }, {});
 
 const SIG_ORDER = {Pathogenic:0,'Likely Pathogenic':1,'VUS/Conflicting':2,'Likely Benign':3,Benign:4,Unknown:5};
 const SIG_CLASS = {Pathogenic:'bp','Likely Pathogenic':'blp','VUS/Conflicting':'bv','Likely Benign':'bbl',Benign:'bb',Unknown:'bu'};
@@ -19,17 +28,17 @@ function csig(s) {
 }
 
 function pct(f) {
-  if (f == null || isNaN(f)) return '—';
+  if (f == null || isNaN(f)) return '-';
   if (f === 0) return '0%';
   if (f < 0.0001) return (f*100).toExponential(2) + '%';
   return (f*100).toFixed(4) + '%';
 }
 function bw(f) { return f > 0 ? Math.max(2, Math.min(80, Math.log10(f*100+0.001)/Math.log10(101)*80)) : 0; }
 function dc(d) { return d == null || isNaN(d) ? 'dno' : d > 0.005 ? 'dup' : d < -0.005 ? 'ddn' : 'dno'; }
-function ds(d) { if (d == null || isNaN(d)) return '—'; return (d >= 0 ? '+' : '') + (d*100).toFixed(3) + '%'; }
+function ds(d) { if (d == null || isNaN(d)) return '-'; return (d >= 0 ? '+' : '') + (d*100).toFixed(3) + '%'; }
 function r2c(r) { if (r == null || isNaN(r)) return 'r2n'; return r >= 0.8 ? 'r2g' : r >= 0.4 ? 'r2m' : 'r2b'; }
 
-// ── Server health check ───────────────────────────────────────────────────────
+//  Server health check 
 async function checkServer(verbose) {
   const dot = document.getElementById('sdot'), lbl = document.getElementById('slbl');
   dot.className = 'dot chk'; lbl.textContent = 'Checking...';
@@ -41,14 +50,14 @@ async function checkServer(verbose) {
       (d.full_table_loaded ? ' | full table ready' : ' | full table not loaded');
   } catch(e) {
     dragenOk = false; dot.className = 'dot err';
-    lbl.textContent = 'DRAGEN offline — embedded data only';
+    lbl.textContent = 'DRAGEN offline - embedded data only';
     if (verbose) document.getElementById('st').innerHTML =
       '<b>To enable live UZB lookup:</b> (1) Start <code>uzb_freq_server.py</code> on DRAGEN, ' +
       '(2) add port to plink tunnel: <code>-L 8765:localhost:8765</code>';
   }
 }
 
-// ── External API calls ────────────────────────────────────────────────────────
+//  External API calls 
 async function apiGnomad(rsid) {
   if (!document.getElementById('cg').checked) return null;
   const q = `{variant(rsid:"${rsid}",dataset:gnomad_r4){chrom pos ref alt genome{ac an af populations{id af}}}}`;
@@ -108,7 +117,7 @@ async function apiDragen(rsid) {
   } catch { return null; }
 }
 
-// ── Build table row pair (main + expand) ──────────────────────────────────────
+//  Build table row pair (main + expand) 
 function mkRow(d, ex) {
   ex = ex || {};
   const gn = ex.gn || null, cv = ex.cv || null, kg = ex.kg || null, dr = ex.dr || null;
@@ -136,7 +145,10 @@ function mkRow(d, ex) {
   const delta = uzb_af != null && nfe != null ? uzb_af - nfe : (d.delta_final_NFE ?? null);
   const matched = d.source && d.source !== 'NOT_FOUND';
 
-  // ── Main row ──
+  // Cardiomyopathy WES cohort match (by chr:pos, since this data has no rsID column)
+  const wesCardio = d.chr_pos ? WES_CARDIO_MAP[d.chr_pos] : null;
+
+  //  Main row 
   const tr = document.createElement('tr');
   tr.className = 'dr'; tr.setAttribute('draggable', 'true');
   tr.innerHTML =
@@ -157,7 +169,7 @@ function mkRow(d, ex) {
       (cpic_drug ? ' <span style="font-size:10px;color:#6b7280">' + cpic_drug + '</span>' : '') + '</td>' +
     '<td>' + (is_proxy ? '<span class="bdg bpr">PROXY</span>' : '') + '</td>';
 
-  // ── Expand row ──
+  //  Expand row 
   const exp = document.createElement('tr'); exp.className = 'er';
   const etd = document.createElement('td'); etd.colSpan = 13;
   const ec  = document.createElement('div'); ec.className = 'ec';
@@ -171,6 +183,7 @@ function mkRow(d, ex) {
     'Do not use for clinical interpretation without direct sequencing.</div>';
 
   const freqs = [
+    ...(wesCardio ? [['Cardio WES (n=16)', wesCardio.WES_CARDIO_AF, '#dc2626']] : []),
     ['UZB (imputed)',  uzb_af, '#16a34a'],
     ['gnomAD global',  gn?.genome?.af ?? d.gnomad_global, '#2563eb'],
     ['gnomAD NFE/EUR', nfe, '#2563eb'],
@@ -208,6 +221,10 @@ function mkRow(d, ex) {
       '<b>Conf:</b> ' + (d.confidence || '&mdash;') + ' &nbsp; <b>Source:</b> ' + (d.source || '&mdash;') + '</div>',
     '<div class="mi"><b>Allele flag:</b> ' + (d.allele_type_flag || '&mdash;') + ' &nbsp; <b>Match:</b> ' + (d.match_method || '&mdash;') + '</div>',
     (dr?.data?.UZB_N) ? '<div class="mi"><b>UZB N (alleles typed):</b> ' + dr.data.UZB_N + '</div>' : '',
+    wesCardio ? '<div class="mi"><b>' + wesCardio.cohort_label + ':</b> ' +
+      wesCardio.WES_CARDIO_AC + '/' + wesCardio.WES_CARDIO_AN + ' alleles (' +
+      wesCardio.WES_CARDIO_CARRIERS.length + ' of ' + wesCardio.WES_CARDIO_N + ' individuals carry it)' +
+      '<br><span style="color:#6b7280;font-size:11px">' + wesCardio.cohort_note + '</span></div>' : '',
   ].filter(Boolean).join('');
 
   const links = [
@@ -296,7 +313,7 @@ async function enrichRow(tr, d, ec, existing) {
   }
 }
 
-// ── Filter ────────────────────────────────────────────────────────────────────
+//  Filter 
 function applyFilter() {
   const pan = document.getElementById('fp').value;
   const sig = document.getElementById('fs').value;
@@ -320,7 +337,7 @@ function applyFilter() {
     `Showing ${filtered.length} of ${PANEL.length} variants. Click row to expand (fetches live data). Use search to query any rsID.`;
 }
 
-// ── Search / add arbitrary rsID ───────────────────────────────────────────────
+//  Search / add arbitrary rsID 
 async function addQuery() {
   const raw = document.getElementById('ri').value.trim();
   if (!raw) return;
@@ -347,7 +364,7 @@ async function addQuery() {
   document.getElementById('ri').value = ''; btn.disabled = false;
 }
 
-// ── Sort ──────────────────────────────────────────────────────────────────────
+//  Sort 
 function sortBy(col) {
   const sd = document.getElementById('sdir');
   if (document.getElementById('scol').value === col) sd.value = sd.value === 'asc' ? 'desc' : 'asc';
@@ -377,7 +394,7 @@ function applySort() {
   pairs.forEach(([m, e]) => { tb.appendChild(m); tb.appendChild(e); });
 }
 
-// ── Selection ─────────────────────────────────────────────────────────────────
+//  Selection 
 function onSel() {
   const n = [...document.querySelectorAll('.rcb')].filter(c => c.checked).length;
   document.getElementById('sc2').textContent = n ? n + ' selected' : '';
@@ -397,8 +414,388 @@ function deleteSel() {
   shownRows = shownRows.filter(v => v.tr.isConnected); onSel();
 }
 
-// ── Init ──────────────────────────────────────────────────────────────────────
+//  Init 
 document.querySelectorAll('.cp').forEach(p =>
   p.querySelector('input').addEventListener('change', function() { p.classList.toggle('on', this.checked); })
 );
 window.addEventListener('load', () => { checkServer(false); applyFilter(); });
+
+
+
+var currentMode = 'rsid';
+
+function switchMode(m) {
+  currentMode = m;
+  document.querySelectorAll('.imode-tab').forEach(function(t) { t.classList.remove('active'); });
+  event.target.classList.add('active');
+  document.querySelectorAll('.imode-body').forEach(function(b) { b.style.display = 'none'; });
+  var el = document.getElementById('mode-' + m);
+  if (el) el.style.display = '';
+  if (m === 'drug') populateDrugSuggestions();
+}
+
+// ── File drop / select ──────────────────────────────────────────────────────
+function handleFileDrop(e) {
+  e.preventDefault();
+  document.getElementById('dropzone').style.borderColor = '#d1d5db';
+  document.getElementById('dropzone').style.background = '#fafafa';
+  var file = e.dataTransfer.files[0];
+  if (file) readFileForRsids(file);
+}
+function handleFileSelect(input) {
+  if (input.files[0]) readFileForRsids(input.files[0]);
+}
+function readFileForRsids(file) {
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var text = e.target.result;
+    var rsids = extractRsids(text);
+    document.getElementById('fileStatus').textContent = 'Found ' + rsids.length + ' rsID(s) in ' + file.name;
+    if (rsids.length > 0) {
+      document.getElementById('fileStatus').textContent += ' -- click Search to look up';
+      window._fileRsids = rsids;
+    }
+  };
+  reader.readAsText(file);
+}
+function extractRsids(text) {
+  var matches = text.match(/rs\d+/g) || [];
+  var seen = {}, out = [];
+  matches.forEach(function(r) { if (!seen[r]) { seen[r] = 1; out.push(r); } });
+  return out;
+}
+
+// ── Drug suggestions ─────────────────────────────────────────────────────────
+function populateDrugSuggestions() {
+  var drugs = {};
+  PANEL.forEach(function(d) {
+    if (d.cpic_drug && d.cpic_drug !== 'N/A' && d.cpic_drug !== 'nan') {
+      d.cpic_drug.split(';').forEach(function(dr) {
+        dr = dr.trim();
+        if (dr) drugs[dr] = (drugs[dr] || 0) + 1;
+      });
+    }
+  });
+  var el = document.getElementById('drugSuggestions');
+  el.innerHTML = '';
+  Object.keys(drugs).sort().forEach(function(drug) {
+    var btn = document.createElement('button');
+    btn.className = 'btn-s';
+    btn.textContent = drug + ' (' + drugs[drug] + ')';
+    btn.style.fontSize = '11px';
+    btn.onclick = function() {
+      document.getElementById('drugInput').value = drug;
+      runMode();
+    };
+    el.appendChild(btn);
+  });
+}
+
+// ── Gene -> rsIDs via Ensembl ────────────────────────────────────────────────
+async function fetchGeneVariants(gene) {
+  // First check embedded panel
+  var panelHits = PANEL.filter(function(d) {
+    return (d.gene || '').toUpperCase() === gene.toUpperCase();
+  });
+  var rsids = panelHits.map(function(d) { return d.rsID; }).filter(Boolean);
+
+  // Optionally fetch from Ensembl
+  if (document.getElementById('chk-gene-ensembl') && document.getElementById('chk-gene-ensembl').checked) {
+    try {
+      var r = await fetch('https://rest.ensembl.org/variation/homo_sapiens?phenotype_significance=pathogenic;content-type=application/json');
+      // Simpler: get gene region then variants
+      var gr = await fetch('https://rest.ensembl.org/lookup/symbol/homo_sapiens/' + gene + '?content-type=application/json');
+      var gd = await gr.json();
+      if (gd && gd.seq_region_name && gd.start && gd.end) {
+        var vr = await fetch(
+          'https://rest.ensembl.org/overlap/region/human/' +
+          gd.seq_region_name + ':' + gd.start + '-' + gd.end +
+          '?feature=variation;content-type=application/json'
+        );
+        var vars = await vr.json();
+        if (Array.isArray(vars)) {
+          vars.forEach(function(v) {
+            if (v.id && v.id.startsWith('rs') && rsids.indexOf(v.id) === -1) {
+              rsids.push(v.id);
+            }
+          });
+        }
+      }
+    } catch(e) {}
+  }
+  return rsids;
+}
+
+// ── Coordinate / BED parsing ─────────────────────────────────────────────────
+function parseCoords(text) {
+  var regions = [];
+  text.trim().split('\n').forEach(function(line) {
+    line = line.trim();
+    if (!line || line.startsWith('#') || line.startsWith('track') || line.startsWith('browser')) return;
+    var cols = line.split(/[\t ]+/);
+    var chrom, start, end;
+
+    // BED: chr start end [name...]
+    if (cols.length >= 3 && /^\d+$/.test(cols[1]) && /^\d+$/.test(cols[2])) {
+      chrom = cols[0].replace(/^chr/, '');
+      start = parseInt(cols[1]);
+      end   = parseInt(cols[2]);
+    }
+    // chr11:5225000-5230000
+    else if (/^chr[\dXYM]+:\d+-\d+$/i.test(line)) {
+      var m = line.match(/^chr([\dXYM]+):(\d+)-(\d+)$/i);
+      chrom = m[1]; start = parseInt(m[2]); end = parseInt(m[3]);
+    }
+    // chr11:5225464 (single position, +/- 500bp window)
+    else if (/^chr[\dXYM]+:\d+$/i.test(line)) {
+      var m2 = line.match(/^chr([\dXYM]+):(\d+)$/i);
+      chrom = m2[1]; start = parseInt(m2[2]) - 500; end = parseInt(m2[2]) + 500;
+    }
+    // 11:5225464
+    else if (/^[\dXYM]+:\d+$/.test(line)) {
+      var m3 = line.match(/^([\dXYM]+):(\d+)$/);
+      chrom = m3[1]; start = parseInt(m3[2]) - 500; end = parseInt(m3[2]) + 500;
+    }
+    if (chrom) regions.push({ chrom: chrom, start: start, end: end, label: line });
+  });
+  return regions;
+}
+
+async function queryRegion(region) {
+  var results = [];
+  // 1. DRAGEN /api/region
+  if (dragenOk) {
+    try {
+      var r = await fetch(DRAGEN_URL + '/api/region?chrom=' + region.chrom + '&start=' + region.start + '&end=' + region.end,
+        { signal: AbortSignal.timeout(8000) });
+      if (r.ok) {
+        var d = await r.json();
+        if (d.data && d.data.length > 0) {
+          d.data.forEach(function(v) {
+            if (v.rsID && v.rsID !== 'nan' && results.indexOf(v.rsID) === -1) results.push(v.rsID);
+          });
+        }
+      }
+    } catch(e) {}
+  }
+  // 2. Ensembl REST overlap
+  try {
+    var er = await fetch(
+      'https://rest.ensembl.org/overlap/region/human/' +
+      region.chrom + ':' + region.start + '-' + region.end +
+      '?feature=variation;content-type=application/json',
+      { signal: AbortSignal.timeout(10000) }
+    );
+    var evars = await er.json();
+    if (Array.isArray(evars)) {
+      evars.forEach(function(v) {
+        if (v.id && v.id.startsWith('rs') && results.indexOf(v.id) === -1) results.push(v.id);
+      });
+    }
+  } catch(e) {}
+  // 3. Also check embedded panel by chr:pos
+  PANEL.forEach(function(d) {
+    if (!d.chr_pos || !d.rsID) return;
+    var m = d.chr_pos.match(/^([\dXYM]+):(\d+)$/);
+    if (!m) return;
+    var c = m[1], p = parseInt(m[2]);
+    if (c === region.chrom && p >= region.start && p <= region.end) {
+      if (results.indexOf(d.rsID) === -1) results.push(d.rsID);
+    }
+  });
+  return results;
+}
+
+// ── HGVS -> rsID via Ensembl ─────────────────────────────────────────────────
+async function hgvsToRsid(hgvs) {
+  try {
+    var r = await fetch(
+      'https://rest.ensembl.org/variant_recoder/human/' + encodeURIComponent(hgvs) + '?content-type=application/json',
+      { signal: AbortSignal.timeout(10000) }
+    );
+    var d = await r.json();
+    if (Array.isArray(d) && d.length > 0) {
+      var obj = d[0];
+      var keys = Object.keys(obj);
+      for (var i = 0; i < keys.length; i++) {
+        var entry = obj[keys[i]];
+        if (entry && entry.id && Array.isArray(entry.id)) {
+          var rsids = entry.id.filter(function(x) { return x.startsWith('rs'); });
+          if (rsids.length > 0) return rsids[0];
+        }
+      }
+    }
+  } catch(e) {}
+  return null;
+}
+
+// ── Dispatch by mode ──────────────────────────────────────────────────────────
+async function runMode() {
+  var btn = document.getElementById('btnRun');
+  btn.disabled = true;
+  document.getElementById('st').innerHTML = 'Working...';
+  document.getElementById('toolbar').style.display = 'flex';
+  document.getElementById('tw').style.display = '';
+
+  try {
+    if (currentMode === 'rsid') {
+      var raw = document.getElementById('ri').value.trim();
+      if (!raw) { btn.disabled = false; return; }
+      var rsids = raw.split(/[\s,;]+/).map(function(s) { return s.trim(); }).filter(function(s) { return s.startsWith('rs'); });
+      await lookupRsids(rsids);
+
+    } else if (currentMode === 'file') {
+      var rsids2 = window._fileRsids || [];
+      if (rsids2.length === 0) {
+        document.getElementById('st').textContent = 'No rsIDs found. Drop a file first.';
+        btn.disabled = false; return;
+      }
+      await lookupRsids(rsids2);
+
+    } else if (currentMode === 'gene') {
+      var raw2 = document.getElementById('geneInput').value.trim();
+      if (!raw2) { btn.disabled = false; return; }
+      var genes = raw2.split(/[\s,;]+/).map(function(s) { return s.trim(); }).filter(Boolean);
+      var allRsids = [];
+      for (var gi = 0; gi < genes.length; gi++) {
+        document.getElementById('st').innerHTML = 'Fetching variants for gene <b>' + genes[gi] + '</b>...';
+        var grsids = await fetchGeneVariants(genes[gi]);
+        document.getElementById('st').innerHTML = 'Gene ' + genes[gi] + ': found ' + grsids.length + ' rsIDs. Looking up...';
+        allRsids = allRsids.concat(grsids.filter(function(r) { return allRsids.indexOf(r) === -1; }));
+      }
+      await lookupRsids(allRsids);
+
+    } else if (currentMode === 'coords') {
+      var text = document.getElementById('coordInput').value.trim();
+      if (!text) { btn.disabled = false; return; }
+      var regions = parseCoords(text);
+      if (regions.length === 0) {
+        document.getElementById('st').textContent = 'Could not parse coordinates. Check format.';
+        btn.disabled = false; return;
+      }
+      var allRsids2 = [];
+      for (var ri = 0; ri < regions.length; ri++) {
+        document.getElementById('st').innerHTML = 'Querying region ' + regions[ri].label + '...';
+        var rrsids = await queryRegion(regions[ri]);
+        document.getElementById('st').innerHTML = regions[ri].label + ': ' + rrsids.length + ' variant(s) found.';
+        allRsids2 = allRsids2.concat(rrsids.filter(function(r) { return allRsids2.indexOf(r) === -1; }));
+      }
+      await lookupRsids(allRsids2);
+
+    } else if (currentMode === 'drug') {
+      var query = document.getElementById('drugInput').value.trim().toLowerCase();
+      if (!query) { btn.disabled = false; return; }
+      var hits = PANEL.filter(function(d) {
+        return d.cpic_drug && d.cpic_drug.toLowerCase().indexOf(query) !== -1;
+      });
+      if (hits.length === 0) {
+        document.getElementById('st').textContent = 'No panel variants found for drug: ' + query;
+        btn.disabled = false; return;
+      }
+      document.getElementById('tb').innerHTML = ''; shownRows = [];
+      hits.forEach(function(d) {
+        var v = mkRow(d, {});
+        shownRows.push(v);
+        document.getElementById('tb').appendChild(v.tr);
+        document.getElementById('tb').appendChild(v.exp);
+      });
+      document.getElementById('st').textContent = hits.length + ' variant(s) found for drug matching "' + query + '"';
+
+    } else if (currentMode === 'disease') {
+      var query2 = document.getElementById('diseaseInput').value.trim().toLowerCase();
+      if (!query2) { btn.disabled = false; return; }
+      var hits2 = PANEL.filter(function(d) {
+        var fields = [d.gene, d.pheno, d.clinvar_sig, d.clinvar_condition, d.notes].join(' ').toLowerCase();
+        return fields.indexOf(query2) !== -1;
+      });
+      document.getElementById('tb').innerHTML = ''; shownRows = [];
+      hits2.forEach(function(d) {
+        var v = mkRow(d, {});
+        shownRows.push(v);
+        document.getElementById('tb').appendChild(v.tr);
+        document.getElementById('tb').appendChild(v.exp);
+      });
+      document.getElementById('st').textContent = hits2.length + ' panel variant(s) matching "' + query2 + '"';
+
+    } else if (currentMode === 'hgvs') {
+      var text2 = document.getElementById('hgvsInput').value.trim();
+      if (!text2) { btn.disabled = false; return; }
+      var hgvsList = text2.split('\n').map(function(s) { return s.trim(); }).filter(Boolean);
+      var resolved = [];
+      for (var hi = 0; hi < hgvsList.length; hi++) {
+        document.getElementById('st').innerHTML = 'Resolving HGVS: <b>' + hgvsList[hi] + '</b>...';
+        var rsid = await hgvsToRsid(hgvsList[hi]);
+        if (rsid) { resolved.push(rsid); }
+        else {
+          document.getElementById('st').textContent = 'Could not resolve: ' + hgvsList[hi];
+        }
+      }
+      if (resolved.length > 0) await lookupRsids(resolved);
+    }
+  } catch(e) {
+    document.getElementById('st').textContent = 'Error: ' + e.message;
+  }
+  btn.disabled = false;
+}
+
+// ── Core rsID lookup (reused by all modes) ────────────────────────────────────
+async function lookupRsids(rsids) {
+  if (rsids.length === 0) {
+    document.getElementById('st').textContent = 'No rsIDs to look up.';
+    return;
+  }
+  // Deduplicate
+  var seen = {}, unique = [];
+  rsids.forEach(function(r) { if (!seen[r]) { seen[r] = 1; unique.push(r); } });
+  rsids = unique;
+
+  document.getElementById('st').innerHTML = 'Looking up ' + rsids.length + ' variant(s)...';
+  var tb = document.getElementById('tb');
+
+  for (var i = 0; i < rsids.length; i++) {
+    var rsid = rsids[i];
+    document.getElementById('st').innerHTML = '(' + (i+1) + '/' + rsids.length + ') Querying <b>' + rsid + '</b>...';
+    // Check embedded panel first
+    var base = PANEL.find(function(d) { return d.rsID === rsid; }) ||
+               { rsID: rsid, gene: '', panel: 'Query', clinvar_sig: '', source: '', allele_type_flag: '' };
+    // Fetch externals
+    var results = await Promise.allSettled([apiGnomad(rsid), apiClinvar(rsid), api1KG(rsid, base.alt), apiDragen(rsid)]);
+    var ex = {
+      gn: results[0].value, cv: results[1].value,
+      kg: results[2].value, dr: results[3].value
+    };
+    var merged = Object.assign({}, base);
+    if (ex.cv) { merged.gene = ex.cv.gene || merged.gene; merged.clinvar_sig = ex.cv.clinsig; }
+    if (ex.dr && ex.dr.data && ex.dr.source !== 'not_found') {
+      merged.UZB_AF_final = ex.dr.data.UZB_AF;
+      merged.R2 = ex.dr.data.R2;
+      merged.confidence = ex.dr.data.confidence;
+      merged.source = ex.dr.data.source;
+    }
+    var v = mkRow(merged, ex);
+    shownRows.push(v);
+    tb.appendChild(v.tr);
+    tb.appendChild(v.exp);
+  }
+  document.getElementById('st').textContent = 'Done. ' + rsids.length + ' variant(s) loaded.';
+}
+
+function clearResults2() {
+  document.getElementById('tb').innerHTML = '';
+  shownRows = [];
+  document.getElementById('toolbar').style.display = 'none';
+  document.getElementById('tw').style.display = 'none';
+  document.getElementById('st').textContent = 'Results cleared.';
+}
+
+// Initialize drug suggestions if drug mode is default
+document.addEventListener('DOMContentLoaded', function() {
+  // pill toggle for gene mode
+  ['lbl-gene-panel','lbl-gene-ensembl'].forEach(function(id) {
+    var lbl = document.getElementById(id);
+    if (lbl) {
+      var cb = lbl.querySelector('input');
+      if (cb) cb.addEventListener('change', function() { lbl.classList.toggle('on', cb.checked); });
+    }
+  });
+});
