@@ -268,10 +268,22 @@ function openDatasetDetail(id){
   const ds = CATALOG.datasets.find(d=>d.id===id);
   const s = ds.live_scan||{};
   const el = document.getElementById("detail");
-  const sampleEntries = Object.entries(s.samples||{});
-  let sampleRows = sampleEntries.length ? `<table class="data"><thead><tr><th>Sample</th><th class="num">Files</th><th>Convention</th><th>Status</th></tr></thead><tbody>` +
-    sampleEntries.map(([sid,info])=>`<tr><td class="mono">${esc(sid)}</td><td class="num">${info.file_count}</td><td class="mono">${esc(info.convention||'-')}</td><td class="status-text ${info.complete?'complete':'error'}">${info.complete?'complete':'incomplete'}</td></tr>`).join("") +
-    `</tbody></table>` : `<p style="color:var(--muted);font-size:0.82rem">No individually-tracked samples at this stage.</p>`;
+  // Samples can live at the top level OR inside sub_path_scans (e.g.
+  // cardio_main, whose root_path is raw FASTQ and whose 25 real samples are
+  // split across cases/ and controls/ output dirs). Collect both, or the
+  // detail view reports "Samples (0)" for exactly the datasets that are
+  // organised into multiple output directories.
+  const sampleEntries = [
+    ...Object.entries(s.samples||{}).map(([sid,info])=>[sid,info,null]),
+    ...Object.entries(s.sub_path_scans||{}).flatMap(([subName,sub])=>
+      Object.entries(sub.samples||{}).map(([sid,info])=>[sid,info,subName]))
+  ];
+  const hasSub = sampleEntries.some(e=>e[2]);
+  let sampleRows = sampleEntries.length ? `<table class="data"><thead><tr><th>Sample</th>${hasSub?'<th>Sub-path</th>':''}<th class="num">Files</th><th>Convention</th><th>Status</th></tr></thead><tbody>` +
+    sampleEntries.map(([sid,info,subName])=>`<tr><td class="mono">${esc(sid)}</td>${hasSub?`<td class="mono">${esc(subName||'-')}</td>`:''}<td class="num">${info.file_count}</td><td class="mono">${esc(info.convention||'-')}</td><td class="status-text ${info.complete?'complete':'error'}">${info.complete?'complete':'incomplete'}</td></tr>`).join("") +
+    `</tbody></table>` : (s.raw_fastq_samples_detected
+        ? `<p style="color:var(--warn);font-size:0.82rem">No processed samples yet — ${s.raw_fastq_samples_detected} raw FASTQ sample(s) present, not yet run through a pipeline.</p>`
+        : `<p style="color:var(--muted);font-size:0.82rem">No individually-tracked samples at this stage.</p>`);
   let subPathHtml = s.sub_path_scans ? "<h3>Sub-paths</h3>" + Object.entries(s.sub_path_scans).map(([n,sub])=>
     `<div class="mono" style="font-size:0.78rem;margin:6px 0"><b>${esc(n)}</b> — ${esc(sub.root_path||'')} — ${sub.sample_count??'?'} samples, ${esc(sub.status||'')}</div>`).join("") : "";
   const detailUrl = ds.detail_url ? `<p><a class="link" href="${esc(ds.detail_url)}" target="_blank" rel="noopener">Full analysis site →</a><br><span style="color:var(--muted);font-size:0.78rem">${esc(ds.detail_note||'')}</span></p>` : "";
