@@ -57,6 +57,8 @@ td{padding:8px 12px;vertical-align:middle}
 .date-v{font-family:"SF Mono","Fira Code",monospace;font-size:11px;color:#6b7280;white-space:nowrap}
 .name-v{font-weight:600;color:#111}
 .desc-v{font-size:11px;color:#9ca3af;margin-top:1px}
+.explore-link{font-weight:500;font-size:11px;color:#2563eb;margin-left:8px;white-space:nowrap}
+.explore-link:hover{text-decoration:underline}
 .n-v{font-weight:600;font-family:"SF Mono","Fira Code",monospace;white-space:nowrap}
 .path-v{font-family:"SF Mono","Fira Code",monospace;font-size:11px;color:#374151;max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .size-v{font-family:"SF Mono","Fira Code",monospace;font-size:11px;white-space:nowrap}
@@ -223,7 +225,7 @@ var DATA=[
    tree:'/staging/Pavel/26-BB-107431 127 Саидкаримова Гузалхан/\n  V350418124_L03_127_1.fq.gz\n  V350418124_L03_127_2.fq.gz',
    note:'Found under /staging/Pavel, a directory not previously catalogued in this tracker. Added as a separate, unrelated entry per explicit request 2026-08-14. Not yet aligned or processed — raw FASTQ only.'},
   {id:'cardio_wes_v350432671',date:'2026-09-17',name:'Cardiomyopathy WES — 16-sample cohort (V350432671)',desc:'16 cardiomyopathy patients, whole-exome sequencing, full pipeline complete — distinct from the earlier cardio_oct/cardio_main WGS batches',
-   n:16,nl:'16',tech:'wes',tl:'WES',
+   n:16,nl:'16',tech:'wes',tl:'WES',exploreUrl:'index.html?dataset=cardio_wes_v350432671',
    path:'/staging/WES_sarek/ (raw FASTQ + results); original run folder V350432671',gb:195,sl:'~195 GB raw / ~50 GB processed',status:'complete',
    kv:{'Platform':'MGI DNBSEQ (machine C21304100240015), PE100, 4 lanes',
        'Kit':'MGIEasy Exome Universal Library Prep Set','Reference':'GRCh38/hg38',
@@ -288,7 +290,9 @@ function render(){
       '<td style="padding:8px 4px 8px 8px;width:18px"><span class="dh" onclick="event.stopPropagation()">&#8942;&#8942;</span></td>'+
       '<td class="exp-td"><span class="exp-ic">&#9654;</span></td>'+
       '<td class="date-v">'+d.date+'</td>'+
-      '<td><div class="name-v">'+d.name+'</div><div class="desc-v">'+d.desc+'</div></td>'+
+      '<td><div class="name-v">'+d.name+
+        (d.exploreUrl?' <a href="'+d.exploreUrl+'" class="explore-link" onclick="event.stopPropagation()" title="Open this dataset in the variant explorer">View in Explorer &rarr;</a>':'')+
+        '</div><div class="desc-v">'+d.desc+'</div></td>'+
       '<td class="r n-v">'+d.nl+'</td>'+
       '<td><span class="badge '+tc+'">'+d.tl+'</span></td>'+
       '<td class="path-v" title="'+d.path+'">'+d.path+'</td>'+

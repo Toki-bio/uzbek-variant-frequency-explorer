@@ -364,7 +364,31 @@ async function addQuery() {
   document.getElementById('ri').value = ''; btn.disabled = false;
 }
 
-//  Sort 
+//  Cardiomyopathy WES cohort browser
+// The 33 WES_CARDIO_COHORT entries aren't part of the 179-panel PANEL list and
+// have no rsID, so they never appear via the normal panel filter or rsID search -
+// this gives them a direct entry point instead of requiring the user to already
+// know each variant's rsID.
+function loadWesCardioCohort() {
+  document.getElementById('tb').innerHTML = ''; shownRows = [];
+  WES_CARDIO_COHORT.forEach(w => {
+    const d = {
+      gene: w.gene, rsID: '', panel: 'Cardio WES (n=16)', clinvar_sig: w.clinvar_sig,
+      chr_pos: w.chr_pos, ref: w.ref, alt: w.alt, source: 'WES_CARDIO_COHORT_16',
+      allele_type_flag: '',
+    };
+    const v = mkRow(d, {});
+    shownRows.push(v);
+    document.getElementById('tb').appendChild(v.tr);
+    document.getElementById('tb').appendChild(v.exp);
+  });
+  document.getElementById('st').innerHTML =
+    `Showing all ${WES_CARDIO_COHORT.length} pathogenic/likely-pathogenic variants from the ` +
+    `<span class="hi">cardiomyopathy WES cohort (n=16)</span>. Click a row to expand for carrier ` +
+    `counts and allele frequency. This is a disease-ascertained cohort, not a population reference.`;
+}
+
+//  Sort
 function sortBy(col) {
   const sd = document.getElementById('sdir');
   if (document.getElementById('scol').value === col) sd.value = sd.value === 'asc' ? 'desc' : 'asc';
@@ -414,11 +438,47 @@ function deleteSel() {
   shownRows = shownRows.filter(v => v.tr.isConnected); onSel();
 }
 
-//  Init 
+//  Dataset selector
+// Lets the user pick which embedded dataset to browse - the 179-variant
+// clinical panel (default) or the cardiomyopathy WES cohort - instead of
+// only reaching the WES cohort via a rsID that happens to match. Also
+// responds to a ?dataset=<id> URL parameter so a link from data-sources.html
+// (or any bookmark) opens directly onto the right dataset.
+function switchDataset(key) {
+  if (key === 'wes_cardio') loadWesCardioCohort();
+  else applyFilter();
+}
+
+function insertDatasetSelector() {
+  const panel = document.querySelector('.panel');
+  if (!panel) return;
+  const wrap = document.createElement('div');
+  wrap.style.cssText = 'margin-bottom:10px;display:flex;align-items:center;gap:8px';
+  wrap.innerHTML =
+    '<label class="fl" style="margin:0">Dataset</label>' +
+    '<select class="sel" id="dsSelect" style="max-width:340px">' +
+    '<option value="panel">179-Variant Clinical Panel (gnomAD / ClinVar / 1000G / UZB)</option>' +
+    '<option value="wes_cardio">Cardiomyopathy WES Cohort (n=16, 33 variants)</option>' +
+    '</select>';
+  panel.insertBefore(wrap, panel.firstChild);
+  document.getElementById('dsSelect').addEventListener('change', e => switchDataset(e.target.value));
+}
+
+//  Init
 document.querySelectorAll('.cp').forEach(p =>
   p.querySelector('input').addEventListener('change', function() { p.classList.toggle('on', this.checked); })
 );
-window.addEventListener('load', () => { checkServer(false); applyFilter(); });
+window.addEventListener('load', () => {
+  checkServer(false);
+  insertDatasetSelector();
+  const urlDataset = new URLSearchParams(window.location.search).get('dataset');
+  if (urlDataset === 'cardio_wes_v350432671') {
+    document.getElementById('dsSelect').value = 'wes_cardio';
+    loadWesCardioCohort();
+  } else {
+    applyFilter();
+  }
+});
 
 
 
