@@ -85,6 +85,9 @@
     <h1>Genotyping Data Catalog</h1>
     <span class="stamp" id="genStamp"></span>
   </div>
+  <div id="loadState" style="margin:14px 0;padding:10px 14px;border-radius:6px;background:var(--surface);border:1px solid var(--border);font-size:0.85rem">
+    Loading catalog data…
+  </div>
   <div class="subline">Sample counts, file status, and panel variant frequencies below are re-derived from disk / VCFs on every generation run — nothing is hand-typed.</div>
 
   <div class="tabs">
@@ -134,6 +137,7 @@
       </tr></thead>
       <tbody id="panelBody"></tbody>
     </table>
+    <div id="panelMore" style="margin-top:10px"></div>
 
     <h3 style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--muted);border-bottom:1px solid var(--border);padding-bottom:6px;margin-top:26px">GSA / array chip coverage</h3>
     <p style="font-size:0.8rem;color:var(--muted);max-width:80ch;line-height:1.5">Which panel genes are actually represented on the genotyping array, and at what real allele frequency — ALSU queried in its native hg19 build via a genuine liftOver of the panel coordinates; gwas2026_2 queried natively in hg38.</p>
@@ -436,11 +440,20 @@ function renderPanel(){
   list = sortedPanel(list);
   const body = document.getElementById("panelBody");
   body.innerHTML = "";
+  // 4,313 variants x ~7 cells each is far too much DOM to build at once -
+  // it makes the tab visibly janky. Cap it and say so, same as the samples
+  // table, rather than silently rendering everything.
+  const PANEL_LIMIT = 250;
+  const totalMatching = list.length;
+  list = list.slice(0, PANEL_LIMIT);
   for(const v of list){
     const nds = Object.keys(v.datasets).length;
-    const freqCells = Object.entries(v.datasets).map(([dsid,d])=>
-      `<span class="genotype-chip" title="${d.carriers.map(c=>c.sample+':'+c.genotype).join(', ')}">${esc(dsid)}: ${d.carrier_count}/${d.cohort_size} (${(d.carrier_frequency*100).toFixed(1)}%)</span>`
-    ).join(" ");
+    const freqCells = Object.entries(v.datasets).map(([dsid,d])=>{
+      const shown = (d.carriers||[]).map(c=>c.sample+':'+c.genotype).join(', ');
+      const more = d.carriers_truncated ? ` (+${d.carriers_truncated} more)` : '';
+      const pct = (d.carrier_frequency==null) ? '?' : (d.carrier_frequency*100).toFixed(1)+'%';
+      return `<span class="genotype-chip" title="${esc(shown+more)}">${esc(dsid)}: ${d.carrier_count}/${d.cohort_size} (${pct})</span>`;
+    }).join(" ");
     // Layer 5: external reference lookup, applied on demand to a selected
     // variant rather than precomputed into the page. Deep links are used
     // (not silent API calls) so a lookup can never appear to have succeeded
@@ -463,6 +476,12 @@ function renderPanel(){
       </td>`;
     body.appendChild(tr);
   }
+  const note = document.getElementById("panelMore");
+  if(note){
+    note.innerHTML = totalMatching > PANEL_LIMIT
+      ? `<span class="empty-note">Showing first ${PANEL_LIMIT} of ${totalMatching.toLocaleString()} matching variants — use the gene or cross-dataset filter to narrow.</span>`
+      : `<span class="empty-note">${totalMatching.toLocaleString()} variant${totalMatching===1?'':'s'} shown.</span>`;
+  }
 }
 document.querySelectorAll('#panelTable thead th[data-sort]').forEach(th=>{
   th.addEventListener("click", ()=>{
@@ -483,19 +502,48 @@ document.getElementById("crossFilter").addEventListener("change",renderPanel);
 document.getElementById("sampleMultiFilter").addEventListener("change",renderSampleRows);
 document.getElementById("sampleDsFilter").addEventListener("change",renderSampleRows);
 
+["sampleSearch"].forEach(id=>document.getElementById(id).addEventListener("input",renderSampleRows));
+
+// Each file is fetched and reported independently: a failure or slowness in
+// one must not blank the whole page, and any failure has to be visible in
+// the page body rather than hidden in small corner text.
+const LOAD = document.getElementById("loadState");
+function grab(url, label){
+  const t0 = performance.now();
+  return fetch(url)
+    .then(r => { if(!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
+    .then(j => ({ok:true, label, url, j, ms:Math.round(performance.now()-t0)}))
+    .catch(e => ({ok:false, label, url, err:String(e.message||e)}));
+}
+
 Promise.all([
-  fetch("catalog/catalog.json").then(r=>r.json()),
-  fetch("catalog/panel_summary.json").then(r=>r.json()),
-  fetch("catalog/samples.json").then(r=>r.json())
-]).then(([catalog, panel, samples])=>{
-  CATALOG = catalog; PANEL = panel; SAMPLES = samples;
-  document.getElementById("genStamp").textContent = catalog.generated_note.slice(0,60)+"…";
-  renderSummary(); renderDatasets();
-  renderPanelNote(); populateGeneFilter();
-  renderPanelSummary(); renderPanel(); renderGsaCoverage();
-  renderSamplesTab();
-}).catch(err=>{
-  document.getElementById("genStamp").textContent = "load error: "+err;
+  grab("catalog/catalog.json", "datasets"),
+  grab("catalog/panel_web.json", "focal panel"),
+  grab("catalog/samples.json", "samples")
+]).then(([c, p, s])=>{
+  const failed = [c,p,s].filter(x=>!x.ok);
+  if(failed.length){
+    LOAD.style.borderColor = "var(--err)";
+    LOAD.innerHTML = `<b style="color:var(--err)">Could not load: ${failed.map(f=>esc(f.label)).join(", ")}</b><br>` +
+      failed.map(f=>`<span class="mono" style="font-size:0.76rem">${esc(f.url)} — ${esc(f.err)}</span>`).join("<br>");
+  }
+  if(c.ok){
+    CATALOG = c.j;
+    document.getElementById("genStamp").textContent = c.j.generated_note.slice(0,60)+"…";
+    renderSummary(); renderDatasets();
+  }
+  if(p.ok){
+    PANEL = p.j;
+    renderPanelNote(); populateGeneFilter();
+    renderPanelSummary(); renderPanel(); renderGsaCoverage();
+  }
+  if(s.ok){ SAMPLES = s.j; renderSamplesTab(); }
+
+  if(!failed.length){
+    const ms = Math.max(c.ms, p.ms, s.ms);
+    LOAD.style.display = "none";
+    console.log(`catalog loaded in ${ms}ms`);
+  }
 });
 </script>
 </body>
