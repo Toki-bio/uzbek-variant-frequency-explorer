@@ -96,6 +96,7 @@ def main():
         entries.append(entry)
 
     catalog = {
+        "generated_at": __import__("datetime").datetime.now().astimezone().isoformat(timespec="seconds"),
         "generated_note": (
             "sample counts, file inventories, and status are LIVE - re-derived from "
             "disk on every generation run via scan_wes.py/scan_gsa.py. Only id/name/"

@@ -1,4 +1,5 @@
 {
+  "generated_at": "2026-09-17T05:19:35-07:00",
   "generated_note": "sample counts, file inventories, and status are LIVE - re-derived from disk on every generation run via scan_wes.py/scan_gsa.py. Only id/name/date/type/root_path/description/detail_url come from the hand-maintained registry.json.",
   "datasets": [
     {
@@ -802,7 +803,8 @@
       "n_claimed": 48,
       "root_path": "/staging/GWAS2026/48redone/",
       "processed_path": "/staging/ALSU-analysis/admixture_analysis/temp/dragen_array_test_20260513/gwas48redone/plink/",
-      "path_note": "CORRECTED from 'pending' - this WAS genotype-called (DRAGEN Array, 48/48 GTCs succeeded - a better rate than gwas2026_2's 95/96 - per COHORT_EXPANSION_2026_08_INTEGRATION_NOTES.md) and has real PLINK raw output. root_path only has raw IDATs; processed_path has the real output, parked in someone's admixture_analysis/temp/ working directory. These are rescans of specific original-cohort members whose chips catastrophically failed (verified via exact sample-sheet ID match against the original cohort). Folded into the 'alsu_expanded' combined cohort - this batch does not have a separate standalone final deliverable beyond that merge.",
+      "path_note": "CORRECTED from 'pending' - this WAS genotype-called (DRAGEN Array, 48/48 GTCs succeeded - a better rate than gwas2026_2's 95/96 - per COHORT_EXPANSION_2026_08_INTEGRATION_NOTES.md) and has real PLINK raw output. root_path only has raw IDATs; processed_path has the real output, parked in someone's admixture_analysis/temp/ working directory. Folded into the 'alsu_expanded' combined cohort - no separate standalone final deliverable beyond that merge.",
+      "identity_note": "These are rescans of original ALSU cohort members whose chips catastrophically failed. Independently confirmed (verify_remaining.sh): all 48/48 rescan48 sample IDs appear in ALSU's PRE-imputation fileset (winter2025/PLINK_301125_0312/ConvSK_raw, 1,247 samples), and 0/48 in ALSU's POST-imputation fileset (1,074 samples). That zero is the expected signature rather than a problem: these are exactly the samples QC dropped (1,247 -> 1,074) because their chips failed, which is why they were rescanned in the first place. 47 of the 48 then survive alsu_expanded's joint QC. So a cross-dataset sample view will correctly show rescan48 overlapping alsu_expanded but NOT alsu.",
       "description": "48 samples, 2x24 GSA chips - rescans of ALSU original-cohort members whose original chips failed. Not a new/independent cohort; its downstream product is the merged 'alsu_expanded' dataset.",
       "live_scan": {
         "root_path": "/staging/ALSU-analysis/admixture_analysis/temp/dragen_array_test_20260513/gwas48redone/plink",

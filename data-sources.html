@@ -519,10 +519,15 @@ function grab(url, label){
     .catch(e => ({ok:false, label, url, err:String(e.message||e)}));
 }
 
+// 20260917121934 is replaced at deploy time. Without it the browser and the
+// GitHub Pages CDN will happily serve a cached catalog.json (max-age=600)
+// while the page looks current - which is exactly how a stale zero got
+// rendered for datasets whose counts had already been fixed.
+const BUILD = "20260917121934";
 Promise.all([
-  grab("catalog/catalog.json", "datasets"),
-  grab("catalog/panel_web.json", "focal panel"),
-  grab("catalog/samples.json", "samples")
+  grab(`catalog/catalog.json?v=${BUILD}`, "datasets"),
+  grab(`catalog/panel_web.json?v=${BUILD}`, "focal panel"),
+  grab(`catalog/samples.json?v=${BUILD}`, "samples")
 ]).then(([c, p, s])=>{
   const failed = [c,p,s].filter(x=>!x.ok);
   if(failed.length){
@@ -532,7 +537,12 @@ Promise.all([
   }
   if(c.ok){
     CATALOG = c.j;
-    document.getElementById("genStamp").textContent = c.j.generated_note.slice(0,60)+"…";
+    // Show when the data was actually generated, so a stale copy is visible
+    // rather than silently rendering as if current.
+    const gen = c.j.generated_at ? new Date(c.j.generated_at) : null;
+    document.getElementById("genStamp").textContent = gen
+      ? `data generated ${gen.toISOString().slice(0,16).replace("T"," ")} UTC`
+      : "data generation time unknown";
     renderSummary(); renderDatasets();
   }
   if(p.ok){
