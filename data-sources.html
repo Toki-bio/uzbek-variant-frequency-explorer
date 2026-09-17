@@ -90,6 +90,7 @@
   <div class="tabs">
     <div class="tab active" data-view="datasets">Datasets</div>
     <div class="tab" data-view="panel">Focal Panel: Cardiomyopathy</div>
+    <div class="tab" data-view="samples">Samples across runs</div>
   </div>
 
   <div class="view active" id="view-datasets">
@@ -129,7 +130,7 @@
       <thead><tr>
         <th data-sort="gene">Gene</th><th data-sort="pos" class="num">Position</th>
         <th>Ref → Alt</th><th data-sort="ndatasets" class="num">Datasets</th>
-        <th>Frequency by cohort</th>
+        <th>Frequency by cohort</th><th>External</th>
       </tr></thead>
       <tbody id="panelBody"></tbody>
     </table>
@@ -140,6 +141,34 @@
       <thead><tr><th>Dataset</th><th class="num">Panel SNPs on chip</th><th>Genes covered</th></tr></thead>
       <tbody id="gsaBody"></tbody>
     </table>
+  </div>
+
+  <div class="view" id="view-samples">
+    <div class="panel-note" id="samplesNote"></div>
+    <div class="summary-row" id="samplesSummaryRow"></div>
+    <div class="toolbar">
+      <div class="field"><label for="sampleSearch">Find sample</label><input id="sampleSearch" type="text" placeholder="sample ID…"></div>
+      <div class="field"><label for="sampleMultiFilter">Show</label>
+        <select id="sampleMultiFilter">
+          <option value="multi">Only samples in &ge;2 datasets</option>
+          <option value="">All samples</option>
+        </select>
+      </div>
+      <div class="field"><label for="sampleDsFilter">In dataset</label>
+        <select id="sampleDsFilter"><option value="">Any</option></select>
+      </div>
+    </div>
+    <h3 style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--muted);border-bottom:1px solid var(--border);padding-bottom:6px;margin-top:4px">Dataset overlap</h3>
+    <table class="data" id="overlapTable">
+      <thead><tr><th>Dataset pair</th><th class="num">Shared samples</th><th class="num">% of smaller</th><th>Example IDs</th></tr></thead>
+      <tbody id="overlapBody"></tbody>
+    </table>
+    <h3 style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--muted);border-bottom:1px solid var(--border);padding-bottom:6px;margin-top:26px">Per-sample run history</h3>
+    <table class="data" id="sampleTable">
+      <thead><tr><th>Sample</th><th class="num">Runs</th><th>Appears in</th></tr></thead>
+      <tbody id="sampleBody"></tbody>
+    </table>
+    <div id="sampleMore" style="margin-top:10px"></div>
   </div>
 
   <div id="overlay"></div>
@@ -264,6 +293,70 @@ function closeDetail(){ document.getElementById("detail").classList.remove("open
 document.getElementById("overlay").addEventListener("click", closeDetail);
 document.addEventListener("keydown", e=>{ if(e.key==="Escape") closeDetail(); });
 
+/* ---------- Samples across runs (layer 4) ---------- */
+let SAMPLES = null;
+function renderSamplesTab(){
+  if(!SAMPLES) return;
+  document.getElementById("samplesNote").innerHTML =
+    `<b>How links are made:</b> ${esc(SAMPLES.method_note)}`;
+  const total = Object.keys(SAMPLES.samples).length;
+  document.getElementById("samplesSummaryRow").innerHTML = `
+    <div class="stat"><div class="n">${total}</div><div class="l">Distinct samples</div></div>
+    <div class="stat ok"><div class="n">${SAMPLES.samples_in_multiple_datasets}</div><div class="l">In &ge;2 datasets</div></div>
+    <div class="stat"><div class="n">${Object.keys(SAMPLES.pairwise_overlap).length}</div><div class="l">Overlapping pairs</div></div>`;
+
+  const ob = document.getElementById("overlapBody");
+  ob.innerHTML = "";
+  for(const [pair, o] of Object.entries(SAMPLES.pairwise_overlap)){
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td><b>${esc(pair)}</b></td><td class="num">${o.shared_sample_count}</td>
+      <td class="num">${o.pct_of_smaller}%</td>
+      <td class="mono">${o.examples.map(esc).join(", ")}</td>`;
+    ob.appendChild(tr);
+  }
+  if(!Object.keys(SAMPLES.pairwise_overlap).length){
+    ob.innerHTML = `<tr><td colspan="4" class="empty-note">No cross-dataset overlaps found.</td></tr>`;
+  }
+
+  const sel = document.getElementById("sampleDsFilter");
+  if(sel.options.length <= 1){
+    for(const d of Object.keys(SAMPLES.dataset_sample_counts).sort()){
+      const o = document.createElement("option"); o.value = d; o.textContent = d; sel.appendChild(o);
+    }
+  }
+  renderSampleRows();
+}
+function renderSampleRows(){
+  const q = document.getElementById("sampleSearch").value.toLowerCase();
+  const multiOnly = document.getElementById("sampleMultiFilter").value === "multi";
+  const dsFilter = document.getElementById("sampleDsFilter").value;
+  const body = document.getElementById("sampleBody");
+  body.innerHTML = "";
+
+  let rows = Object.entries(SAMPLES.samples).filter(([sid, info])=>{
+    const n = Object.keys(info.datasets).length;
+    if(multiOnly && n < 2) return false;
+    if(dsFilter && !(dsFilter in info.datasets)) return false;
+    if(q && !sid.includes(q)) return false;
+    return true;
+  });
+  rows.sort((a,b)=> Object.keys(b[1].datasets).length - Object.keys(a[1].datasets).length
+                    || a[0].localeCompare(b[0]));
+  const LIMIT = 300;
+  const shown = rows.slice(0, LIMIT);
+  for(const [sid, info] of shown){
+    const dsets = Object.entries(info.datasets)
+      .map(([d, ids])=>`<span class="genotype-chip" title="${esc(ids.join(', '))}">${esc(d)}</span>`).join(" ");
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td class="mono">${esc(sid)}</td>
+      <td class="num">${Object.keys(info.datasets).length}</td><td>${dsets}</td>`;
+    body.appendChild(tr);
+  }
+  document.getElementById("sampleMore").innerHTML = rows.length > LIMIT
+    ? `<span class="empty-note">Showing first ${LIMIT} of ${rows.length} matching samples — narrow the filter to see others.</span>`
+    : (rows.length ? "" : `<span class="empty-note">No samples match this filter.</span>`);
+}
+
 /* ---------- Focal panel view ---------- */
 function renderPanelNote(){
   const nGenes = (PANEL.panel.match(/(\d+)\/26/)||[])[1] || "?";
@@ -336,13 +429,26 @@ function renderPanel(){
     const freqCells = Object.entries(v.datasets).map(([dsid,d])=>
       `<span class="genotype-chip" title="${d.carriers.map(c=>c.sample+':'+c.genotype).join(', ')}">${esc(dsid)}: ${d.carrier_count}/${d.cohort_size} (${(d.carrier_frequency*100).toFixed(1)}%)</span>`
     ).join(" ");
+    // Layer 5: external reference lookup, applied on demand to a selected
+    // variant rather than precomputed into the page. Deep links are used
+    // (not silent API calls) so a lookup can never appear to have succeeded
+    // when it didn't.
+    const chrNum = String(v.chrom).replace(/^chr/,'');
+    const gnomad = `https://gnomad.broadinstitute.org/variant/${chrNum}-${v.pos}-${encodeURIComponent(v.ref)}-${encodeURIComponent(v.alt)}?dataset=gnomad_r4`;
+    const clinvar = `https://www.ncbi.nlm.nih.gov/clinvar/?term=${chrNum}%5Bchr%5D+AND+${v.pos}%5Bchrpos37%5D`;
+    const dbsnp = `https://www.ncbi.nlm.nih.gov/snp/?term=${chrNum}%3A${v.pos}`;
     const tr = document.createElement("tr");
     tr.innerHTML = `
       <td><b>${esc(v.gene)}</b></td>
       <td class="num mono">${esc(v.chrom)}:${v.pos}</td>
       <td class="mono">${esc(v.ref)} → ${esc(v.alt)}</td>
       <td class="num">${nds}</td>
-      <td>${freqCells}</td>`;
+      <td>${freqCells}</td>
+      <td class="mono" style="white-space:nowrap">
+        <a class="link" href="${gnomad}" target="_blank" rel="noopener">gnomAD</a> ·
+        <a class="link" href="${clinvar}" target="_blank" rel="noopener">ClinVar</a> ·
+        <a class="link" href="${dbsnp}" target="_blank" rel="noopener">dbSNP</a>
+      </td>`;
     body.appendChild(tr);
   }
 }
@@ -361,15 +467,21 @@ document.getElementById("statusFilter").addEventListener("change",renderDatasets
 document.getElementById("geneFilter").addEventListener("change",renderPanel);
 document.getElementById("crossFilter").addEventListener("change",renderPanel);
 
+["sampleSearch"].forEach(id=>document.getElementById(id).addEventListener("input",renderSampleRows));
+document.getElementById("sampleMultiFilter").addEventListener("change",renderSampleRows);
+document.getElementById("sampleDsFilter").addEventListener("change",renderSampleRows);
+
 Promise.all([
   fetch("catalog/catalog.json").then(r=>r.json()),
-  fetch("catalog/panel_summary.json").then(r=>r.json())
-]).then(([catalog, panel])=>{
-  CATALOG = catalog; PANEL = panel;
+  fetch("catalog/panel_summary.json").then(r=>r.json()),
+  fetch("catalog/samples.json").then(r=>r.json())
+]).then(([catalog, panel, samples])=>{
+  CATALOG = catalog; PANEL = panel; SAMPLES = samples;
   document.getElementById("genStamp").textContent = catalog.generated_note.slice(0,60)+"…";
   renderSummary(); renderDatasets();
   renderPanelNote(); populateGeneFilter();
   renderPanelSummary(); renderPanel(); renderGsaCoverage();
+  renderSamplesTab();
 }).catch(err=>{
   document.getElementById("genStamp").textContent = "load error: "+err;
 });
