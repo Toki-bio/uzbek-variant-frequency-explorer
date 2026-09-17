@@ -221,7 +221,19 @@ var DATA=[
        'Platform':'MGI/BGI DNBSEQ (flowcell V350418124)','Read length':'~111 bp paired-end (verified from FASTQ header)',
        'Files':'2 FASTQ.gz (R1/R2), 5.7 GB + 5.6 GB','Relation to cohort':'Standalone isolated sample — not part of ALSU, GWAS2026, GWAS2026-2, or 48redone; no known relatedness to any existing cohort member'},
    tree:'/staging/Pavel/26-BB-107431 127 Саидкаримова Гузалхан/\n  V350418124_L03_127_1.fq.gz\n  V350418124_L03_127_2.fq.gz',
-   note:'Found under /staging/Pavel, a directory not previously catalogued in this tracker. Added as a separate, unrelated entry per explicit request 2026-08-14. Not yet aligned or processed — raw FASTQ only.'}
+   note:'Found under /staging/Pavel, a directory not previously catalogued in this tracker. Added as a separate, unrelated entry per explicit request 2026-08-14. Not yet aligned or processed — raw FASTQ only.'},
+  {id:'cardio_wes_v350432671',date:'2026-09-17',name:'Cardiomyopathy WES — 16-sample cohort (V350432671)',desc:'16 cardiomyopathy patients, whole-exome sequencing, full pipeline complete — distinct from the earlier cardio_oct/cardio_main WGS batches',
+   n:16,nl:'16',tech:'wes',tl:'WES',
+   path:'/staging/WES_sarek/ (raw FASTQ + results); original run folder V350432671',gb:195,sl:'~195 GB raw / ~50 GB processed',status:'complete',
+   kv:{'Platform':'MGI DNBSEQ (machine C21304100240015), PE100, 4 lanes',
+       'Kit':'MGIEasy Exome Universal Library Prep Set','Reference':'GRCh38/hg38',
+       'Sample naming':'sample01–sample16 (barcode1–barcode16, one per lane-merged individual)',
+       'QC':'Q30 ~98% avg across all 4 lanes; mean depth ~30–33x over the 26-gene cardiomyopathy panel coding regions (measured directly from completed CRAMs — on the low side for confident heterozygous calling in GC-rich/repetitive exons; see project notes before increasing multiplexing per batch)',
+       'Pipeline':'github.com/Toki-bio/example_workflow (bwa+bcftools+snpEff/ClinVar) — fixed mid-project: original run was misconfigured with RESTRICT_TO_PANEL=1 against an unrelated 26-gene BED, plus a silently-broken hard-filter and a missing bwa read-group; all three fixed and pushed (commit 823032f)',
+       'Findings':'33 distinct pathogenic/likely-pathogenic ClinVar variants across the cohort; only one (BAG3, chr10:119,676,971, sample04) sits in an established dilated-cardiomyopathy gene — everything else surfaced because calling is exome-wide, not panel-restricted. Two variants (CPT1A 5/16, CDKN2B 16/16) recur suspiciously often for their “Pathogenic” tags and are more likely common population variants than real per-carrier findings.',
+       'Explorer integration':'Cohort allele frequencies for all 33 variants are now a queryable data source in this explorer (“Cardio WES (n=16)”, commit b3d799d) — genotyped properly via bcftools call -m across all 16 samples including hom-ref, not the variant-only call that silently drops reference samples from the denominator.'},
+   tree:'/staging/WES_sarek/\n  fastq_merged/          [32 files: sample01–16 R1/R2]\n  clinical_reports/      [.markdup.cram, .bcftools.*.vcf.gz, .report.html per sample]\n  example_workflow/      [pipeline clone]\n  README_DATA_STRUCTURE.md',
+   note:'Disease-ascertained cohort (all 16 diagnosed with cardiomyopathy) — pathogenic-variant frequencies here reflect prevalence among diagnosed patients, not the general Uzbek population (compare against the ALSU/GSA array entries for that). A population-level allele-frequency cross-check against the ALSU array cohort was run separately; overlap between array-tag SNPs and exome-covered positions is inherently thin by design (~500 comparable positions out of 469k array SNPs).'}
 ];
 
 var vis=DATA.slice(),sCol='date',sDir=1,dragSrc=null;
