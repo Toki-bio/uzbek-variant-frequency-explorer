@@ -27,6 +27,7 @@
           ".imiss",
           ".lmiss"
         ],
+        "sample_count": 1074,
         "inferred_stage": "post_imputation_qc_complete",
         "equally_or_more_complete_alternatives": [
           "/staging/ALSU-analysis/winter2025/PLINK_301125_0312/ConvSK_mind20_dedup_snpqc"
@@ -57,6 +58,7 @@
           ".bim",
           ".fam"
         ],
+        "sample_count": 1268,
         "inferred_stage": "post_imputation_qc_complete",
         "equally_or_more_complete_alternatives": [
           "/staging/ALSU-analysis/spring2026/full_expanded_cohort/imputation_results/hq_filtered/UZB_imputed_HQ_qc",
@@ -738,25 +740,27 @@
       "name": "GWAS 2026 wave 1 - IDAT batch",
       "date": "2026-05-13",
       "type": "gsa",
-      "n_claimed": 96,
+      "n_claimed": 83,
+      "n_claimed_note": "CORRECTED from 96 (raw IDAT batch size) to 83 - the real post-variant-QC count at this batch's own final stage (gwas2026_varqc: geno/hwe/maf filtering applied, confirmed via direct .fam count). Of the original 96, 95 were successfully genotype-called (DRAGEN Array, May 2026, per COHORT_EXPANSION_2026_08_INTEGRATION_NOTES.md) and 83 remain after variant QC. Note this batch has NOT been through the same full sample-level QC (relatedness/heterozygosity/missingness) as gwas2026_2 - no qc/ side-files found, unlike gwas2026_2 - so 83 reflects variant-level filtering only, not a fully finished sample-QC'd cohort.",
       "root_path": "/staging/GWAS2026/GWAS_IDAT/",
       "processed_path": "/staging/ALSU-analysis/admixture_analysis/temp/dragen_array_test_20260513/gwas2026/plink/",
-      "path_note": "CORRECTED from 'pending QC' - this WAS genotype-called (DRAGEN Array, May 2026, per COHORT_EXPANSION_2026_08_INTEGRATION_NOTES.md) and has full staged QC output (raw/sampleqc/geno10/varqc), same convention as gwas2026_2. root_path only has raw IDATs; processed_path has the real output, just parked in someone's admixture_analysis/temp/ working directory rather than a proper deliverable path. Also folded into the 'alsu_expanded' combined cohort (95 of these 96 samples).",
-      "description": "96 samples, 4x24 GSA chips. Case/control design for an unstated study (per source docs, purpose not yet resolved with the study team) - confirmed to have no bearing on its use in population-genetics analyses (ascertainment on an unrelated trait doesn't distort PCA/ADMIXTURE/Fst).",
+      "path_note": "root_path only has raw IDATs (96 samples); processed_path has the real staged QC output (raw/sampleqc/geno10/varqc), parked in someone's admixture_analysis/temp/ working directory rather than a proper deliverable path. Also folded into the 'alsu_expanded' combined cohort (95 of the original 96 samples, before that cohort's own further joint QC).",
+      "description": "96 raw samples, 4x24 GSA chips; 95 genotype-called, 83 pass this batch's own variant-level QC. Case/control design for an unstated study (per source docs, purpose not yet resolved with the study team) - confirmed to have no bearing on its use in population-genetics analyses (ascertainment on an unrelated trait doesn't distort PCA/ADMIXTURE/Fst).",
       "live_scan": {
         "root_path": "/staging/ALSU-analysis/admixture_analysis/temp/dragen_array_test_20260513/gwas2026/plink",
         "plink_filesets_found": 4,
-        "best_fileset": "/staging/ALSU-analysis/admixture_analysis/temp/dragen_array_test_20260513/gwas2026/plink/gwas2026_raw",
+        "best_fileset": "/staging/ALSU-analysis/admixture_analysis/temp/dragen_array_test_20260513/gwas2026/plink/gwas2026_varqc",
         "best_fileset_extensions": [
           ".bed",
           ".bim",
           ".fam"
         ],
+        "sample_count": 83,
         "inferred_stage": "plink_fileset_present_no_full_qc",
         "equally_or_more_complete_alternatives": [
           "/staging/ALSU-analysis/admixture_analysis/temp/dragen_array_test_20260513/gwas2026/plink/gwas2026_geno10",
-          "/staging/ALSU-analysis/admixture_analysis/temp/dragen_array_test_20260513/gwas2026/plink/gwas2026_sampleqc",
-          "/staging/ALSU-analysis/admixture_analysis/temp/dragen_array_test_20260513/gwas2026/plink/gwas2026_varqc"
+          "/staging/ALSU-analysis/admixture_analysis/temp/dragen_array_test_20260513/gwas2026/plink/gwas2026_raw",
+          "/staging/ALSU-analysis/admixture_analysis/temp/dragen_array_test_20260513/gwas2026/plink/gwas2026_sampleqc"
         ],
         "qc_side_files_found": 0
       },
@@ -773,17 +777,18 @@
       "live_scan": {
         "root_path": "/staging/GWAS2026-2",
         "plink_filesets_found": 6,
-        "best_fileset": "/staging/GWAS2026-2/plink/gwas2026_2_raw",
+        "best_fileset": "/staging/GWAS2026-2/plink/gwas2026_2_varqc",
         "best_fileset_extensions": [
           ".bed",
           ".bim",
           ".fam"
         ],
+        "sample_count": 87,
         "inferred_stage": "post_imputation_qc_complete",
         "equally_or_more_complete_alternatives": [
           "/staging/GWAS2026-2/plink/gwas2026_2_geno10",
-          "/staging/GWAS2026-2/plink/gwas2026_2_sampleqc",
-          "/staging/GWAS2026-2/plink/gwas2026_2_varqc"
+          "/staging/GWAS2026-2/plink/gwas2026_2_raw",
+          "/staging/GWAS2026-2/plink/gwas2026_2_sampleqc"
         ],
         "qc_side_files_found": 17
       },
@@ -808,6 +813,7 @@
           ".bim",
           ".fam"
         ],
+        "sample_count": 48,
         "inferred_stage": "plink_fileset_present_no_full_qc",
         "equally_or_more_complete_alternatives": [],
         "qc_side_files_found": 0

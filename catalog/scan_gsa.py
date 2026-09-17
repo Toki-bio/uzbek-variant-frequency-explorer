@@ -51,10 +51,23 @@ def scan(root: Path) -> dict:
     # (e.g. "3_post-imputation") when scores tie, since multiple staged
     # PLINK filesets can coexist and a naive "most extensions" pick is
     # fragile to that.
+    # Explicit stage ordering, not just a binary "is it final" flag - staged
+    # PLINK pipelines here go raw -> sampleqc -> geno10 -> varqc (-> final/
+    # post-imputation), and every stage shares identical .bed/.bim/.fam
+    # extensions, so extension-count alone can't tell them apart (this is
+    # exactly how gwas2026_2 got the wrong fileset picked: raw and varqc
+    # scored equal on extensions, and raw happened to sort first).
+    STAGE_ORDER = ["raw", "mind20", "sampleqc", "dedup", "geno10", "snpqc",
+                   "varqc", "final_clean", "final", "post-imputation", "post_imputation"]
+
     def stage_hint(base: str) -> int:
+        # A filename can contain multiple stage keywords (e.g.
+        # "ConvSK_mind20_dedup_snpqc" matches "mind20", "dedup", AND
+        # "snpqc") - take the latest (highest-ranked) one present, not the
+        # first keyword found in STAGE_ORDER.
         lowered = base.lower()
-        return 1 if ("post-imputation" in lowered or "post_imputation" in lowered
-                     or "final" in lowered) else 0
+        matches = [rank for rank, keyword in enumerate(STAGE_ORDER) if keyword in lowered]
+        return max(matches) if matches else -1
 
     best_base, best_exts = None, set()
     for base, exts in filesets.items():
@@ -87,11 +100,23 @@ def scan(root: Path) -> dict:
     ties = [b for b, e in filesets.items()
             if b != best_base and (len(e & PLINK_CORE), len(e & PLINK_QC)) >= best_completeness]
 
+    # Real sample count: count rows in the best fileset's .fam file directly.
+    # This was missing entirely before - the scanner reported which fileset
+    # exists and its QC stage, but never actually counted samples, so every
+    # GSA dataset silently had no sample_count field at all.
+    sample_count = None
+    if best_base is not None:
+        fam_path = Path(best_base + ".fam")
+        if fam_path.exists():
+            with open(fam_path, encoding="utf-8") as f:
+                sample_count = sum(1 for line in f if line.strip())
+
     return {
         "root_path": str(root),
         "plink_filesets_found": len(filesets),
         "best_fileset": best_base,
         "best_fileset_extensions": sorted(best_exts),
+        "sample_count": sample_count,
         "inferred_stage": stage,
         "equally_or_more_complete_alternatives": sorted(ties),
         "qc_side_files_found": len(qc_side_files),
