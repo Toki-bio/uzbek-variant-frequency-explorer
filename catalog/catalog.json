@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-17T07:51:18-07:00",
+  "generated_at": "2026-09-17T10:22:04-07:00",
   "generated_note": "sample counts, file inventories, and status are LIVE - re-derived from disk on every generation run via scan_wes.py/scan_gsa.py. Only id/name/date/type/root_path/description/detail_url come from the hand-maintained registry.json.",
   "datasets": [
     {
@@ -14140,141 +14140,141 @@
         "samples_incomplete": 0,
         "status": "complete",
         "samples": {
-          "DjorayevEldor": {
+          "CARDIO_OCT_01": {
             "file_count": 2,
             "convention": "unrecognized",
             "expected_present": [],
             "expected_missing": [],
             "complete": true,
             "files": [
-              "sample_DjorayevEldor (1).zip",
-              "sample_DjorayevEldor.zip"
+              "sample_CARDIO_OCT_01 (1).zip",
+              "sample_CARDIO_OCT_01.zip"
             ]
           },
-          "Egamberdiyeva": {
+          "CARDIO_OCT_02": {
             "file_count": 2,
             "convention": "unrecognized",
             "expected_present": [],
             "expected_missing": [],
             "complete": true,
             "files": [
-              "sample_Egamberdiyeva (1).zip",
-              "sample_Egamberdiyeva.zip"
+              "sample_CARDIO_OCT_02 (1).zip",
+              "sample_CARDIO_OCT_02.zip"
             ]
           },
-          "Hidirova": {
+          "CARDIO_OCT_03": {
             "file_count": 2,
             "convention": "unrecognized",
             "expected_present": [],
             "expected_missing": [],
             "complete": true,
             "files": [
-              "sample_Hidirova (1).zip",
-              "sample_Hidirova.zip"
+              "sample_CARDIO_OCT_03 (1).zip",
+              "sample_CARDIO_OCT_03.zip"
             ]
           },
-          "IronovaNasiba": {
+          "CARDIO_OCT_04": {
             "file_count": 2,
             "convention": "unrecognized",
             "expected_present": [],
             "expected_missing": [],
             "complete": true,
             "files": [
-              "sample_IronovaNasiba (1).zip",
-              "sample_IronovaNasiba.zip"
+              "sample_CARDIO_OCT_04 (1).zip",
+              "sample_CARDIO_OCT_04.zip"
             ]
           },
-          "IshkulatovaMadina": {
+          "CARDIO_OCT_05": {
             "file_count": 2,
             "convention": "unrecognized",
             "expected_present": [],
             "expected_missing": [],
             "complete": true,
             "files": [
-              "sample_IshkulatovaMadina (1).zip",
-              "sample_IshkulatovaMadina.zip"
+              "sample_CARDIO_OCT_05 (1).zip",
+              "sample_CARDIO_OCT_05.zip"
             ]
           },
-          "Raximova": {
+          "CARDIO_OCT_06": {
             "file_count": 2,
             "convention": "unrecognized",
             "expected_present": [],
             "expected_missing": [],
             "complete": true,
             "files": [
-              "sample_Raximova (1).zip",
-              "sample_Raximova.zip"
+              "sample_CARDIO_OCT_06 (1).zip",
+              "sample_CARDIO_OCT_06.zip"
             ]
           },
-          "RiskiyevaAziza": {
+          "CARDIO_OCT_07": {
             "file_count": 2,
             "convention": "unrecognized",
             "expected_present": [],
             "expected_missing": [],
             "complete": true,
             "files": [
-              "sample_RiskiyevaAziza (1).zip",
-              "sample_RiskiyevaAziza.zip"
+              "sample_CARDIO_OCT_07 (1).zip",
+              "sample_CARDIO_OCT_07.zip"
             ]
           },
-          "Soatova": {
+          "CARDIO_OCT_08": {
             "file_count": 2,
             "convention": "unrecognized",
             "expected_present": [],
             "expected_missing": [],
             "complete": true,
             "files": [
-              "sample_Soatova (1).zip",
-              "sample_Soatova.zip"
+              "sample_CARDIO_OCT_08 (1).zip",
+              "sample_CARDIO_OCT_08.zip"
             ]
           },
-          "SoyFoman": {
+          "CARDIO_OCT_09": {
             "file_count": 2,
             "convention": "unrecognized",
             "expected_present": [],
             "expected_missing": [],
             "complete": true,
             "files": [
-              "sample_SoyFoman (1).zip",
-              "sample_SoyFoman.zip"
+              "sample_CARDIO_OCT_09 (1).zip",
+              "sample_CARDIO_OCT_09.zip"
             ]
           },
-          "Sundetkin": {
+          "CARDIO_OCT_10": {
             "file_count": 2,
             "convention": "unrecognized",
             "expected_present": [],
             "expected_missing": [],
             "complete": true,
             "files": [
-              "sample_Sundetkin (1).zip",
-              "sample_Sundetkin.zip"
+              "sample_CARDIO_OCT_10 (1).zip",
+              "sample_CARDIO_OCT_10.zip"
             ]
           },
-          "Ulkanova": {
+          "CARDIO_OCT_11": {
             "file_count": 2,
             "convention": "unrecognized",
             "expected_present": [],
             "expected_missing": [],
             "complete": true,
             "files": [
-              "sample_Ulkanova (1).zip",
-              "sample_Ulkanova.zip"
+              "sample_CARDIO_OCT_11 (1).zip",
+              "sample_CARDIO_OCT_11.zip"
             ]
           },
-          "Yulchiyeva": {
+          "CARDIO_OCT_12": {
             "file_count": 2,
             "convention": "unrecognized",
             "expected_present": [],
             "expected_missing": [],
             "complete": true,
             "files": [
-              "sample_Yulchiyeva (1).zip",
-              "sample_Yulchiyeva.zip"
+              "sample_CARDIO_OCT_12 (1).zip",
+              "sample_CARDIO_OCT_12.zip"
             ]
           }
         },
         "cohort_level_files": [
-          "full_variant_table_IshkulatovaMadina.vcf",
+          "full_variant_table_CARDIO_OCT_05.vcf",
           "ФИО.docx"
         ]
       },
@@ -16193,15 +16193,15 @@
       "discrepancies": []
     },
     {
-      "id": "pavel_wes_saidkarimova",
-      "name": "Isolated WES - Saidkarimova Guzalkhan",
+      "id": "pavel_wes_single",
+      "name": "Isolated WES - REDACTED REDACTED",
       "date": "2026-08-04",
       "type": "wes",
       "n_claimed": 1,
-      "root_path": "/staging/Pavel/26-BB-107431 127 Саидкаримова Гузалхан/",
+      "root_path": "/staging/Pavel/26-BB-107431 127 REDACTED REDACTED/",
       "description": "1 sample, raw FASTQ only, pending processing.",
       "live_scan": {
-        "root_path": "/staging/Pavel/26-BB-107431 127 Саидкаримова Гузалхан",
+        "root_path": "/staging/Pavel/26-BB-107431 127 REDACTED REDACTED",
         "sample_count": 0,
         "samples_complete": 0,
         "samples_incomplete": 0,

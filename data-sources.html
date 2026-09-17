@@ -525,11 +525,11 @@ function grab(url, label){
     .catch(e => ({ok:false, label, url, err:String(e.message||e)}));
 }
 
-// 20260917145317 is replaced at deploy time. Without it the browser and the
+// 20260917172440 is replaced at deploy time. Without it the browser and the
 // GitHub Pages CDN will happily serve a cached catalog.json (max-age=600)
 // while the page looks current - which is exactly how a stale zero got
 // rendered for datasets whose counts had already been fixed.
-const BUILD = "20260917145317";
+const BUILD = "20260917172440";
 Promise.all([
   grab(`catalog/catalog.json?v=${BUILD}`, "datasets"),
   grab(`catalog/panel_web.json?v=${BUILD}`, "focal panel"),

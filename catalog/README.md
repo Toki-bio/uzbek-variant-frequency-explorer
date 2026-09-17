@@ -63,7 +63,7 @@ and `cardio_main` before this was generalized:
 | Convention | Example | Seen in |
 |---|---|---|
 | `bcftools_sarek` | `sample01.bcftools.hard-filtered.vcf.gz` | `cardio_wes_v350432671` |
-| `sample_zip` | `sample_DjorayevEldor.zip` | `cardio_oct` |
+| `sample_zip` | `sample_CARDIO_OCT_01.zip` | `cardio_oct` |
 | `dragen_native` | `Cardio1.hard-filtered.vcf.gz`, `Cardio1.bam` | `cardio_main` |
 
 Raw, unprocessed FASTQ is also detected as a fallback (`<name>_R1/R2.fastq.gz`
@@ -129,6 +129,6 @@ rather than the single raw-FASTQ path the original catalog pointed to.
   represented in the catalog at all (pangenome-reference reruns of the same
   25 samples, and the transplant sample's separate pathogenic-variant
   annotation).
-- `pavel_wes_saidkarimova`'s date_confidence and `cardio_wes_v350432671`'s
+- `pavel_wes_single`'s date_confidence and `cardio_wes_v350432671`'s
   date both need a human to confirm the true run date - the extracted values
   looked more like "last edited" timestamps than true experiment dates.

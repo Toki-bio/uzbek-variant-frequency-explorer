@@ -1,0 +1,6 @@
+
+# never commit: real-name map, private registry, pre-purge backup
+private/
+*.private.json
+name_map*
+*.bundle

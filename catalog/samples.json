@@ -8,7 +8,7 @@
     "gwas96": 83,
     "gwas2026_2": 87,
     "rescan48": 48,
-    "pavel_wes_saidkarimova": 0,
+    "pavel_wes_single": 0,
     "cardio_wes_v350432671": 16
   },
   "samples_in_multiple_datasets": 1234,
@@ -13191,35 +13191,35 @@
     "djorayeveldor": {
       "datasets": {
         "cardio_oct": [
-          "DjorayevEldor"
+          "CARDIO_OCT_01"
         ]
       }
     },
     "egamberdiyeva": {
       "datasets": {
         "cardio_oct": [
-          "Egamberdiyeva"
+          "CARDIO_OCT_02"
         ]
       }
     },
     "hidirova": {
       "datasets": {
         "cardio_oct": [
-          "Hidirova"
+          "CARDIO_OCT_03"
         ]
       }
     },
     "ironovanasiba": {
       "datasets": {
         "cardio_oct": [
-          "IronovaNasiba"
+          "CARDIO_OCT_04"
         ]
       }
     },
     "ishkulatovamadina": {
       "datasets": {
         "cardio_oct": [
-          "IshkulatovaMadina"
+          "CARDIO_OCT_05"
         ]
       }
     },
@@ -13246,14 +13246,14 @@
     "raximova": {
       "datasets": {
         "cardio_oct": [
-          "Raximova"
+          "CARDIO_OCT_06"
         ]
       }
     },
     "riskiyevaaziza": {
       "datasets": {
         "cardio_oct": [
-          "RiskiyevaAziza"
+          "CARDIO_OCT_07"
         ]
       }
     },
@@ -13382,35 +13382,35 @@
     "soatova": {
       "datasets": {
         "cardio_oct": [
-          "Soatova"
+          "CARDIO_OCT_08"
         ]
       }
     },
     "soyfoman": {
       "datasets": {
         "cardio_oct": [
-          "SoyFoman"
+          "CARDIO_OCT_09"
         ]
       }
     },
     "sundetkin": {
       "datasets": {
         "cardio_oct": [
-          "Sundetkin"
+          "CARDIO_OCT_10"
         ]
       }
     },
     "ulkanova": {
       "datasets": {
         "cardio_oct": [
-          "Ulkanova"
+          "CARDIO_OCT_11"
         ]
       }
     },
     "yulchiyeva": {
       "datasets": {
         "cardio_oct": [
-          "Yulchiyeva"
+          "CARDIO_OCT_12"
         ]
       }
     }

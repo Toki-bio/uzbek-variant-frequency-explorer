@@ -86,12 +86,12 @@
       "description": "48 samples, 2x24 GSA chips - rescans of ALSU original-cohort members whose original chips failed. Not a new/independent cohort; its downstream product is the merged 'alsu_expanded' dataset."
     },
     {
-      "id": "pavel_wes_saidkarimova",
-      "name": "Isolated WES - Saidkarimova Guzalkhan",
+      "id": "pavel_wes_single",
+      "name": "Isolated WES - REDACTED REDACTED",
       "date": "2026-08-04",
       "type": "wes",
       "n_claimed": 1,
-      "root_path": "/staging/Pavel/26-BB-107431 127 Саидкаримова Гузалхан/",
+      "root_path": "/staging/Pavel/26-BB-107431 127 REDACTED REDACTED/",
       "description": "1 sample, raw FASTQ only, pending processing."
     },
     {
