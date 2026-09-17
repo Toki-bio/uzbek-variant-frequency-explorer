@@ -104,12 +104,27 @@ def scan(root: Path) -> dict:
     # This was missing entirely before - the scanner reported which fileset
     # exists and its QC stage, but never actually counted samples, so every
     # GSA dataset silently had no sample_count field at all.
+    # Emit the actual per-sample records, not just a count. Without these the
+    # detail view has nothing to list and renders "Samples (0)" for every
+    # array dataset while the row above it correctly shows n=48/1074/etc.
+    # .fam delimiting is inconsistent here (ALSU space-separated, rescan48
+    # tab-separated), so split on any whitespace.
     sample_count = None
+    samples = {}
     if best_base is not None:
         fam_path = Path(best_base + ".fam")
         if fam_path.exists():
-            with open(fam_path, encoding="utf-8") as f:
-                sample_count = sum(1 for line in f if line.strip())
+            with open(fam_path, encoding="utf-8", errors="ignore") as f:
+                for line in f:
+                    parts = line.split()
+                    if len(parts) >= 2:
+                        samples[parts[1]] = {
+                            "convention": "plink_fileset",
+                            "fileset": Path(best_base).name,
+                            "fid": parts[0],
+                            "complete": True,
+                        }
+            sample_count = len(samples)
 
     return {
         "root_path": str(root),
@@ -117,6 +132,7 @@ def scan(root: Path) -> dict:
         "best_fileset": best_base,
         "best_fileset_extensions": sorted(best_exts),
         "sample_count": sample_count,
+        "samples": samples,
         "inferred_stage": stage,
         "equally_or_more_complete_alternatives": sorted(ties),
         "qc_side_files_found": len(qc_side_files),

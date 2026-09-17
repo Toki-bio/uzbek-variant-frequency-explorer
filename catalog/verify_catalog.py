@@ -143,14 +143,17 @@ def main():
         # are all inside sub_path_scans previously rendered as "Samples (0)"
         # in the detail view because only the top level was read - this check
         # asserts the per-sample records actually add up to the headline.
-        if ds["type"] in ("wes", "wgs"):
-            headline = scan.get("sample_count_including_sub_paths", scan.get("sample_count")) or 0
-            reachable = len(scan.get("samples") or {})
-            for sub in (scan.get("sub_path_scans") or {}).values():
-                reachable += len(sub.get("samples") or {})
-            if headline:
-                check(f"{did}: per-sample records reachable for headline count",
-                      reachable == headline, f"headline={headline} reachable={reachable}")
+        # Applies to EVERY dataset type. This check was originally scoped to
+        # wes/wgs only, which excluded exactly the datasets (all five GSA ones)
+        # where the bug was live - they rendered "Samples (0)" in the detail
+        # view while this suite reported all green.
+        headline = scan.get("sample_count_including_sub_paths", scan.get("sample_count")) or 0
+        reachable = len(scan.get("samples") or {})
+        for sub in (scan.get("sub_path_scans") or {}).values():
+            reachable += len(sub.get("samples") or {})
+        if headline:
+            check(f"{did}: per-sample records reachable for headline count",
+                  reachable == headline, f"headline={headline} reachable={reachable}")
 
         # 4. Registry claim vs scanner, restated here independently.
         n_claimed = ds.get("n_claimed")

@@ -283,9 +283,15 @@ function openDatasetDetail(id){
       Object.entries(sub.samples||{}).map(([sid,info])=>[sid,info,subName]))
   ];
   const hasSub = sampleEntries.some(e=>e[2]);
+  // ALSU has 1,074 samples and alsu_expanded 1,268 - rendering every row into
+  // the drawer is pointless and slow, so cap and say so.
+  const DETAIL_LIMIT = 200;
+  const shownEntries = sampleEntries.slice(0, DETAIL_LIMIT);
+  const moreNote = sampleEntries.length > DETAIL_LIMIT
+    ? `<p class="empty-note">Showing first ${DETAIL_LIMIT} of ${sampleEntries.length.toLocaleString()} samples.</p>` : "";
   let sampleRows = sampleEntries.length ? `<table class="data"><thead><tr><th>Sample</th>${hasSub?'<th>Sub-path</th>':''}<th class="num">Files</th><th>Convention</th><th>Status</th></tr></thead><tbody>` +
-    sampleEntries.map(([sid,info,subName])=>`<tr><td class="mono">${esc(sid)}</td>${hasSub?`<td class="mono">${esc(subName||'-')}</td>`:''}<td class="num">${info.file_count}</td><td class="mono">${esc(info.convention||'-')}</td><td class="status-text ${info.complete?'complete':'error'}">${info.complete?'complete':'incomplete'}</td></tr>`).join("") +
-    `</tbody></table>` : (s.raw_fastq_samples_detected
+    shownEntries.map(([sid,info,subName])=>`<tr><td class="mono">${esc(sid)}</td>${hasSub?`<td class="mono">${esc(subName||'-')}</td>`:''}<td class="num">${info.file_count==null?'—':info.file_count}</td><td class="mono">${esc(info.convention||'-')}</td><td class="status-text ${info.complete?'complete':'error'}">${info.complete?'complete':'incomplete'}</td></tr>`).join("") +
+    `</tbody></table>` + moreNote : (s.raw_fastq_samples_detected
         ? `<p style="color:var(--warn);font-size:0.82rem">No processed samples yet — ${s.raw_fastq_samples_detected} raw FASTQ sample(s) present, not yet run through a pipeline.</p>`
         : `<p style="color:var(--muted);font-size:0.82rem">No individually-tracked samples at this stage.</p>`);
   let subPathHtml = s.sub_path_scans ? "<h3>Sub-paths</h3>" + Object.entries(s.sub_path_scans).map(([n,sub])=>
@@ -519,11 +525,11 @@ function grab(url, label){
     .catch(e => ({ok:false, label, url, err:String(e.message||e)}));
 }
 
-// 20260917121934 is replaced at deploy time. Without it the browser and the
+// 20260917145317 is replaced at deploy time. Without it the browser and the
 // GitHub Pages CDN will happily serve a cached catalog.json (max-age=600)
 // while the page looks current - which is exactly how a stale zero got
 // rendered for datasets whose counts had already been fixed.
-const BUILD = "20260917121934";
+const BUILD = "20260917145317";
 Promise.all([
   grab(`catalog/catalog.json?v=${BUILD}`, "datasets"),
   grab(`catalog/panel_web.json?v=${BUILD}`, "focal panel"),
