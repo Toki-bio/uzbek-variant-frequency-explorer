@@ -504,6 +504,7 @@ document.getElementById("sampleDsFilter").addEventListener("change",renderSample
 
 ["sampleSearch"].forEach(id=>document.getElementById(id).addEventListener("input",renderSampleRows));
 
+/* BOOTSTRAP-START (build_artifact.py replaces this block with inlined data) */
 // Each file is fetched and reported independently: a failure or slowness in
 // one must not blank the whole page, and any failure has to be visible in
 // the page body rather than hidden in small corner text.
@@ -545,6 +546,7 @@ Promise.all([
     console.log(`catalog loaded in ${ms}ms`);
   }
 });
+/* BOOTSTRAP-END */
 </script>
 </body>
 </html>
