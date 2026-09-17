@@ -30,8 +30,18 @@ for v in data["variants"]:
             d["carriers_truncated"] = len(carriers) - KEEP
         # carrier_count / cohort_size / carrier_frequency are left untouched.
 
-# GSA coverage: keep every SNP (needed for the gene list) but drop nothing -
-# it is only ~220KB combined, already small enough.
+# GSA coverage: the page only ever shows the SNP count and the distinct gene
+# list per dataset - never individual SNPs. Keeping all of them cost ~1.5MB
+# once imputed datasets (alsu_expanded: 9,677 SNPs) were included, for data
+# nothing renders. Reduce to exactly what the view uses; the full per-SNP
+# records with MAFs stay in panel_summary.json.
+for _dsid, _cov in (data.get("gsa_coverage") or {}).items():
+    snps = _cov.get("snps") or []
+    genes = sorted({s["gene"] for s in snps if s.get("gene")})
+    with_maf = sum(1 for s in snps if s.get("maf") is not None)
+    _cov["genes_covered"] = genes
+    _cov["snps_with_maf"] = with_maf
+    _cov["snps"] = []  # full records remain in panel_summary.json
 
 data["_slim_note"] = (
     f"Carrier lists truncated to {KEEP} entries per variant/cohort for page weight; "

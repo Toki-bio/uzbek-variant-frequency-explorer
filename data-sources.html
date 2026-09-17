@@ -397,7 +397,9 @@ function renderGsaCoverage(){
   body.innerHTML = "";
   const cov = PANEL.gsa_coverage || {};
   for(const [dsid, d] of Object.entries(cov)){
-    const genes = [...new Set(d.snps.map(s=>s.gene))].sort();
+    // genes_covered is precomputed in the web copy; fall back to deriving it
+    // from full SNP records when reading the unslimmed panel_summary.json.
+    const genes = d.genes_covered || [...new Set((d.snps||[]).map(s=>s.gene))].sort();
     const tr = document.createElement("tr");
     tr.innerHTML = `<td><b>${esc(dsid)}</b></td><td class="num">${d.panel_snps_on_chip}</td>
       <td>${genes.map(g=>`<span class="genotype-chip">${esc(g)}</span>`).join(" ")}</td>`;
