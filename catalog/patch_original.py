@@ -134,6 +134,11 @@ extra_css = """
 .derived{font-size:10px;color:#9ca3af;text-transform:uppercase;letter-spacing:.04em;margin-left:6px}
 .conflict{background:#fef3c7;border-left:3px solid #d97706;padding:4px 8px;font-size:12px;color:#92400e;margin:4px 0}
 .browse a{margin-right:10px;font-size:12px}
+/* width: full by default; body.compact restores the original 1280px cap */
+.wrap{max-width:none}
+body.compact .wrap{max-width:1280px}
+.path-v{max-width:none;white-space:normal;word-break:break-all}
+body.compact .path-v{max-width:280px;white-space:nowrap}
 .bigtbl{overflow-x:auto}.bigtbl table{width:100%;border-collapse:collapse;font-size:12.5px;background:#fff}
 .bigtbl th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;color:#6b7280;padding:7px 8px;border-bottom:2px solid #e5e7eb;cursor:pointer;white-space:nowrap}
 .bigtbl td{padding:6px 8px;border-bottom:1px solid #f3f4f6;vertical-align:top}
@@ -146,6 +151,13 @@ extra_css = """
 #loadState{margin:8px 0;padding:8px 12px;border:1px solid #e5e7eb;border-radius:4px;font-size:12.5px;background:#fff}
 """
 replace_once("\n</style>", extra_css + "\n</style>", "extra css")
+
+# 10b. width toggle in the original toolbar (full width is the default now)
+replace_once(
+    '    <button class="btn" onclick="colAll()">Collapse</button>',
+    '    <button class="btn" onclick="colAll()">Collapse</button>\n'
+    '    <button class="btn" id="btnWidth" onclick="toggleWidth()" title="Toggle between full-width and the original 1280px layout">Compact width</button>',
+    "width toggle")
 
 # 11. loading banner after the meta-row
 replace_once('<div class="toolbar">',

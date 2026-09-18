@@ -198,19 +198,19 @@
     },
     {
       "id": "pavel_wes_single",
-      "name": "Isolated WES - REDACTED REDACTED",
+      "name": "Isolated WES - single sample (PAVEL_WES_01)",
       "date": "2026-08-04",
       "type": "wes",
       "n_claimed": 1,
-      "root_path": "/staging/Pavel/26-BB-107431 127 REDACTED REDACTED/",
-      "description": "1 sample, raw FASTQ only, pending processing.",
+      "root_path": "/staging/Pavel/26-BB-107431 127 PAVEL_WES_01/",
+      "description": "1 sample (PAVEL_WES_01), raw FASTQ only, pending processing.",
       "curated": {
         "_note": "Hand-written by the lab in the original data-sources page. Human knowledge, not derivable from disk. Keep editing this here; it is never overwritten by a scan.",
         "tech_label": "WES",
         "samples_label": "1",
         "kv": {
           "Sample ID": "26-BB-107431 (127)",
-          "Individual": "ÃÂ¡ÃÂ°ÃÂ¸ÃÂ´ÃÂºÃÂ°Ã‘â‚¬ÃÂ¸ÃÂ¼ÃÂ¾ÃÂ²ÃÂ° Ãâ€œÃ‘Æ’ÃÂ·ÃÂ°ÃÂ»Ã‘â€¦ÃÂ°ÃÂ½ (REDACTED REDACTED)",
+          "Individual": "ÃÂ¡ÃÂ°ÃÂ¸ÃÂ´ÃÂºÃÂ°Ã‘â‚¬ÃÂ¸ÃÂ¼ÃÂ¾ÃÂ²ÃÂ° Ãâ€œÃ‘Æ’ÃÂ·ÃÂ°ÃÂ»Ã‘â€¦ÃÂ°ÃÂ½ (PAVEL_WES_01)",
           "Assay": "Whole exome sequencing (per submitter; not independently re-verified from the read data)",
           "Platform": "MGI/BGI DNBSEQ (flowcell V350418124)",
           "Read length": "~111 bp paired-end (verified from FASTQ header)",

@@ -248,6 +248,21 @@ function renderSampleRows(){
   document.getElementById('smMore').textContent = total > LIMIT ? 'Showing first ' + LIMIT + ' of ' + fmtN(total) + ' — narrow the filter.' : (total ? '' : 'No samples match.');
 }
 
+/* ---------- width toggle ---------- */
+/* Full width is the default. The original capped the page at 1280px, which on a
+   wide monitor leaves half the screen empty; the choice is remembered per browser. */
+function applyWidth(){
+  var compact = false; try { compact = localStorage.getItem("catalog-width") === "compact"; } catch(e){}
+  document.body.classList.toggle("compact", compact);
+  var b = document.getElementById("btnWidth"); if (b) b.textContent = compact ? "Full width" : "Compact width";
+}
+function toggleWidth(){
+  var compact = !document.body.classList.contains("compact");
+  try { localStorage.setItem("catalog-width", compact ? "compact" : "full"); } catch(e){}
+  applyWidth();
+}
+applyWidth();
+
 /* ---------- loader: progressive ---------- */
 /* Each file renders as soon as IT arrives. On a slow or lossy link the 44 KB
    catalog must not wait behind the 2 MB panel file - a colleague on a

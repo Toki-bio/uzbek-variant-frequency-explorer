@@ -44,7 +44,14 @@ def load_extra_tokens(private_dir: Path) -> list:
     p = private_dir / "extra_tokens.txt"
     if not p.exists():
         return []
-    return [l.strip() for l in p.read_text(encoding="utf-8").splitlines() if l.strip() and not l.startswith("#")]
+    out = []
+    for l in p.read_text(encoding="utf-8").splitlines():
+        l = l.strip()
+        if not l or l.startswith("#"):
+            continue
+        tok, _, pseud = l.partition("=")
+        out.append((tok.strip(), (pseud.strip() or "REDACTED")))
+    return out
 
 
 def load_map(private_dir: Path) -> dict:
@@ -76,9 +83,9 @@ def build(catalog_path: Path, private_dir: Path) -> dict:
             if sid not in tokens:
                 tokens[sid] = f"{prefix}_{len([v for v in tokens.values() if v.startswith(prefix)]) + 1:02d}"
 
-    for t in load_extra_tokens(private_dir):
+    for t, pseud in load_extra_tokens(private_dir):
         if t not in tokens:
-            tokens[t] = "REDACTED"
+            tokens[t] = pseud
 
 
     save_map(private_dir, m)
