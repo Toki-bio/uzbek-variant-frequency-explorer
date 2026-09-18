@@ -30,15 +30,21 @@ MAP_NAME = "name_map.json"
 # Datasets whose sample IDs are personal names, and the pseudonym prefix used.
 NAME_BEARING = {
     "cardio_oct": "CARDIO_OCT",
-    "pavel_wes_saidkarimova": "PAVEL_WES",
+    # single-sample WES submission: its real id is in the private map; keyed here by prefix
+    "pavel_wes_": "PAVEL_WES",
 }
 
 # Extra tokens that are names but are not sample IDs (dataset id / title /
-# path components). Listed explicitly so they are never emitted.
-EXTRA_TOKENS = [
-    "Saidkarimova", "Guzalkhan", "Саидкаримова", "Гузалхан",
-    "IshkulatovaMadina",  # also appears inside full_variant_table_*.vcf
-]
+# path components). NEVER listed in code - they are read from
+# <private_dir>/extra_tokens.txt, one per line, so this file can be public.
+EXTRA_TOKENS: list = []
+
+
+def load_extra_tokens(private_dir: Path) -> list:
+    p = private_dir / "extra_tokens.txt"
+    if not p.exists():
+        return []
+    return [l.strip() for l in p.read_text(encoding="utf-8").splitlines() if l.strip() and not l.startswith("#")]
 
 
 def load_map(private_dir: Path) -> dict:
@@ -61,7 +67,7 @@ def build(catalog_path: Path, private_dir: Path) -> dict:
     tokens = m["tokens"]
 
     for ds in cat["datasets"]:
-        prefix = NAME_BEARING.get(ds["id"])
+        prefix = next((v for k, v in NAME_BEARING.items() if ds["id"].startswith(k)), None)
         if not prefix:
             continue
         scan = ds.get("live_scan", {})
@@ -70,19 +76,17 @@ def build(catalog_path: Path, private_dir: Path) -> dict:
             if sid not in tokens:
                 tokens[sid] = f"{prefix}_{len([v for v in tokens.values() if v.startswith(prefix)]) + 1:02d}"
 
-    for t in EXTRA_TOKENS:
+    for t in load_extra_tokens(private_dir):
         if t not in tokens:
             tokens[t] = "REDACTED"
 
-    # The dataset id itself carries a surname.
-    tokens.setdefault("pavel_wes_saidkarimova", "pavel_wes_single")
 
     save_map(private_dir, m)
     return m
 
 
 def _subst(s: str, tokens: dict) -> str:
-    # Longest-first so "IshkulatovaMadina" is replaced before any substring.
+    # Longest-first so a longer token is replaced before any shorter token it contains.
     for real in sorted(tokens, key=len, reverse=True):
         if real in s:
             s = s.replace(real, tokens[real])

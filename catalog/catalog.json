@@ -1,5 +1,14 @@
 {
-  "generated_at": "2026-09-17T10:22:04-07:00",
+  "host": {
+    "hostname": "Biotech2024",
+    "ip_lan": "10.10.8.149",
+    "ip_tailscale": "100.104.25.22",
+    "os": "Oracle Linux Server 8.6",
+    "dragen": "4.4.4 4.5.4",
+    "ram_gb": "503",
+    "staging_free": "3.4T / 14T"
+  },
+  "generated_at": "2026-09-18T00:00:35-07:00",
   "generated_note": "sample counts, file inventories, and status are LIVE - re-derived from disk on every generation run via scan_wes.py/scan_gsa.py. Only id/name/date/type/root_path/description/detail_url come from the hand-maintained registry.json.",
   "datasets": [
     {
@@ -14,6 +23,24 @@
       "description": "1,074 post-QC samples (1,047 in the GWAS-eligible subset after phenotype mapping), 53 chip positions, general Uzbek population reference cohort. Scope: RPL (recurrent pregnancy loss) GWAS - kept intentionally separate from the expanded population-genetics cohort.",
       "detail_url": "https://toki-bio.github.io/ALSU-analysis/index.html",
       "detail_note": "Dedicated deep-dive site for this cohort's population-genetics workflow. Note the site documents BOTH cohorts (original + expanded) - see also 'alsu_expanded' in this catalog.",
+      "curated": {
+        "_note": "Hand-written by the lab in the original data-sources page. Human knowledge, not derivable from disk. Keep editing this here; it is never overwritten by a scan.",
+        "tech_label": "GSA v3",
+        "samples_label": "1,074 (post-QC)",
+        "kv": {
+          "Array": "Illumina GSA v3, ~700k SNPs",
+          "Build": "hg38",
+          "Chip positions": "53",
+          "Files": "24,258",
+          "Sample IDs": "207585740001 â€“ 207591080022",
+          "Post-QC": "1,074 unrelated individuals",
+          "Downstream": "GenomeStudio â†’ PLINK QC â†’ Michigan Imputation â†’ GWAS",
+          "Imputed": "~10M variants, HRC reference",
+          "Imputed path": "~/v2/plink/UZB_v2_clean"
+        },
+        "tree": "/staging/ALSU/OUTPUT/\n  207585740001/   [chip folder x53]\n    _qc.txt\n    _R01C01_1_Green.xml\n    _R01C01_1_Red.xml\n    _R01C01_1-Swath1_Grn.jpg",
+        "note": "Primary Uzbek GWAS cohort. Reproductive outcomes study (pregnancy loss). 3 confirmed sample swaps. Imputed data: chr:pos:ref:alt IDs, no rsIDs."
+      },
       "live_scan": {
         "root_path": "/staging/ALSU-analysis/winter2025",
         "plink_filesets_found": 210,
@@ -6479,7 +6506,26 @@
         "equally_or_more_complete_alternatives": [
           "/staging/ALSU-analysis/winter2025/PLINK_301125_0312/ConvSK_mind20_dedup_snpqc"
         ],
-        "qc_side_files_found": 77
+        "qc_side_files_found": 77,
+        "has": {
+          "per_sample": true,
+          "raw_reads": true,
+          "panel_variants": false,
+          "clinical_reports": false,
+          "coverage_flags": false,
+          "allele_freqs": true,
+          "allele_freqs_precomputed": true,
+          "panel_coverage": true,
+          "sample_qc": true,
+          "imputation": true,
+          "popgen": true,
+          "sub_cohorts": false
+        },
+        "size_bytes": {
+          "root": 65333667649,
+          "processed": 401671350952
+        },
+        "size_total_bytes": 467005018601
       },
       "discrepancies": []
     },
@@ -14121,162 +14167,237 @@
           "/staging/ALSU-analysis/spring2026/full_expanded_cohort/imputation_results/hq_filtered/UZB_imputed_HQ_qc",
           "/staging/ALSU-analysis/spring2026/full_expanded_cohort/imputation_results/hq_filtered/UZB_imputed_HQ_unique"
         ],
-        "qc_side_files_found": 1
+        "qc_side_files_found": 1,
+        "has": {
+          "per_sample": true,
+          "raw_reads": true,
+          "panel_variants": false,
+          "clinical_reports": false,
+          "coverage_flags": false,
+          "allele_freqs": true,
+          "allele_freqs_precomputed": false,
+          "panel_coverage": true,
+          "sample_qc": true,
+          "imputation": true,
+          "popgen": true,
+          "sub_cohorts": false
+        },
+        "size_bytes": {
+          "root": 326553142499,
+          "processed": 114142142448
+        },
+        "size_total_bytes": 326553142499
       },
       "discrepancies": []
     },
     {
       "id": "cardio_oct",
-      "name": "Cardio - October 2025",
+      "name": "Cardio - October 2025 (targeted panel)",
       "date": "2025-10-23",
-      "type": "wgs",
+      "type": "targeted_panel",
       "n_claimed": 12,
       "root_path": "/staging/cardio/sophia/october2025-12samples/",
-      "description": "12 WGS samples, cardiomyopathy pilot cohort, aggregate VCF (not per-sample).",
+      "description": "12 clinical cardiac samples on the extCAS_v2 targeted cardiac gene panel, sequenced and called by an external provider (ddm) on GRCh37/hg19. Delivered as two zips per sample: raw FASTQ (600 MB-1.5 GB) and a ~2 MB deliverable with the per-sample VCF (~1,300-1,700 variants), a QA report PDF, a flagged low-coverage-regions table with gene/exon annotation, and an annotated variant table (gene, depth, VAF, off-target flag).",
+      "genome_build": "GRCh37",
+      "panel": "extCAS_v2",
+      "provider": "ddm (external lab)",
+      "correction_note": "CORRECTED. Earlier catalog entries called this 'WGS' with 'an aggregate VCF (not per-sample)' and treated the '(1)' zips as duplicate copies. All three were wrong, found by reading the zip contents and VCF headers directly (##genePanel=extCAS_v2, ##genome-build=GRCh37, ##provider=ddm): it is a targeted panel, not WGS; there are 12 per-sample VCFs; and the two zip sets are raw reads vs deliverables. The 1.5 GB FASTQ size alone rules out WGS (30x is ~100 GB).",
+      "build_note": "Native build is GRCh37. For the cross-dataset focal panel its in-panel positions are lifted to GRCh38 with UCSC liftOver (hg19ToHg38 chain); every record keeps its source_pos. 1,228/1,228 in-panel positions lifted, 0 unmapped.",
+      "curated": {
+        "_note": "Hand-written by the lab in the original data-sources page. Human knowledge, not derivable from disk. Keep editing this here; it is never overwritten by a scan.",
+        "tech_label": "WGS",
+        "samples_label": "12",
+        "kv": {
+          "PI": "Sophia",
+          "Reference": "hg38",
+          "Pipeline": "DRAGEN WGS",
+          "Samples": "CARDIO_OCT_01, CARDIO_OCT_02, CARDIO_OCT_03, CARDIO_OCT_04, CARDIO_OCT_05, CARDIO_OCT_06, CARDIO_OCT_07, CARDIO_OCT_08, CARDIO_OCT_09, CARDIO_OCT_10 +2",
+          "Format": "Per-sample ZIP (x2 each) + full_variant_table VCF"
+        },
+        "tree": "/staging/cardio/sophia/october2025-12samples/\n  full_variant_table_CARDIO_OCT_05.vcf\n  sample_CARDIO_OCT_01.zip  [x2 per sample]\n  [12 samples total]",
+        "note": "",
+        "conflicts": {
+          "tech_label": "curated says 'WGS'; VCF headers say targeted panel extCAS_v2 (GRCh37). Derived value wins in the table; curated value kept here for the record."
+        }
+      },
       "live_scan": {
         "root_path": "/staging/cardio/sophia/october2025-12samples",
         "sample_count": 12,
         "samples_complete": 12,
         "samples_incomplete": 0,
         "status": "complete",
+        "panel": [
+          "extCAS_v2"
+        ],
+        "genome_build": [
+          "GRCh37"
+        ],
+        "provider": [
+          "ddm"
+        ],
         "samples": {
           "CARDIO_OCT_01": {
-            "file_count": 2,
-            "convention": "unrecognized",
-            "expected_present": [],
-            "expected_missing": [],
+            "convention": "external_panel_zip",
             "complete": true,
-            "files": [
-              "sample_CARDIO_OCT_01 (1).zip",
-              "sample_CARDIO_OCT_01.zip"
-            ]
+            "file_count": 6,
+            "raw_reads_zip": "sample_CARDIO_OCT_01.zip",
+            "raw_reads_mb": 1545.1,
+            "vcf": "full_variant_table_CARDIO_OCT_01.vcf",
+            "variants": 1588,
+            "flagged_low_coverage_regions": 34,
+            "qa_report_pdf": "QA-patient_CARDIO_OCT_01.pdf",
+            "variant_table_txt": "full_variant_table_CARDIO_OCT_01.txt"
           },
           "CARDIO_OCT_02": {
-            "file_count": 2,
-            "convention": "unrecognized",
-            "expected_present": [],
-            "expected_missing": [],
+            "convention": "external_panel_zip",
             "complete": true,
-            "files": [
-              "sample_CARDIO_OCT_02 (1).zip",
-              "sample_CARDIO_OCT_02.zip"
-            ]
+            "file_count": 6,
+            "raw_reads_zip": "sample_CARDIO_OCT_02.zip",
+            "raw_reads_mb": 1012.7,
+            "vcf": "full_variant_table_CARDIO_OCT_02.vcf",
+            "variants": 1404,
+            "flagged_low_coverage_regions": 32,
+            "qa_report_pdf": "QA-patient_CARDIO_OCT_02.pdf",
+            "variant_table_txt": "full_variant_table_CARDIO_OCT_02.txt"
           },
           "CARDIO_OCT_03": {
-            "file_count": 2,
-            "convention": "unrecognized",
-            "expected_present": [],
-            "expected_missing": [],
+            "convention": "external_panel_zip",
             "complete": true,
-            "files": [
-              "sample_CARDIO_OCT_03 (1).zip",
-              "sample_CARDIO_OCT_03.zip"
-            ]
+            "file_count": 6,
+            "raw_reads_zip": "sample_CARDIO_OCT_03.zip",
+            "raw_reads_mb": 1510.5,
+            "vcf": "full_variant_table_CARDIO_OCT_03.vcf",
+            "variants": 1684,
+            "flagged_low_coverage_regions": 32,
+            "qa_report_pdf": "QA-patient_CARDIO_OCT_03.pdf",
+            "variant_table_txt": "full_variant_table_CARDIO_OCT_03.txt"
           },
           "CARDIO_OCT_04": {
-            "file_count": 2,
-            "convention": "unrecognized",
-            "expected_present": [],
-            "expected_missing": [],
+            "convention": "external_panel_zip",
             "complete": true,
-            "files": [
-              "sample_CARDIO_OCT_04 (1).zip",
-              "sample_CARDIO_OCT_04.zip"
-            ]
+            "file_count": 6,
+            "raw_reads_zip": "sample_CARDIO_OCT_04.zip",
+            "raw_reads_mb": 1284.2,
+            "vcf": "full_variant_table_CARDIO_OCT_04.vcf",
+            "variants": 1508,
+            "flagged_low_coverage_regions": 33,
+            "qa_report_pdf": "QA-patient_CARDIO_OCT_04.pdf",
+            "variant_table_txt": "full_variant_table_CARDIO_OCT_04.txt"
           },
           "CARDIO_OCT_05": {
-            "file_count": 2,
-            "convention": "unrecognized",
-            "expected_present": [],
-            "expected_missing": [],
+            "convention": "external_panel_zip",
             "complete": true,
-            "files": [
-              "sample_CARDIO_OCT_05 (1).zip",
-              "sample_CARDIO_OCT_05.zip"
-            ]
+            "file_count": 6,
+            "raw_reads_zip": "sample_CARDIO_OCT_05.zip",
+            "raw_reads_mb": 747.6,
+            "vcf": "full_variant_table_CARDIO_OCT_05.vcf",
+            "variants": 1546,
+            "flagged_low_coverage_regions": 45,
+            "qa_report_pdf": "QA-patient_CARDIO_OCT_05.pdf",
+            "variant_table_txt": "full_variant_table_CARDIO_OCT_05.txt"
           },
           "CARDIO_OCT_06": {
-            "file_count": 2,
-            "convention": "unrecognized",
-            "expected_present": [],
-            "expected_missing": [],
+            "convention": "external_panel_zip",
             "complete": true,
-            "files": [
-              "sample_CARDIO_OCT_06 (1).zip",
-              "sample_CARDIO_OCT_06.zip"
-            ]
+            "file_count": 6,
+            "raw_reads_zip": "sample_CARDIO_OCT_06.zip",
+            "raw_reads_mb": 954.0,
+            "vcf": "full_variant_table_CARDIO_OCT_06.vcf",
+            "variants": 1482,
+            "flagged_low_coverage_regions": 32,
+            "qa_report_pdf": "QA-patient_CARDIO_OCT_06.pdf",
+            "variant_table_txt": "full_variant_table_CARDIO_OCT_06.txt"
           },
           "CARDIO_OCT_07": {
-            "file_count": 2,
-            "convention": "unrecognized",
-            "expected_present": [],
-            "expected_missing": [],
+            "convention": "external_panel_zip",
             "complete": true,
-            "files": [
-              "sample_CARDIO_OCT_07 (1).zip",
-              "sample_CARDIO_OCT_07.zip"
-            ]
+            "file_count": 6,
+            "raw_reads_zip": "sample_CARDIO_OCT_07.zip",
+            "raw_reads_mb": 628.4,
+            "vcf": "full_variant_table_CARDIO_OCT_07.vcf",
+            "variants": 1409,
+            "flagged_low_coverage_regions": 60,
+            "qa_report_pdf": "QA-patient_CARDIO_OCT_07.pdf",
+            "variant_table_txt": "full_variant_table_CARDIO_OCT_07.txt"
           },
           "CARDIO_OCT_08": {
-            "file_count": 2,
-            "convention": "unrecognized",
-            "expected_present": [],
-            "expected_missing": [],
+            "convention": "external_panel_zip",
             "complete": true,
-            "files": [
-              "sample_CARDIO_OCT_08 (1).zip",
-              "sample_CARDIO_OCT_08.zip"
-            ]
+            "file_count": 6,
+            "raw_reads_zip": "sample_CARDIO_OCT_08.zip",
+            "raw_reads_mb": 1599.8,
+            "vcf": "full_variant_table_CARDIO_OCT_08.vcf",
+            "variants": 1724,
+            "flagged_low_coverage_regions": 33,
+            "qa_report_pdf": "QA-patient_CARDIO_OCT_08.pdf",
+            "variant_table_txt": "full_variant_table_CARDIO_OCT_08.txt"
           },
           "CARDIO_OCT_09": {
-            "file_count": 2,
-            "convention": "unrecognized",
-            "expected_present": [],
-            "expected_missing": [],
+            "convention": "external_panel_zip",
             "complete": true,
-            "files": [
-              "sample_CARDIO_OCT_09 (1).zip",
-              "sample_CARDIO_OCT_09.zip"
-            ]
+            "file_count": 6,
+            "raw_reads_zip": "sample_CARDIO_OCT_09.zip",
+            "raw_reads_mb": 1640.3,
+            "vcf": "full_variant_table_CARDIO_OCT_09.vcf",
+            "variants": 1734,
+            "flagged_low_coverage_regions": 34,
+            "qa_report_pdf": "QA-patient_CARDIO_OCT_09.pdf",
+            "variant_table_txt": "full_variant_table_CARDIO_OCT_09.txt"
           },
           "CARDIO_OCT_10": {
-            "file_count": 2,
-            "convention": "unrecognized",
-            "expected_present": [],
-            "expected_missing": [],
+            "convention": "external_panel_zip",
             "complete": true,
-            "files": [
-              "sample_CARDIO_OCT_10 (1).zip",
-              "sample_CARDIO_OCT_10.zip"
-            ]
+            "file_count": 6,
+            "raw_reads_zip": "sample_CARDIO_OCT_10.zip",
+            "raw_reads_mb": 1012.2,
+            "vcf": "full_variant_table_CARDIO_OCT_10.vcf",
+            "variants": 1486,
+            "flagged_low_coverage_regions": 31,
+            "qa_report_pdf": "QA-patient_CARDIO_OCT_10.pdf",
+            "variant_table_txt": "full_variant_table_CARDIO_OCT_10.txt"
           },
           "CARDIO_OCT_11": {
-            "file_count": 2,
-            "convention": "unrecognized",
-            "expected_present": [],
-            "expected_missing": [],
+            "convention": "external_panel_zip",
             "complete": true,
-            "files": [
-              "sample_CARDIO_OCT_11 (1).zip",
-              "sample_CARDIO_OCT_11.zip"
-            ]
+            "file_count": 6,
+            "raw_reads_zip": "sample_CARDIO_OCT_11.zip",
+            "raw_reads_mb": 627.6,
+            "vcf": "full_variant_table_CARDIO_OCT_11.vcf",
+            "variants": 1287,
+            "flagged_low_coverage_regions": 46,
+            "qa_report_pdf": "QA-patient_CARDIO_OCT_11.pdf",
+            "variant_table_txt": "full_variant_table_CARDIO_OCT_11.txt"
           },
           "CARDIO_OCT_12": {
-            "file_count": 2,
-            "convention": "unrecognized",
-            "expected_present": [],
-            "expected_missing": [],
+            "convention": "external_panel_zip",
             "complete": true,
-            "files": [
-              "sample_CARDIO_OCT_12 (1).zip",
-              "sample_CARDIO_OCT_12.zip"
-            ]
+            "file_count": 6,
+            "raw_reads_zip": "sample_CARDIO_OCT_12.zip",
+            "raw_reads_mb": 967.4,
+            "vcf": "full_variant_table_CARDIO_OCT_12.vcf",
+            "variants": 1662,
+            "flagged_low_coverage_regions": 43,
+            "qa_report_pdf": "QA-patient_CARDIO_OCT_12.pdf",
+            "variant_table_txt": "full_variant_table_CARDIO_OCT_12.txt"
           }
         },
-        "cohort_level_files": [
-          "full_variant_table_CARDIO_OCT_05.vcf",
-          "ФИО.docx"
-        ]
+        "has": {
+          "per_sample": true,
+          "raw_reads": true,
+          "panel_variants": true,
+          "clinical_reports": true,
+          "coverage_flags": true,
+          "allele_freqs": false,
+          "panel_coverage": false,
+          "sample_qc": false,
+          "imputation": false,
+          "popgen": false,
+          "sub_cohorts": false
+        },
+        "size_bytes": {
+          "root": 13552691122
+        },
+        "size_total_bytes": 13552691122
       },
       "discrepancies": []
     },
@@ -14294,6 +14415,31 @@
       },
       "sub_paths_note": "cases/controls counted from these two dirs only (transplant and annotations dirs deliberately excluded from counting - transplant is 1 known sample already reflected in n_claimed, and annotations/ describes the SAME 25 samples rather than being a new batch, so scanning it too would double-count). Known caveat not yet resolved: results/ physically contains 14 sample outputs (Cardio1-12 + Cardio1017 transplant + CardioUndetermined demux leftover) rather than exactly the 12 true cases - a correct count requires filtering by annotations/cases.tsv's authoritative sample list, which this scanner does not yet do. Other real output dirs not yet counted: results_pangenome_cases/, healthy/results_pangenome_controls/ (pangenome-reference reruns of the same samples), transplant/, annotations_transplant/.",
       "description": "WGS DRAGEN germline pipeline (native single-sample naming CardioN.*, NOT the sarek/bcftools convention used by cardio_wes_v350432671). 12 cases + 12 controls + 1 transplant sample = 25 total, each with full DRAGEN output (BAM, hard-filtered VCF, coverage/QC metrics, ROH) and most also reprocessed against a pangenome reference. Pathogenic-variant aggregation exists and is real (annotations/aggregated_pathogenic_variants.json), covering the 12+12 case/control set; transplant sample annotated separately, not yet merged into the aggregation.",
+      "aux_paths": {
+        "annotations": "/staging/cardio/sophia/fastq/annotations/",
+        "annotations_transplant": "/staging/cardio/sophia/fastq/annotations_transplant/",
+        "pangenome_cases": "/staging/cardio/sophia/fastq/results_pangenome_cases/",
+        "pangenome_controls": "/staging/cardio/sophia/fastq/healthy/results_pangenome_controls/",
+        "transplant": "/staging/cardio/sophia/fastq/transplant/"
+      },
+      "aux_paths_note": "Describe the SAME 25 samples (annotation tables, pathogenic-variant aggregation, pangenome-reference re-runs, the transplant sample's own dir). Scanned for capabilities and file counts only - never for sample counts, which would double-count.",
+      "curated": {
+        "_note": "Hand-written by the lab in the original data-sources page. Human knowledge, not derivable from disk. Keep editing this here; it is never overwritten by a scan.",
+        "tech_label": "WGS",
+        "samples_label": "14 + 11 + ~40",
+        "kv": {
+          "PI": "Sophia",
+          "Reference": "hg38 + pangenome (cases)",
+          "Cases": "14 paired-end FASTQ",
+          "Healthy controls": "11 samples (IDs: 25,27,32,36,39,40,41,827,838,839,843)",
+          "Transplant": "~40 samples with DRAGEN BAM/VCF",
+          "Results": "results/, results_pangenome_cases/",
+          "Annotations": "aggregated_pathogenic_variants.json, all_samples_pathogenic_variants.tsv",
+          "Scripts": "run_dragen.sh, run_dragen_transplant.sh"
+        },
+        "tree": "/staging/cardio/sophia/fastq/\n  1_S1...14_S14_R[12].fastq.gz\n  healthy/\n  transplant/\n  results/\n  results_pangenome_cases/\n  annotations/\n  annotations_transplant/",
+        "note": ""
+      },
       "live_scan": {
         "root_path": "/staging/cardio/sophia/fastq",
         "sample_count": 0,
@@ -14337,6 +14483,19 @@
           "run_dragen_undetermined.sh"
         ],
         "raw_fastq_samples_detected": 14,
+        "has": {
+          "per_sample": true,
+          "raw_reads": true,
+          "panel_variants": true,
+          "clinical_reports": true,
+          "sample_qc": true,
+          "coverage_flags": true,
+          "allele_freqs": false,
+          "panel_coverage": false,
+          "imputation": false,
+          "popgen": false,
+          "sub_cohorts": true
+        },
         "sub_path_scans": {
           "cases": {
             "root_path": "/staging/cardio/sophia/fastq/results",
@@ -14594,7 +14753,20 @@
               "hipassnotbenign",
               "rare_potential_pathogenic.tsv",
               "variants_report.csv"
-            ]
+            ],
+            "has": {
+              "per_sample": true,
+              "raw_reads": false,
+              "panel_variants": true,
+              "clinical_reports": false,
+              "sample_qc": true,
+              "coverage_flags": true,
+              "allele_freqs": false,
+              "panel_coverage": false,
+              "imputation": false,
+              "popgen": false,
+              "sub_cohorts": false
+            }
           },
           "controls": {
             "root_path": "/staging/cardio/sophia/fastq/healthy/results",
@@ -14785,10 +14957,121 @@
               "Cardio839-replay.json",
               "Cardio906-replay.json",
               "Cardio998-replay.json"
-            ]
+            ],
+            "has": {
+              "per_sample": true,
+              "raw_reads": false,
+              "panel_variants": true,
+              "clinical_reports": false,
+              "sample_qc": true,
+              "coverage_flags": true,
+              "allele_freqs": false,
+              "panel_coverage": false,
+              "imputation": false,
+              "popgen": false,
+              "sub_cohorts": false
+            }
           }
         },
-        "sample_count_including_sub_paths": 25
+        "sample_count_including_sub_paths": 25,
+        "aux_path_scans": {
+          "annotations": {
+            "root_path": "/staging/cardio/sophia/fastq/annotations/",
+            "file_count": 41,
+            "has": {
+              "per_sample": true,
+              "raw_reads": false,
+              "panel_variants": true,
+              "clinical_reports": true,
+              "sample_qc": false,
+              "coverage_flags": false,
+              "allele_freqs": false,
+              "panel_coverage": false,
+              "imputation": false,
+              "popgen": false,
+              "sub_cohorts": false
+            }
+          },
+          "annotations_transplant": {
+            "root_path": "/staging/cardio/sophia/fastq/annotations_transplant/",
+            "file_count": 2,
+            "has": {
+              "per_sample": true,
+              "raw_reads": false,
+              "panel_variants": true,
+              "clinical_reports": true,
+              "sample_qc": false,
+              "coverage_flags": false,
+              "allele_freqs": false,
+              "panel_coverage": false,
+              "imputation": false,
+              "popgen": false,
+              "sub_cohorts": false
+            }
+          },
+          "pangenome_cases": {
+            "root_path": "/staging/cardio/sophia/fastq/results_pangenome_cases/",
+            "file_count": 421,
+            "has": {
+              "per_sample": true,
+              "raw_reads": false,
+              "panel_variants": true,
+              "clinical_reports": false,
+              "sample_qc": true,
+              "coverage_flags": true,
+              "allele_freqs": false,
+              "panel_coverage": false,
+              "imputation": false,
+              "popgen": false,
+              "sub_cohorts": false
+            }
+          },
+          "pangenome_controls": {
+            "root_path": "/staging/cardio/sophia/fastq/healthy/results_pangenome_controls/",
+            "file_count": 396,
+            "has": {
+              "per_sample": true,
+              "raw_reads": false,
+              "panel_variants": true,
+              "clinical_reports": false,
+              "sample_qc": true,
+              "coverage_flags": true,
+              "allele_freqs": false,
+              "panel_coverage": false,
+              "imputation": false,
+              "popgen": false,
+              "sub_cohorts": false
+            }
+          },
+          "transplant": {
+            "root_path": "/staging/cardio/sophia/fastq/transplant/",
+            "file_count": 39,
+            "has": {
+              "per_sample": true,
+              "raw_reads": true,
+              "panel_variants": true,
+              "clinical_reports": false,
+              "sample_qc": true,
+              "coverage_flags": true,
+              "allele_freqs": false,
+              "panel_coverage": false,
+              "imputation": false,
+              "popgen": false,
+              "sub_cohorts": false
+            }
+          }
+        },
+        "size_bytes": {
+          "root": 91520243044,
+          "cases": 16298720931,
+          "controls": 13848230822,
+          "aux:annotations": 15355584,
+          "aux:annotations_transplant": 216820,
+          "aux:pangenome_cases": 14750277770,
+          "aux:pangenome_controls": 13771094607,
+          "aux:transplant": 2526821239
+        },
+        "size_total_bytes": 91520243044
       },
       "discrepancies": []
     },
@@ -14803,6 +15086,21 @@
       "processed_path": "/staging/ALSU-analysis/admixture_analysis/temp/dragen_array_test_20260513/gwas2026/plink/",
       "path_note": "root_path only has raw IDATs (96 samples); processed_path has the real staged QC output (raw/sampleqc/geno10/varqc), parked in someone's admixture_analysis/temp/ working directory rather than a proper deliverable path. Also folded into the 'alsu_expanded' combined cohort (95 of the original 96 samples, before that cohort's own further joint QC).",
       "description": "96 raw samples, 4x24 GSA chips; 95 genotype-called, 83 pass this batch's own variant-level QC. Case/control design for an unstated study (per source docs, purpose not yet resolved with the study team) - confirmed to have no bearing on its use in population-genetics analyses (ascertainment on an unrelated trait doesn't distort PCA/ADMIXTURE/Fst).",
+      "curated": {
+        "_note": "Hand-written by the lab in the original data-sources page. Human knowledge, not derivable from disk. Keep editing this here; it is never overwritten by a scan.",
+        "tech_label": "GSA v3",
+        "samples_label": "96 (4 Ã— 24)",
+        "kv": {
+          "Chip IDs": "208993030058, 208993030083, 209422280033, 209422280035",
+          "Sample sheet ground truth": "GWAS2026_dragen_sample_sheet_95_existing_idats.csv â€” 95 rows, Sample_Group column is literally â€˜caseâ€™ or â€˜controlâ€™ per row (roughly even split), IDs use a distinct initials-based scheme (e.g. 190-TS, CAT-180-EN, Rustamov_Aziz) that matches neither the original ALSU cohort (01-01 style) nor GWAS2026-2 (35-SN style)",
+          "What this is NOT": "A prior version of this tracker (commit 4a1a894, 2026-05-20) claimed this batch â€˜replaces 2 failed ALSU chips (208993030034, 208993030080, 48 samples)â€™. That claim was fabricated â€” those two barcodes are real and do belong to 48 real original-cohort samples, but there is zero ID overlap between this batch and the original cohort, and this batchâ€™s own sample sheet never mentions replacement or those barcodes. Confirmed directly with the study owner (2026-08-12): these are genuinely new samples, not a rescan.",
+          "Case/control meaning": "Unknown â€” not stated anywhere in the sample sheet or elsewhere on DRAGEN. Do not assume RPL or population-genetics relevance without asking.",
+          "Format": "XML intensity + QC TXT + scan images",
+          "Next step": "Do not merge into any pipeline until the case/control study purpose is known"
+        },
+        "tree": "/staging/GWAS2026/GWAS_IDAT/\n  208993030058/  [24 samples]\n  208993030083/  [24 samples]\n  209422280033/  [24 samples]\n  209422280035/  [24 samples]\n  diag/",
+        "note": "Purpose unresolved as of 2026-08-12. Sample sheet is the only ground truth available; it does not disambiguate the case/control phenotype. Parked â€” not integrated into the popgen expansion (which uses GWAS2026-2 only)."
+      },
       "live_scan": {
         "root_path": "/staging/ALSU-analysis/admixture_analysis/temp/dragen_array_test_20260513/gwas2026/plink",
         "plink_filesets_found": 4,
@@ -15319,7 +15617,26 @@
           "/staging/ALSU-analysis/admixture_analysis/temp/dragen_array_test_20260513/gwas2026/plink/gwas2026_raw",
           "/staging/ALSU-analysis/admixture_analysis/temp/dragen_array_test_20260513/gwas2026/plink/gwas2026_sampleqc"
         ],
-        "qc_side_files_found": 0
+        "qc_side_files_found": 0,
+        "has": {
+          "per_sample": true,
+          "raw_reads": true,
+          "panel_variants": false,
+          "clinical_reports": false,
+          "coverage_flags": false,
+          "allele_freqs": true,
+          "allele_freqs_precomputed": false,
+          "panel_coverage": true,
+          "sample_qc": false,
+          "imputation": false,
+          "popgen": false,
+          "sub_cohorts": false
+        },
+        "size_bytes": {
+          "root": 3799768263,
+          "processed": 125198831
+        },
+        "size_total_bytes": 3924967094
       },
       "discrepancies": []
     },
@@ -15331,6 +15648,24 @@
       "n_claimed": 87,
       "root_path": "/staging/GWAS2026-2/",
       "description": "87/96 post-QC samples, full PLINK+QC trail complete.",
+      "curated": {
+        "_note": "Hand-written by the lab in the original data-sources page. Human knowledge, not derivable from disk. Keep editing this here; it is never overwritten by a scan.",
+        "tech_label": "GSA v3",
+        "samples_label": "87 (of 96, post-QC)",
+        "kv": {
+          "Chip IDs": "209422280026, 209422280029, 209422280044, 209422280066",
+          "Sample sheet": "GWAS_192_merged_sample_sheet_31072026.xlsx (192 rows Ã¢â‚¬â€ cumulative w/ GWAS2026Ã¢â‚¬â„¢s 96)",
+          "Cohort": "General population samples, no case/control phenotype in sheet Ã¢â‚¬â€ not part of the RPL study",
+          "Pipeline": "DRAGEN Array GenCall (dragena 1.4.0) Ã¢â€ â€™ gtc-to-vcf Ã¢â€ â€™ bcftools merge Ã¢â€ â€™ PLINK QC (same recipe as GWAS2026)",
+          "Genotyping call": "95/96 (209422280044_R03C02 / sample 314-AB failed GenCall)",
+          "Sample QC": "95 Ã¢â€ â€™ 87: 7 removed via KING relatedness (0.185 cutoff), 1 heterozygosity outlier",
+          "Variant QC": "613,586 Ã¢â€ â€™ 437,596 variants (geno 0.10 Ã¢â€ â€™ geno 0.02/hwe 1e-6/maf 0.01)",
+          "PCA": "153,623 LD-pruned SNPs, 10 PCs, 87 samples",
+          "Output": "/staging/GWAS2026-2/plink/, qc/ (gwas2026_2_* prefix)"
+        },
+        "tree": "/staging/GWAS2026-2/\n  209422280026/  [24 samples]\n  209422280029/  [24 samples]\n  209422280044/  [24 samples]\n  209422280066/  [24 samples]\n  diag/\n  gtc/  vcf/  plink/  qc/  logs/",
+        "note": "Second population-samples batch, distinct from the ALSU/RPL cohort. QC complete 2026-07-31. Found one hidden unexpected-duplicate pair (303-AF / 304-UD, PI_HAT=1.0, different sample IDs) needing identity verification Ã¢â‚¬â€ see chat log for full flagged-sample list with reasons."
+      },
       "live_scan": {
         "root_path": "/staging/GWAS2026-2",
         "plink_filesets_found": 6,
@@ -15871,7 +16206,25 @@
           "/staging/GWAS2026-2/plink/gwas2026_2_raw",
           "/staging/GWAS2026-2/plink/gwas2026_2_sampleqc"
         ],
-        "qc_side_files_found": 17
+        "qc_side_files_found": 17,
+        "has": {
+          "per_sample": true,
+          "raw_reads": true,
+          "panel_variants": false,
+          "clinical_reports": false,
+          "coverage_flags": false,
+          "allele_freqs": true,
+          "allele_freqs_precomputed": false,
+          "panel_coverage": true,
+          "sample_qc": true,
+          "imputation": false,
+          "popgen": false,
+          "sub_cohorts": false
+        },
+        "size_bytes": {
+          "root": 7025097436
+        },
+        "size_total_bytes": 7025097436
       },
       "discrepancies": []
     },
@@ -15886,6 +16239,19 @@
       "path_note": "CORRECTED from 'pending' - this WAS genotype-called (DRAGEN Array, 48/48 GTCs succeeded - a better rate than gwas2026_2's 95/96 - per COHORT_EXPANSION_2026_08_INTEGRATION_NOTES.md) and has real PLINK raw output. root_path only has raw IDATs; processed_path has the real output, parked in someone's admixture_analysis/temp/ working directory. Folded into the 'alsu_expanded' combined cohort - no separate standalone final deliverable beyond that merge.",
       "identity_note": "These are rescans of original ALSU cohort members whose chips catastrophically failed. Independently confirmed (verify_remaining.sh): all 48/48 rescan48 sample IDs appear in ALSU's PRE-imputation fileset (winter2025/PLINK_301125_0312/ConvSK_raw, 1,247 samples), and 0/48 in ALSU's POST-imputation fileset (1,074 samples). That zero is the expected signature rather than a problem: these are exactly the samples QC dropped (1,247 -> 1,074) because their chips failed, which is why they were rescanned in the first place. 47 of the 48 then survive alsu_expanded's joint QC. So a cross-dataset sample view will correctly show rescan48 overlapping alsu_expanded but NOT alsu.",
       "description": "48 samples, 2x24 GSA chips - rescans of ALSU original-cohort members whose original chips failed. Not a new/independent cohort; its downstream product is the merged 'alsu_expanded' dataset.",
+      "curated": {
+        "_note": "Hand-written by the lab in the original data-sources page. Human knowledge, not derivable from disk. Keep editing this here; it is never overwritten by a scan.",
+        "tech_label": "GSA v3",
+        "samples_label": "48 (2 Ã— 24)",
+        "kv": {
+          "Chip IDs": "209422280005, 209422280032",
+          "Sample sheet": "48_rescan_sample_sheet_18052026.xlsx",
+          "Purpose": "QC validation and concordance checking",
+          "Next step": "Concordance analysis vs original ALSU calls"
+        },
+        "tree": "/staging/GWAS2026/48redone/\n  48_rescan_sample_sheet_18052026.xlsx\n  ALSU rescan/\n    209422280005/  [24 samples]\n    209422280032/  [24 samples]\n    diag/",
+        "note": ""
+      },
       "live_scan": {
         "root_path": "/staging/ALSU-analysis/admixture_analysis/temp/dragen_array_test_20260513/gwas48redone/plink",
         "plink_filesets_found": 1,
@@ -16188,7 +16554,26 @@
         },
         "inferred_stage": "plink_fileset_present_no_full_qc",
         "equally_or_more_complete_alternatives": [],
-        "qc_side_files_found": 0
+        "qc_side_files_found": 0,
+        "has": {
+          "per_sample": true,
+          "raw_reads": true,
+          "panel_variants": false,
+          "clinical_reports": false,
+          "coverage_flags": false,
+          "allele_freqs": true,
+          "allele_freqs_precomputed": false,
+          "panel_coverage": true,
+          "sample_qc": false,
+          "imputation": false,
+          "popgen": false,
+          "sub_cohorts": false
+        },
+        "size_bytes": {
+          "root": 1880423875,
+          "processed": 27902088
+        },
+        "size_total_bytes": 1908325963
       },
       "discrepancies": []
     },
@@ -16200,6 +16585,22 @@
       "n_claimed": 1,
       "root_path": "/staging/Pavel/26-BB-107431 127 REDACTED REDACTED/",
       "description": "1 sample, raw FASTQ only, pending processing.",
+      "curated": {
+        "_note": "Hand-written by the lab in the original data-sources page. Human knowledge, not derivable from disk. Keep editing this here; it is never overwritten by a scan.",
+        "tech_label": "WES",
+        "samples_label": "1",
+        "kv": {
+          "Sample ID": "26-BB-107431 (127)",
+          "Individual": "ÃÂ¡ÃÂ°ÃÂ¸ÃÂ´ÃÂºÃÂ°Ã‘â‚¬ÃÂ¸ÃÂ¼ÃÂ¾ÃÂ²ÃÂ° Ãâ€œÃ‘Æ’ÃÂ·ÃÂ°ÃÂ»Ã‘â€¦ÃÂ°ÃÂ½ (REDACTED REDACTED)",
+          "Assay": "Whole exome sequencing (per submitter; not independently re-verified from the read data)",
+          "Platform": "MGI/BGI DNBSEQ (flowcell V350418124)",
+          "Read length": "~111 bp paired-end (verified from FASTQ header)",
+          "Files": "2 FASTQ.gz (R1/R2), 5.7 GB + 5.6 GB",
+          "Relation to cohort": "Standalone isolated sample Ã¢â‚¬â€ not part of ALSU, GWAS2026, GWAS2026-2, or 48redone; no known relatedness to any existing cohort member"
+        },
+        "tree": "/staging/Pavel/26-BB-107431 127 ÃÂ¡ÃÂ°ÃÂ¸ÃÂ´ÃÂºÃÂ°Ã‘â‚¬ÃÂ¸ÃÂ¼ÃÂ¾ÃÂ²ÃÂ° Ãâ€œÃ‘Æ’ÃÂ·ÃÂ°ÃÂ»Ã‘â€¦ÃÂ°ÃÂ½/\n  V350418124_L03_127_1.fq.gz\n  V350418124_L03_127_2.fq.gz",
+        "note": "Found under /staging/Pavel, a directory not previously catalogued in this tracker. Added as a separate, unrelated entry per explicit request 2026-08-14. Not yet aligned or processed Ã¢â‚¬â€ raw FASTQ only."
+      },
       "live_scan": {
         "root_path": "/staging/Pavel/26-BB-107431 127 REDACTED REDACTED",
         "sample_count": 0,
@@ -16211,7 +16612,24 @@
           "V350418124_L03_127_1.fq.gz",
           "V350418124_L03_127_2.fq.gz"
         ],
-        "raw_fastq_samples_detected": 1
+        "raw_fastq_samples_detected": 1,
+        "has": {
+          "per_sample": false,
+          "raw_reads": true,
+          "panel_variants": false,
+          "clinical_reports": false,
+          "sample_qc": false,
+          "coverage_flags": false,
+          "allele_freqs": false,
+          "panel_coverage": false,
+          "imputation": false,
+          "popgen": false,
+          "sub_cohorts": false
+        },
+        "size_bytes": {
+          "root": 11327849853
+        },
+        "size_total_bytes": 11327849853
       },
       "discrepancies": []
     },
@@ -16224,6 +16642,27 @@
       "n_claimed": 16,
       "root_path": "/staging/WES_sarek/clinical_reports/",
       "description": "16-sample whole-exome cardiomyopathy cohort, full Sarek-style pipeline. Note: /staging/WES_sarek/ top level is a cluttered working dir with 60+ leftover scripts; clinical_reports/ subdir is the clean output root.",
+      "curated": {
+        "_note": "Hand-written by the lab in the original data-sources page. Human knowledge, not derivable from disk. Keep editing this here; it is never overwritten by a scan.",
+        "tech_label": "WES",
+        "samples_label": "16",
+        "kv": {
+          "Platform": "MGI DNBSEQ (machine C21304100240015), PE100, 4 lanes",
+          "Kit": "MGIEasy Exome Universal Library Prep Set",
+          "Reference": "GRCh38/hg38",
+          "Sample naming": "sample01Ã¢â‚¬â€œsample16 (barcode1Ã¢â‚¬â€œbarcode16, one per lane-merged individual)",
+          "QC": "Q30 ~98% avg across all 4 lanes; mean depth ~30Ã¢â‚¬â€œ33x over the 26-gene cardiomyopathy panel coding regions (measured directly from completed CRAMs Ã¢â‚¬â€ on the low side for confident heterozygous calling in GC-rich/repetitive exons; see project notes before increasing multiplexing per batch)",
+          "Pipeline": "github.com/Toki-bio/example_workflow (bwa+bcftools+snpEff/ClinVar) Ã¢â‚¬â€ fixed mid-project: original run was misconfigured with RESTRICT_TO_PANEL=1 against an unrelated 26-gene BED, plus a silently-broken hard-filter and a missing bwa read-group; all three fixed and pushed (commit 823032f)",
+          "Findings": "33 distinct pathogenic/likely-pathogenic ClinVar variants across the cohort; only one (BAG3, chr10:119,676,971, sample04) sits in an established dilated-cardiomyopathy gene Ã¢â‚¬â€ everything else surfaced because calling is exome-wide, not panel-restricted. Two variants (CPT1A 5/16, CDKN2B 16/16) recur suspiciously often for their Ã¢â‚¬Å“PathogenicÃ¢â‚¬Â tags and are more likely common population variants than real per-carrier findings.",
+          "Explorer integration": "Cohort allele frequencies for all 33 variants are now a queryable data source in this explorer (Ã¢â‚¬Å“Cardio WES (n=16)Ã¢â‚¬Â, commit b3d799d) Ã¢â‚¬â€ genotyped properly via bcftools call -m across all 16 samples including hom-ref, not the variant-only call that silently drops reference samples from the denominator."
+        },
+        "tree": "/staging/WES_sarek/\n  fastq_merged/          [32 files: sample01Ã¢â‚¬â€œ16 R1/R2]\n  clinical_reports/      [.markdup.cram, .bcftools.*.vcf.gz, .report.html per sample]\n  example_workflow/      [pipeline clone]\n  README_DATA_STRUCTURE.md",
+        "note": "Disease-ascertained cohort (all 16 diagnosed with cardiomyopathy) Ã¢â‚¬â€ pathogenic-variant frequencies here reflect prevalence among diagnosed patients, not the general Uzbek population (compare against the ALSU/GSA array entries for that). A population-level allele-frequency cross-check against the ALSU array cohort was run separately; overlap between array-tag SNPs and exome-covered positions is inherently thin by design (~500 comparable positions out of 469k array SNPs)."
+      },
+      "aux_paths": {
+        "raw_fastq": "/staging/WES_sarek/fastq_merged/"
+      },
+      "aux_paths_note": "raw_fastq: the merged per-sample FASTQ (32 files, 16 samples x R1/R2, ~195 GB) the pipeline was run from. Not a sample-count source (clinical_reports/ is); scanned for capabilities and size only. The original lane-split run folder V350432671 lives off-server.",
       "live_scan": {
         "root_path": "/staging/WES_sarek/clinical_reports",
         "sample_count": 16,
@@ -16458,7 +16897,44 @@
         },
         "cohort_level_files": [
           "aggregated_pathogenic_variants.json"
-        ]
+        ],
+        "has": {
+          "per_sample": true,
+          "raw_reads": true,
+          "panel_variants": true,
+          "clinical_reports": true,
+          "sample_qc": true,
+          "coverage_flags": false,
+          "allele_freqs": false,
+          "panel_coverage": false,
+          "imputation": false,
+          "popgen": false,
+          "sub_cohorts": false
+        },
+        "aux_path_scans": {
+          "raw_fastq": {
+            "root_path": "/staging/WES_sarek/fastq_merged/",
+            "file_count": 32,
+            "has": {
+              "per_sample": false,
+              "raw_reads": true,
+              "panel_variants": false,
+              "clinical_reports": false,
+              "sample_qc": false,
+              "coverage_flags": false,
+              "allele_freqs": false,
+              "panel_coverage": false,
+              "imputation": false,
+              "popgen": false,
+              "sub_cohorts": false
+            }
+          }
+        },
+        "size_bytes": {
+          "root": 53947315053,
+          "aux:raw_fastq": 206514412511
+        },
+        "size_total_bytes": 260461727564
       },
       "discrepancies": []
     }

@@ -10,6 +10,7 @@ implicit signal explicit.
 Usage: scan_gsa.py <root_dir> > gsa_scan.json
 """
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -126,6 +127,40 @@ def scan(root: Path) -> dict:
                         }
             sample_count = len(samples)
 
+    # Capability flags, each tied to a concrete file observed under root.
+    # Match on FILE NAMES, not full paths: gwas96/rescan48 live under a
+    # directory literally called admixture_analysis/, which made a path
+    # substring match report population-genetics output they don't have.
+    files = [f for f in root.rglob("*") if f.is_file()]
+    names = [f.name.lower() for f in files]
+    rels  = [str(f.relative_to(root)).lower() for f in files]
+    def any_name(*subs): return any(s in n for n in names for s in subs)
+    def any_rel(*subs):  return any(s in r for r in rels  for s in subs)
+    # Population-genetics outputs: ADMIXTURE .Q/.P files, Fst, ROH, or a PCA
+    # that is NOT just the sample-QC PCA sitting under a qc/ directory.
+    popgen_pca = any(r.endswith((".eigenvec", ".eigenval")) and "qc/" not in r for r in rels)
+    popgen_adm = any(re.fullmatch(r".+\.\d+\.[qp]", n) for n in names)  # e.g. UZB_v2_admix.5.Q
+    has = {
+        "per_sample": bool(samples),
+        # raw array scans: IDAT/GTC intensity files or Illumina .sdf scan descriptors
+        "raw_reads": any_name(".idat", ".gtc", ".sdf"),
+        "panel_variants": False,
+        "clinical_reports": False,
+        "coverage_flags": False,
+        # .frq/.afreq present, or computable from the .bed by plink --freq
+        "allele_freqs": bool(best_base) and (bool(best_exts & {".frq", ".afreq"}) or ".bed" in best_exts),
+        "allele_freqs_precomputed": bool(best_exts & {".frq", ".afreq"}),
+        "panel_coverage": bool(best_base) and ".bim" in best_exts,
+        "sample_qc": bool(best_exts & PLINK_QC) or bool(qc_side_files),
+        # The scanned root itself may sit INSIDE an imputation output tree
+        # (alsu_expanded: .../imputation_results/hq_filtered/), in which case
+        # no path beneath it contains the marker - so check the root too.
+        "imputation": any_rel("post_imputation/", "post-imputation/", "imputation_results/")
+                      or any_name(".dose.vcf")
+                      or any(m in str(root).lower() for m in ("post_imputation", "post-imputation", "imputation_results")),
+        "popgen": popgen_pca or popgen_adm or any_name(".fst", ".hom", ".hom.indiv", ".roh"),
+        "sub_cohorts": False,
+    }
     return {
         "root_path": str(root),
         "plink_filesets_found": len(filesets),
@@ -136,6 +171,7 @@ def scan(root: Path) -> dict:
         "inferred_stage": stage,
         "equally_or_more_complete_alternatives": sorted(ties),
         "qc_side_files_found": len(qc_side_files),
+        "has": has,
     }
 
 

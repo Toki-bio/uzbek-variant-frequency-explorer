@@ -71,8 +71,9 @@ foreach ($entry in ($result -split ' ;; ')) {
   }
   if ($entry -match '^(?<id>[^:]+):hdr=(?<hdr>\w+),rows=(?<rows>\d+),(?<msg>\w+)$') {
     $id = $Matches.id; $hdr = $Matches.hdr; $rows = [int]$Matches.rows; $msg = $Matches.msg
-    # pavel_wes_saidkarimova legitimately has 0 processed samples (raw FASTQ only)
-    if ($id -eq 'pavel_wes_saidkarimova') {
+    # The single-sample WES submission legitimately has 0 processed samples (raw
+    # FASTQ only). Match the pseudonymised id; the original carried a surname.
+    if ($id -like 'pavel_wes_*') {
       if ($hdr -eq '0') { Write-Host "[PASS] $id - correctly shows 0 (raw FASTQ only)"; $passes++ }
       else { Write-Host "[FAIL] $id - expected 0, got $hdr" -ForegroundColor Red; $fails++ }
       continue

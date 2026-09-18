@@ -3,7 +3,7 @@
 variant x dataset frequency table - the actual point of a focal panel:
 "how common is this variant in each of our cohorts?"
 
-Usage: panel_aggregate.py panel_results.json panel.bed > panel_summary.json
+Usage: panel_aggregate.py panel.bed results1.json [results2.json ...] > panel_summary.json
 """
 import json
 import sys
@@ -27,16 +27,31 @@ def gene_for(chrom, pos, regions):
 
 
 def main():
-    data = json.loads(open(sys.argv[1], encoding="utf-8").read())
-    gene_regions = load_gene_regions(sys.argv[2])
+    gene_regions = load_gene_regions(sys.argv[1])
+    # Merge any number of scan outputs (native-hg38 bcftools scans plus lifted
+    # zip scans). Dataset ids must be unique across files.
+    data = {"datasets": {}}
+    for p in sys.argv[2:]:
+        d = json.loads(open(p, encoding="utf-8").read())
+        for k, v in d["datasets"].items():
+            if k in data["datasets"]:
+                sys.exit(f"duplicate dataset id across inputs: {k}")
+            data["datasets"][k] = v
+    gene_tags = {}  # key -> gene supplied by the scanner itself, if any
     variants = {}  # (chrom,pos,ref,alt) -> {dataset: {carriers: [], alt_allele_count: int, samples_genotyped: int}}
 
+    builds = {}
     for dataset_id, ds in data["datasets"].items():
+        if ds.get("source_build"):
+            builds[dataset_id] = {"source_build": ds["source_build"], "lifted_to": ds.get("lifted_to"),
+                                  "positions_unmapped_by_liftover": ds.get("positions_unmapped_by_liftover")}
         n_samples = len(ds["samples"])
         for sample_id, records in ds["samples"].items():
             seen_keys = set()
             for r in records:
                 key = (r["chrom"], r["pos"], r["ref"], r["alt"])
+                if r.get("gene"):
+                    gene_tags[key] = r["gene"]
                 seen_keys.add(key)
                 v = variants.setdefault(key, {})
                 d = v.setdefault(dataset_id, {"carriers": [], "n_samples_in_dataset": n_samples})
@@ -48,7 +63,7 @@ def main():
     for (chrom, pos, ref, alt), by_dataset in sorted(variants.items(), key=lambda kv: (kv[0][0], kv[0][1])):
         entry = {
             "chrom": chrom, "pos": pos, "ref": ref, "alt": alt,
-            "gene": gene_for(chrom, pos, gene_regions),
+            "gene": gene_tags.get((chrom, pos, ref, alt)) or gene_for(chrom, pos, gene_regions),
             "datasets": {},
         }
         for dataset_id, d in by_dataset.items():
@@ -65,6 +80,7 @@ def main():
         summary.append(entry)
 
     print(json.dumps({"panel": f"cardiomyopathy ({len(gene_regions)}/26 genes, GRCh38 coords from NCBI RefSeq GCF_000001405.40 GRCh38.p14, verified)",
+                       "dataset_builds": builds,
                        "variant_count": len(summary), "variants": summary}, indent=2))
 
 

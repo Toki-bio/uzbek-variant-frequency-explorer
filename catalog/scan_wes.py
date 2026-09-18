@@ -114,6 +114,25 @@ def scan(clinical_reports_dir: Path) -> dict:
     if not samples and raw_fastq_samples:
         result["raw_fastq_samples_detected"] = len(raw_fastq_samples)
         result["status"] = "raw_data_only_not_yet_processed"
+
+    # Capability flags: every one is derived from a file that was actually
+    # seen above. The page renders a section only if its flag is true, so a
+    # dataset never shows an empty "allele frequencies" or "clinical reports"
+    # block for data it does not have.
+    all_files = [fn for fs in files_by_sample.values() for fn in fs] + cohort_level_files
+    def any_ends(*sufs): return any(fn.endswith(sufs) for fn in all_files)
+    conventions = {s["convention"] for s in samples.values()}
+    result["has"] = {
+        "per_sample": bool(samples),
+        "raw_reads": bool(raw_fastq_samples),
+        "panel_variants": bool(samples) and bool(conventions & {"bcftools_sarek", "dragen_native"}),
+        "clinical_reports": any_ends(".report.html", ".case.pathogenic.jsonl", ".control.pathogenic.jsonl")
+                            or "aggregated_pathogenic_variants.json" in cohort_level_files,
+        "sample_qc": any_ends(".fastp.json", ".flagstat.txt", ".mapping_metrics.csv", ".wgs_coverage_metrics.csv"),
+        "coverage_flags": any_ends(".wgs_coverage_metrics.csv", ".roh.bed"),
+        "allele_freqs": False, "panel_coverage": False,
+        "imputation": False, "popgen": False, "sub_cohorts": False,
+    }
     return result
 
 

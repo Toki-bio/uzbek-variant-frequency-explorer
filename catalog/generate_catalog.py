@@ -36,6 +36,16 @@ def run_scanner(script_name: str, root_path: str) -> dict:
         return {"error": "scanner produced non-JSON output"}
 
 
+def dir_size_bytes(path: str):
+    """Real on-disk size via du. None if the path is missing. du -sb follows
+    the same accounting the lab used for the original 'Size' column."""
+    try:
+        out = subprocess.run(["du", "-sb", path], capture_output=True, text=True, timeout=600, check=True)
+        return int(out.stdout.split()[0])
+    except Exception:
+        return None
+
+
 def main():
     if len(sys.argv) != 3:
         print(f"usage: {sys.argv[0]} <registry.json> <output catalog.json>", file=sys.stderr)
@@ -72,9 +82,77 @@ def main():
             # never have PLINK output - scan processed_path instead when set.
             scan_path = ds.get("processed_path") or ds["root_path"]
             scan = run_scanner("scan_gsa.py", scan_path)
+        elif dtype == "targeted_panel":
+            # Externally delivered per-sample zips (VCF + QA report + coverage
+            # flags); read by streaming, never extracted.
+            scan = run_scanner("scan_panel_zip.py", ds["root_path"])
         else:
             scan = {"error": f"unknown type: {dtype}"}
+
+        # Flags the scanner cannot know from the directory alone.
+        if "error" not in scan:
+            has = scan.setdefault("has", {})
+            if extra_roots:
+                has["sub_cohorts"] = True
+                # A dataset's capabilities are the union of everything found in
+                # its root AND its sub-paths. cardio_main's root is raw FASTQ;
+                # all 25 samples, their VCFs and the pathogenic aggregation live
+                # in cases/ and controls/ - without this OR it reported no
+                # per-sample data at all.
+                for sub in scan.get("sub_path_scans", {}).values():
+                    for k, v in (sub.get("has") or {}).items():
+                        if v:
+                            has[k] = True
+            # aux_paths: directories that describe the SAME samples (annotation
+            # tables, pathogenic-variant aggregations, pangenome re-runs). They
+            # contribute capability flags and a file inventory but are never
+            # counted as samples - scanning them as sub_paths would double-count.
+            aux = {}
+            for name, path in (ds.get("aux_paths") or {}).items():
+                path = path.split(" (")[0].strip()
+                if Path(path).exists():
+                    a = run_scanner("scan_wes.py", path)
+                    if "error" not in a:
+                        aux[name] = {"root_path": path,
+                                     "file_count": sum(s["file_count"] for s in a.get("samples", {}).values())
+                                                   + len(a.get("cohort_level_files", [])),
+                                     "has": a.get("has", {})}
+                        for k, v in (a.get("has") or {}).items():
+                            if v:
+                                has[k] = True
+            if aux:
+                scan["aux_path_scans"] = aux
+            if dtype == "gsa" and ds.get("root_path") and ds.get("processed_path") \
+               and ds["root_path"] != ds["processed_path"]:
+                has["raw_reads"] = True   # raw IDAT export exists separately
         entry["live_scan"] = scan
+
+        # On-disk size, derived. A directory that lies INSIDE another counted
+        # directory is reported for information but NOT added to the total -
+        # du of the parent already includes it. (cardio_main's cases/ and
+        # controls/ sit under its root; alsu_expanded's processed dir sits
+        # under its root. Adding those again overstated both by ~30%.)
+        if "error" not in scan:
+            root = ds.get("root_path")
+            candidates = [("root", root), ("processed", ds.get("processed_path"))]
+            candidates += list(extra_roots.items())
+            candidates += [(f"aux:{n}", p.split(" (")[0].strip()) for n, p in (ds.get("aux_paths") or {}).items()]
+            sizes, counted, total = {}, [], 0
+            def under(p, parents):
+                rp = Path(p).resolve()
+                return any(rp == Path(q).resolve() or Path(q).resolve() in rp.parents for q in parents)
+            for label, p in candidates:
+                if not p or not Path(p).exists():
+                    continue
+                b = dir_size_bytes(p)
+                if b is None:
+                    continue
+                sizes[label] = b
+                if not under(p, counted):
+                    total += b
+                    counted.append(p)
+            scan["size_bytes"] = sizes
+            scan["size_total_bytes"] = total
 
         # Flag registry claims that disagree with what the scanner actually found,
         # instead of silently trusting either side.
@@ -95,7 +173,25 @@ def main():
 
         entries.append(entry)
 
+    def sh(cmd):
+        try:
+            return subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=30).stdout.strip()
+        except Exception:
+            return ""
+    # The original page had a hand-typed host row (host, IP, OS, DRAGEN, RAM,
+    # free space, scanned date). Every one of those is derivable, so derive it.
+    host = {
+        "hostname": sh("hostname -s"),
+        "ip_lan": sh("hostname -I | tr ' ' '\\n' | grep -E '^10\\.' | head -1"),
+        "ip_tailscale": sh("hostname -I | tr ' ' '\\n' | grep -E '^100\\.' | head -1"),
+        "os": sh(". /etc/os-release && echo \"$PRETTY_NAME\""),
+        "dragen": sh("ls -1 /opt/dragen 2>/dev/null | grep -E '^[0-9]' | sort -V | tr '\\n' ' '").strip(),
+        "ram_gb": sh("free -g | awk '/^Mem:/{print $2}'"),
+        "staging_free": sh("df -h /staging | awk 'NR==2{print $4\" / \"$2}'"),
+    }
+
     catalog = {
+        "host": host,
         "generated_at": __import__("datetime").datetime.now().astimezone().isoformat(timespec="seconds"),
         "generated_note": (
             "sample counts, file inventories, and status are LIVE - re-derived from "
