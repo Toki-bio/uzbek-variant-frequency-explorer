@@ -25,6 +25,7 @@ sed "s|__BUILD_ID__|$BUILD|g; s|__SHARE_BASE__|$LAN_URL/share/|g; \
 python3 "$SRC/build_artifact.py" "$SRC/_standalone_src.html" "$SRC/catalog.json" "$SRC/panel_web.json" "$SRC/samples.json" "$SRC/catalog_standalone.html"
 python3 "$SRC/build_artifact.py" "$SRC/_standalone_src.html" "$SRC/catalog.json" "$SRC/panel_web.json" "$SRC/samples.json" "$SRC/artifact.html" --fragment
 rm -f "$SRC/_standalone_src.html"
+cp -f "$SRC/catalog_standalone.html" "$SRC/genotyping_catalog.html"   # same file, the name people will guess
 
 echo "=== 3b. public copy for GitHub: no LAN links, fetches from catalog/ ==="
 sed "s|__BUILD_ID__|$BUILD|g; s|__SHARE_BASE__||g" "$SRC/page_master.html" > "$SRC/data-sources.public.html"

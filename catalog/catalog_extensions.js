@@ -248,30 +248,48 @@ function renderSampleRows(){
   document.getElementById('smMore').textContent = total > LIMIT ? 'Showing first ' + LIMIT + ' of ' + fmtN(total) + ' — narrow the filter.' : (total ? '' : 'No samples match.');
 }
 
-/* ---------- loader ---------- */
+/* ---------- loader: progressive ---------- */
+/* Each file renders as soon as IT arrives. On a slow or lossy link the 44 KB
+   catalog must not wait behind the 2 MB panel file - a colleague on a
+   multi-hop Wi-Fi route saw a blank table because Promise.all waited for
+   everything. The banner names exactly what is still loading or failed. */
+var LOADSTATE = { datasets: 'loading', 'focal panel': 'loading', samples: 'loading' }, LOADERR = {};
+function updateBanner(){
+  var L = document.getElementById('loadState'), keys = Object.keys(LOADSTATE);
+  var pending = keys.filter(function(k){ return LOADSTATE[k] === 'loading'; });
+  var failed  = keys.filter(function(k){ return LOADSTATE[k] === 'failed'; });
+  if (!pending.length && !failed.length) { L.style.display = 'none'; return; }
+  L.style.display = '';
+  L.style.borderColor = failed.length ? '#dc2626' : '#e5e7eb';
+  L.innerHTML = (pending.length ? 'Loading: ' + pending.join(', ') + '…' : '')
+    + (failed.length ? (pending.length ? '<br>' : '') + '<b style="color:#dc2626">Could not load: ' + failed.map(esc).join(', ') + '</b> '
+        + failed.map(function(k){ return '<span class="mini">' + esc(LOADERR[k]) + '</span>'; }).join(' ')
+        + ' <a href="#" onclick="location.reload();return false;">retry</a>' : '');
+}
+function fillHostRow(){
+  var h = CATALOG.host || {};
+  document.getElementById('mh-host').textContent = h.hostname || '—';
+  document.getElementById('mh-ip').textContent = [h.ip_lan, h.ip_tailscale].filter(Boolean).join(' / ') || '—';
+  document.getElementById('mh-os').textContent = h.os || '—';
+  document.getElementById('mh-dragen').textContent = h.dragen || '—';
+  document.getElementById('mh-ram').textContent = h.ram_gb ? h.ram_gb + ' GB' : '—';
+  document.getElementById('mh-free').textContent = h.staging_free || '—';
+  var g = CATALOG.generated_at ? new Date(CATALOG.generated_at) : null;
+  document.getElementById('mh-gen').textContent = g ? g.toISOString().slice(0,16).replace('T',' ') + ' UTC' : '—';
+}
+/* re-render the dataset rows without losing which ones the user has expanded */
+function rerenderRows(){
+  var open = []; document.querySelectorAll('.dp.open').forEach(function(p){ open.push(p.id); });
+  applyFilters();
+  open.forEach(function(id){ var p = document.getElementById(id); if (p) { p.classList.add('open'); var r = document.getElementById(id.replace(/^dp-/, 'row-')); if (r) r.classList.add('exp'); } });
+}
 function onCatalogLoaded(catalog, panel, samples, failed){
-  var L = document.getElementById('loadState');
-  if (failed.length) { L.style.borderColor = '#dc2626'; L.innerHTML = '<b style="color:#dc2626">Could not load: ' + failed.map(function(f){ return esc(f.label); }).join(', ') + '</b><br>' + failed.map(function(f){ return '<span class="mini">' + esc(f.url) + ' — ' + esc(f.err) + '</span>'; }).join('<br>'); }
-  if (panel) PANEL = panel;
-  if (samples) SAMPLES = samples;
-  if (catalog) {
-    CATALOG = catalog;
-    var h = CATALOG.host || {};
-    document.getElementById('mh-host').textContent = h.hostname || '—';
-    document.getElementById('mh-ip').textContent = [h.ip_lan, h.ip_tailscale].filter(Boolean).join(' / ') || '—';
-    document.getElementById('mh-os').textContent = h.os || '—';
-    document.getElementById('mh-dragen').textContent = h.dragen || '—';
-    document.getElementById('mh-ram').textContent = h.ram_gb ? h.ram_gb + ' GB' : '—';
-    document.getElementById('mh-free').textContent = h.staging_free || '—';
-    var g = CATALOG.generated_at ? new Date(CATALOG.generated_at) : null;
-    document.getElementById('mh-gen').textContent = g ? g.toISOString().slice(0,16).replace('T',' ') + ' UTC' : '—';
-    DATA = CATALOG.datasets.map(toRow);
-    vis = DATA.slice();
-    applyFilters();
-  }
-  if (panel) renderPanelView();
-  if (samples) renderSamplesView();
-  if (!failed.length) L.style.display = 'none';
+  /* single entry point, also used by the standalone build with everything inlined */
+  (failed || []).forEach(function(f){ LOADSTATE[f.label] = 'failed'; LOADERR[f.label] = f.url + ' — ' + f.err; });
+  if (catalog) { CATALOG = catalog; LOADSTATE.datasets = 'done'; fillHostRow(); DATA = CATALOG.datasets.map(toRow); vis = DATA.slice(); applyFilters(); }
+  if (panel)   { PANEL = panel;     LOADSTATE['focal panel'] = 'done'; renderPanelView(); if (CATALOG) rerenderRows(); }
+  if (samples) { SAMPLES = samples; LOADSTATE.samples = 'done'; renderSamplesView(); }
+  updateBanner();
 }
 /* BOOTSTRAP-START (build_artifact.py replaces this block with inlined data) */
 function grab(url, label){
@@ -279,12 +297,8 @@ function grab(url, label){
     .then(function(j){ return {ok:true, label:label, url:url, j:j}; })
     .catch(function(e){ return {ok:false, label:label, url:url, err:String(e.message || e)}; });
 }
-Promise.all([
-  grab('catalog/catalog.json?v=' + BUILD, 'datasets'),
-  grab('catalog/panel_web.json?v=' + BUILD, 'focal panel'),
-  grab('catalog/samples.json?v=' + BUILD, 'samples')
-]).then(function(res){
-  onCatalogLoaded(res[0].ok ? res[0].j : null, res[1].ok ? res[1].j : null, res[2].ok ? res[2].j : null,
-                  res.filter(function(r){ return !r.ok; }));
-});
+updateBanner();
+grab('catalog/catalog.json?v=' + BUILD, 'datasets').then(function(r){ onCatalogLoaded(r.ok ? r.j : null, null, null, r.ok ? [] : [r]); });
+grab('catalog/panel_web.json?v=' + BUILD, 'focal panel').then(function(r){ onCatalogLoaded(null, r.ok ? r.j : null, null, r.ok ? [] : [r]); });
+grab('catalog/samples.json?v=' + BUILD, 'samples').then(function(r){ onCatalogLoaded(null, null, r.ok ? r.j : null, r.ok ? [] : [r]); });
 /* BOOTSTRAP-END */

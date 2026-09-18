@@ -148,7 +148,12 @@ extra_css = """
 replace_once("\n</style>", extra_css + "\n</style>", "extra css")
 
 # 11. loading banner after the meta-row
-replace_once('<div class="toolbar">', '<div id="loadState">Loading catalog data…</div>\n<div class="toolbar">', "load banner")
+replace_once('<div class="toolbar">',
+    '<div id="loadState">Loading catalog data…</div>\n'
+    '<div class="mini" style="margin:4px 0 8px">Slow or unstable link? Download the '
+    '<a href="genotyping_catalog.html" download>single-file offline copy</a> '
+    '(works without the server; its browse links need it).</div>\n'
+    '<div class="toolbar">', "load banner")
 
 out.write_text(html, encoding="utf-8")
 print(f"patched -> {out} ({len(html)} bytes); {len(changes)} changes:")
