@@ -220,10 +220,17 @@ function applyDragenUrl() {
       <option value="hi_r2">R2 >= 0.8</option>
     </select>
   </div>
+  <div style="display:flex;align-items:center;gap:12px;margin-top:8px;flex-wrap:wrap;font-size:12px;color:#374151">
+    <span class="fl" style="margin:0">Sources:</span>
+    <label><input type="checkbox" id="cg" checked> gnomAD v4</label>
+    <label><input type="checkbox" id="cc" checked> ClinVar</label>
+    <label><input type="checkbox" id="c1" checked> 1000 Genomes</label>
+    <label><input type="checkbox" id="cd" checked> DRAGEN UZB (live)</label>
+  </div>
   <p class="st" id="st">Loading...</p>
 </div>
 
-<div class="tb">
+<div class="tb" id="toolbar">
   <span style="font-size:11px;font-weight:700;color:#6b7280">Sort</span>
   <select class="ss" id="scol" onchange="applySort()">
     <option value="gene">Gene</option><option value="panel">Panel</option>
@@ -943,14 +950,17 @@ async function checkServer(verbose) {
 //  External API calls 
 async function apiGnomad(rsid) {
   if (!document.getElementById('cg').checked) return null;
-  const q = `{variant(rsid:"${rsid}",dataset:gnomad_r4){chrom pos ref alt genome{ac an af populations{id af}}}}`;
+  const q = `{variant(rsid:"${rsid}",dataset:gnomad_r4){chrom pos ref alt genome{ac an af populations{id ac an}}}}`;
   try {
     const r = await fetch('https://gnomad.broadinstitute.org/api', {
       method: 'POST', headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({query: q})
     });
     const d = await r.json(); let v = d?.data?.variant;
-    if (Array.isArray(v)) v = v[0]; return v || null;
+    if (Array.isArray(v)) v = v[0];
+    // gnomAD API no longer serves populations.af; derive it from ac/an
+    if (v?.genome?.populations) v.genome.populations.forEach(p => { p.af = p.an ? p.ac / p.an : null; });
+    return v || null;
   } catch { return null; }
 }
 
