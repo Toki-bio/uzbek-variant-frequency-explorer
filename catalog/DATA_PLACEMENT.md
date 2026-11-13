@@ -24,8 +24,12 @@ All human sequencing (WES now, WGS later) lives under `/staging/human/`.
 3. **`fastq/` is flat.** No lane subfolders: MGI names already carry flowcell, lane, barcode and read
    (`V350431082_L01_17_1.fq.gz` = flowcell V350431082, lane 1, barcode 17, read 1), so names cannot collide.
    File names are never changed.
-4. **Only real samples go to `fastq/`.** The sequencer writes a file for every barcode in its list (1–128 and more)
-   plus `undecoded` reads; barcodes with no sample loaded hold a few thousand misread reads and are not data.
+4. **Only real samples go directly in `fastq/`.** The sequencer writes a file for every barcode in its list
+   (1–128 and more) plus `undecoded` reads; barcodes with no sample loaded hold at most tens of thousands of misread
+   reads (a real sample: 22–50 M per lane) and are not data. These go to `fastq/unusable/` (owner's choice,
+   2026-11-13), together with the `undecoded` reads (reads whose barcode matched no sample, ~1 % of a lane).
+9. **The vendor's `<flowcell>_<lane>_FileInfo.txt` holds the MD5 of every fastq** and is kept in `qc/<lane>/`; it
+   is the checksum record for the batch.
 5. **`qc/` keeps lane subfolders**, because the lane-level files (`BioInfo.csv`, `summaryTable.csv`,
    `BarcodeStat.txt`, …) have identical names in every lane.
 6. **Results never go into `raw/`.** Each pipeline run gets its own dated folder in `analysis/`; a re-run gets a new
@@ -44,5 +48,5 @@ All human sequencing (WES now, WGS later) lives under `/staging/human/`.
 - Destination of the reads: `/staging/human/raw/wes/2026-10-28_V350431082/fastq/`
 - Analysed in the joint run `/staging/sarek_runs/WES16_cardio/` (with batch V350432671), finished 2026-11-05.
   Its `samplesheet32.csv` points to the old paths.
-- Status: step 1 (fastq move) — command given to the owner 2026-11-13, not yet run.
+- Status 2026-11-13: L01 real fastq (32) moved by owner, sizes verified; L01 noise barcodes + undecoded moved to fastq/unusable/. L02–L04 and QC files pending.
   Still open: QC files, leftover barcodes, undecoded reads, results folder.
