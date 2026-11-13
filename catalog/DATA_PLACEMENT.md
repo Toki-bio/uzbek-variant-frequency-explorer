@@ -12,10 +12,10 @@ All human sequencing (WES now, WGS later) lives under `/staging/human/`.
 /staging/human/
   raw/<assay>/<YYYY-MM-DD>_<flowcell>/        source data of one sequencing batch, never changed after arrival
       fastq/                                  real sample reads, flat, original file names
-          <flowcell>_<lane>_FileInfo.txt      vendor MD5 of every fastq of that lane
-          BioInfo.csv, summaryTable.csv, BarcodeStat.txt, SequenceStat.txt, BasecallQC.txt, version.json
-                                              lane-level run files (same names in every lane - see open question)
-          qc/<lane>/                          all other sequencer QC of that lane:
+          qc/<lane>/                          all sequencer QC of that lane:
+                                                <flowcell>_<lane>_FileInfo.txt (vendor MD5 of every fastq),
+                                                BioInfo.csv, summaryTable.csv, BarcodeStat.txt, SequenceStat.txt,
+                                                BasecallQC.txt, version.json (same names in every lane, hence lane folders),
                                                 per-barcode *.fq.fqStat.txt and *.report.html (samples and noise),
                                                 *.allfq.fqStat.txt, undecoded *.fqStat.txt,
                                                 lane reports *.summaryReport/heatmapReport/bestFovReport/allCycleHeatmap.html
@@ -35,20 +35,13 @@ All human sequencing (WES now, WGS later) lives under `/staging/human/`.
 4. **Noise goes to `fastq/unusable/`.** The sequencer writes a file for every barcode in its list (1–128 and more)
    plus `undecoded` reads. Barcodes with no sample loaded hold at most tens of thousands of misread reads (a real
    sample: 22–50 M per lane) and are not data; `undecoded` = reads whose barcode matched no sample (~1 % of a lane).
-5. **`<flowcell>_<lane>_FileInfo.txt` is the MD5 record** of the lane's fastq. Keep it next to the fastq.
-6. **Per-file and lane reports go to `fastq/qc/<lane>/`.**
+5. **`<flowcell>_<lane>_FileInfo.txt` is the MD5 record** of the lane's fastq; it lives in `fastq/qc/<lane>/`.
+6. **All sequencer QC goes to `fastq/qc/<lane>/`**, because six lane-level files have the same name in every lane.
 7. **Results never go into `raw/`.** Each pipeline run gets its own dated folder in `analysis/`; a re-run gets a new
    folder and never overwrites. A run that covers several batches lists all their flowcells in its name.
 8. **No patient names in any path.** Samples are identified by barcode / lab code only.
 9. **Moves within `/staging` use `mv -n`** (same filesystem, instant rename, never overwrites); every move is checked
    by file count and byte sizes against the list taken before the move.
-
-## Open question
-
-The six lane-level files `BioInfo.csv`, `summaryTable.csv`, `BarcodeStat.txt`, `SequenceStat.txt`, `BasecallQC.txt`,
-`version.json` have the same name in every lane. L01's copies now sit in `fastq/`; L02's would overwrite them
-(or be refused by `mv -n`). To decide before L02: move them into `fastq/qc/<lane>/`, or prefix them with
-`<flowcell>_<lane>_` (e.g. `V350431082_L01_BioInfo.csv`).
 
 ## Batch log
 
@@ -60,8 +53,9 @@ The six lane-level files `BioInfo.csv`, `summaryTable.csv`, `BarcodeStat.txt`, `
 - Analysed in the joint run `/staging/sarek_runs/WES16_cardio/` (with batch V350432671), finished 2026-11-05.
   Its `samplesheet32.csv` points to the old paths.
 - State on DRAGEN, checked 2026-11-13:
-  - L01 done: `fastq/` 32 sample fastq (sizes identical to the pre-move list) + `V350431082_L01_FileInfo.txt`
-    + the six lane-level files; `fastq/qc/L01/` 419 files; `fastq/unusable/` 244 files (121 noise barcodes × R1/R2
-    + 2 undecoded). Old `L01/` folder is empty.
+  - L01 done: `fastq/` 32 files = 16 samples × R1/R2 (sizes identical to the pre-move list);
+    `fastq/qc/L01/` 426 files (all QC incl. FileInfo.txt and the six lane-level files);
+    `fastq/unusable/` 244 files (121 noise barcodes × R1/R2 + 2 undecoded). Old `L01/` folder is empty.
+  - Each sample ends with 8 fastq: 4 lanes × R1/R2.
   - L02, L03, L04: still in `/staging/sarek_runs/V350431082/`, 702 files each.
   - Not yet done: MD5 check against `FileInfo.txt`; results folder.
