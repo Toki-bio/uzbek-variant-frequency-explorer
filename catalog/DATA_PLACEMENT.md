@@ -49,4 +49,4 @@ All human sequencing (WES now, WGS later) lives under `/staging/human/`.
 - Analysed in the joint run `/staging/sarek_runs/WES16_cardio/` (with batch V350432671), finished 2026-11-05.
   Its `samplesheet32.csv` points to the old paths.
 - Status 2026-11-13: L01 real fastq (32) moved by owner, sizes verified; L01 noise barcodes + undecoded moved to fastq/unusable/. L02–L04 and QC files pending.
-  Still open: QC files, leftover barcodes, undecoded reads, results folder.
+  Still open: QC files, results folder.
