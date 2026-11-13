@@ -20,7 +20,7 @@ All human sequencing (WES now, WGS later) lives under `/staging/human/`.
                                                 *.allfq.fqStat.txt, undecoded *.fqStat.txt,
                                                 lane reports *.summaryReport/heatmapReport/bestFovReport/allCycleHeatmap.html
           unusable/                           fastq of barcodes with no sample + undecoded reads
-  analysis/<YYYY-MM-DD>_<pipeline>-<version>_<ref>_<flowcell>[+<flowcell>…]/
+  analysis/<YYYY-MM-DD>_<pipeline>-<version>_<ref>_<flowcell>[_<flowcell>…]/
                                               one folder per pipeline run: samplesheet, run script, logs, results
 ```
 
@@ -38,7 +38,10 @@ All human sequencing (WES now, WGS later) lives under `/staging/human/`.
 5. **`<flowcell>_<lane>_FileInfo.txt` is the MD5 record** of the lane's fastq; it lives in `fastq/qc/<lane>/`.
 6. **All sequencer QC goes to `fastq/qc/<lane>/`**, because six lane-level files have the same name in every lane.
 7. **Results never go into `raw/`.** Each pipeline run gets its own dated folder in `analysis/`; a re-run gets a new
-   folder and never overwrites. A run that covers several batches lists all their flowcells in its name.
+   folder and never overwrites. A run that covers several batches lists all their flowcells in its name, joined by
+   `_`, e.g. `analysis/2026-11-04_sarek-3.9.0_GRCh38_V350432671_V350431082/`.
+10. **Names use only letters, digits, `-`, `_` and `.`** — no `+` (means a space in URLs, special in regex),
+    no spaces, no Cyrillic.
 8. **No patient names in any path.** Samples are identified by barcode / lab code only.
 9. **Moves within `/staging` use `mv -n`** (same filesystem, instant rename, never overwrites); every move is checked
    by file count and byte sizes against the list taken before the move.
