@@ -16944,29 +16944,33 @@
       "date": "2026-10-28",
       "type": "wes",
       "n_claimed": 16,
-      "root_path": "/staging/sarek_runs/V350431082/",
-      "description": "Second 16-sample whole-exome batch, raw lane-split FASTQ, sarek processing queued after WES16_cardio (2026-11-04).",
+      "root_path": "/staging/human/raw/wes/2026-10-28_V350431082/",
+      "description": "Second 16-sample whole-exome batch (flowcell V350431082). Raw FASTQ moved 2026-11-13 to the new layout /staging/human/raw/wes/; processed with batch V350432671 in the joint 32-sample sarek run, finished 2026-11-05.",
       "curated": {
-        "_note": "Added by hand 2026-11-04 from the run files on disk (BioInfo.csv, BarcodeStat.txt). Keep editing this here; it is never overwritten by a scan.",
+        "_note": "Added by hand 2026-11-04; updated by hand 2026-11-13 after the move, from a server check. Keep editing this here; it is never overwritten by a scan.",
         "tech_label": "WES",
         "samples_label": "16",
         "kv": {
-          "Platform": "MGI DNBSEQ (machine C21304100240015), PE100, 4 lanes, flowcell V350431082",
+          "Platform": "MGI DNBSEQ-2000 (machine C21304100240015), PE100, 4 lanes, flowcell V350431082",
           "Sequence date": "2026-10-28 (from BioInfo.csv)",
-          "DNB IDs": "WES2_1 to WES2_4",
-          "Sample naming": "sample17-sample32 (barcode17-barcode32)",
-          "Files": "16 samples x 4 lanes x R1/R2 = 128 FASTQ.gz; folder 198 GB. The other barcode files in the folder are near-empty demultiplexing leftovers.",
-          "Pipeline": "nf-core/sarek 3.9.0, GATK.GRCh38, haplotypecaller + snpeff; queued, not yet run"
+          "Lanes": "The same 16-sample pool was loaded on all 4 lanes (DNB IDs WES2_1 to WES2_4); each sample has 4 lanes x R1/R2 = 8 FASTQ, merged by the pipeline",
+          "Sample naming": "barcodes 17-32, called sample17-sample32 in the pipeline; no mapping to lab codes on disk yet",
+          "Reads": "89.5 M (barcode24) to 200.3 M (barcode32) read pairs per sample, 4 lanes summed (BarcodeStat.txt); lane Q30 98.1-98.3 %",
+          "Raw FASTQ": "128 files, 209.2 GB, in fastq/ (sizes checked against the pre-move list 2026-11-13)",
+          "Checksums": "vendor MD5 of every FASTQ in fastq/qc/L0N/V350431082_L0N_FileInfo.txt (not yet verified after the move)",
+          "Unusable": "fastq/unusable/: barcodes with no sample loaded (at most ~38 k reads each) and undecoded reads (~1 % of each lane)",
+          "Pipeline": "nf-core/sarek 3.9.0, GATK.GRCh38, haplotypecaller + snpEff, no variant filter, no exome target BED (coverage reported genome-wide only); joint run with batch V350432671, completed 2026-11-05",
+          "Results": "/staging/sarek_runs/WES16_cardio/results/ (sample17-sample32: variant_calling/haplotypecaller/, annotation/haplotypecaller/, reports/, multiqc/); run files samplesheet32.csv, run_sarek32.sh in /staging/sarek_runs/WES16_cardio/ (samplesheet still points to the old FASTQ paths)"
         },
-        "tree": "/staging/sarek_runs/V350431082/\n  L01/ L02/ L03/ L04/\n    V350431082_L0N_<barcode>_1.fq.gz, _2.fq.gz\n    BioInfo.csv, BarcodeStat.txt, summaryTable.csv",
-        "note": "Phenotype and cohort description to be confirmed by the lab. Results will be in /staging/sarek_runs/WES16_cardio/results/ with batch 1."
+        "tree": "/staging/human/raw/wes/2026-10-28_V350431082/\n  fastq/\n    V350431082_L0N_<17-32>_1.fq.gz, _2.fq.gz   (128 = 16 samples x 4 lanes x R1/R2)\n    qc/L01/ L02/ L03/ L04/   (426 files each: FileInfo.txt (MD5), BioInfo.csv, summaryTable.csv, BarcodeStat.txt,\n                              SequenceStat.txt, BasecallQC.txt, version.json, lane reports, per-barcode fqStat/report)\n    unusable/   (976 files: noise barcodes + undecoded, 244 per lane)\n[results: /staging/sarek_runs/WES16_cardio/results/]",
+        "note": "Phenotype and cohort description to be confirmed by the lab. Capture kit / target BED unknown. Placement rules: catalog/DATA_PLACEMENT.md."
       },
       "live_scan": {
-        "root_path": "/staging/sarek_runs/V350431082",
-        "sample_count": 0,
-        "samples_complete": 0,
+        "root_path": "/staging/human/raw/wes/2026-10-28_V350431082",
+        "sample_count": 16,
+        "samples_complete": 16,
         "samples_incomplete": 0,
-        "status": "raw_data_only_not_yet_processed",
+        "status": "complete",
         "cohort_level_files": [],
         "raw_fastq_samples_detected": 16,
         "has": {
@@ -16983,9 +16987,11 @@
           "sub_cohorts": false
         },
         "size_bytes": {
-          "root": 198000000000
+          "fastq_samples": 209177236526
         },
-        "size_total_bytes": 198000000000
+        "size_total_bytes": 209177236526,
+        "_note": "hand-updated 2026-11-13 from a server check, not a scanner run",
+        "status_note": "16/16 samples have haplotypecaller + snpEff VCFs in /staging/sarek_runs/WES16_cardio/results/ (joint run with V350432671, completed 2026-11-05). Variants unfiltered; no exome target BED used."
       },
       "discrepancies": []
     }

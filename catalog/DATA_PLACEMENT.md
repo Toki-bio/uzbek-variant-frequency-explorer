@@ -52,10 +52,10 @@ All human sequencing (WES now, WGS later) lives under `/staging/human/`.
   (list with sizes: `batches/2026-10-28_V350431082_fastq.tsv`, taken from the server 2026-11-13).
 - Analysed in the joint run `/staging/sarek_runs/WES16_cardio/` (with batch V350432671), finished 2026-11-05.
   Its `samplesheet32.csv` points to the old paths.
-- State on DRAGEN, checked 2026-11-13:
-  - L01 done: `fastq/` 32 files = 16 samples × R1/R2 (sizes identical to the pre-move list);
-    `fastq/qc/L01/` 426 files (all QC incl. FileInfo.txt and the six lane-level files);
-    `fastq/unusable/` 244 files (121 noise barcodes × R1/R2 + 2 undecoded). Old `L01/` folder is empty.
-  - Each sample ends with 8 fastq: 4 lanes × R1/R2.
-  - L02, L03, L04: still in `/staging/sarek_runs/V350431082/`, 702 files each.
-  - Not yet done: MD5 check against `FileInfo.txt`; results folder.
+- State on DRAGEN, checked 2026-11-13 (after the owner's move of all 4 lanes):
+  - `fastq/` 128 sample fastq = 16 samples × 4 lanes × R1/R2, sizes identical to the pre-move list.
+  - `fastq/qc/L01..L04/` 426 files each (incl. `V350431082_L0N_FileInfo.txt` with MD5s and the six lane-level files).
+  - `fastq/unusable/` 976 files (244 per lane: noise barcodes × R1/R2 + undecoded); no sample barcode among them.
+  - `/staging/sarek_runs/V350431082/` no longer exists.
+  - data_sources entry `wes2_v350431082` updated to the new path the same day.
+  - Not yet done: MD5 check against `FileInfo.txt`; results folder (still `/staging/sarek_runs/WES16_cardio/`).
