@@ -247,7 +247,7 @@ function render(){
     var stHtml=statusHtml(d);
 
     var mr=document.createElement('tr');
-    mr.className='drow';mr.id='row-'+d.id;mr.setAttribute('draggable','true');
+    mr.className='drow';mr.id='row-'+d.id;
     mr.innerHTML=
       '<td class="cb-td"><input type="checkbox" class="rcb" onchange="onCb()" onclick="event.stopPropagation()"></td>'+
       '<td style="padding:8px 4px 8px 8px;width:18px"><span class="dh" onclick="event.stopPropagation()">&#8942;&#8942;</span></td>'+
@@ -294,13 +294,18 @@ function render(){
 
     mr.addEventListener('click',function(e){
       if(e.target.tagName==='INPUT')return;
+      if(String(window.getSelection())!=='')return; // text was being selected, not a click
       var dp=document.getElementById('dp-'+d.id);
       var o=dp.classList.toggle('open');
       mr.classList.toggle('exp',o);
     });
 
+    // drag only from the handle, so names/paths stay selectable as text
+    var dh=mr.querySelector('.dh');
+    dh.addEventListener('mousedown',function(){mr.setAttribute('draggable','true');});
+    document.addEventListener('mouseup',function(){mr.removeAttribute('draggable');});
     mr.addEventListener('dragstart',function(e){dragSrc=d.id;mr.classList.add('dragging');e.dataTransfer.effectAllowed='move';});
-    mr.addEventListener('dragend',function(){mr.classList.remove('dragging');document.querySelectorAll('.drop-above').forEach(function(r){r.classList.remove('drop-above');});});
+    mr.addEventListener('dragend',function(){mr.removeAttribute('draggable');mr.classList.remove('dragging');document.querySelectorAll('.drop-above').forEach(function(r){r.classList.remove('drop-above');});});
     mr.addEventListener('dragover',function(e){e.preventDefault();document.querySelectorAll('.drop-above').forEach(function(r){r.classList.remove('drop-above');});if(dragSrc!==d.id)mr.classList.add('drop-above');});
     mr.addEventListener('drop',function(e){
       e.preventDefault();mr.classList.remove('drop-above');
