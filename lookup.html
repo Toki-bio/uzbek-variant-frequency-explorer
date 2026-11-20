@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UZB SNP Lookup</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:13px;background:#f5f6f8;color:#1a1d23}a{color:#2563eb;text-decoration:none}a:hover{text-decoration:underline}.app{max-width:1280px;margin:0 auto;padding:20px 16px}header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid #e5e7eb}h1{font-size:17px;font-weight:700;color:#111}h1 span{color:#2563eb}.sub{font-size:11px;color:#6b7280;margin-top:1px}.panel{background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:14px 16px;margin-bottom:14px}.row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}.col{flex:1;min-width:160px}label.fl{display:block;font-size:11px;font-weight:600;color:#374151;margin-bottom:4px}input[type=text]{width:100%;border:1px solid #d1d5db;border-radius:5px;padding:6px 10px;font-size:12px;background:#fafafa;color:#111}input:focus{outline:none;border-color:#2563eb;background:#fff}.btn{padding:7px 16px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:none}.btn-p{background:#2563eb;color:#fff}.btn-p:hover{background:#1d4ed8}.btn-p:disabled{background:#93c5fd;cursor:default}.st{font-size:11px;color:#6b7280;margin-top:8px;min-height:15px}.tw{overflow-x:auto;border:1px solid #e5e7eb;border-radius:6px;margin-top:8px}table{width:100%;border-collapse:collapse;font-size:12px}thead tr{border-bottom:2px solid #e5e7eb;background:#f9fafb}th{padding:6px 9px;text-align:left;font-size:10px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}td{padding:5px 9px;border-bottom:1px solid #f3f4f6;white-space:nowrap}td.n{text-align:right;font-variant-numeric:tabular-nums;font-family:"SF Mono","Fira Code",monospace;font-size:11px}td.mn{font-family:"SF Mono","Fira Code",monospace;font-size:11px}.bdg{display:inline-block;padding:2px 7px;border-radius:3px;font-size:10px;font-weight:700;white-space:nowrap}.bbl{background:#dcfce7;color:#166534}.bv{background:#fef9c3;color:#854d0e}.bp{background:#fee2e2;color:#b91c1c}.bu{background:#f3f4f6;color:#6b7280}.wb{background:#fffbeb;border:1px solid #fcd34d;border-radius:5px;padding:8px 12px;margin-top:8px;font-size:12px;color:#92400e;line-height:1.5}.h3{font-size:14px;font-weight:700;color:#111}.h4{font-size:10px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;margin-top:12px}.mi{font-size:12px;line-height:1.6;color:#374151}.mi b{color:#111}tr.uzb td{background:#eff6ff;font-weight:600}.sp td{color:#6b7280;background:#fafafa;font-weight:600}details{margin-top:10px}summary{cursor:pointer;font-size:12px;font-weight:600;color:#374151}.doc p,.doc li{font-size:12px;line-height:1.6;color:#374151;margin-top:4px}.doc ul{padding-left:18px}code{font-family:"SF Mono","Fira Code",monospace;font-size:11px;background:#f3f4f6;padding:0 3px;border-radius:3px}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div><h1>UZB SNP <span>Lookup</span></h1>
+  <p class="sub">ALSU Uzbek cohort, N = 1,256 · every typed GSA SNP (452,377) and every reliable imputed variant (9,808,764; R² ≥ 0.8) · compared with 1000 Genomes 30x (NYGC, 3,202 samples) · no server needed</p></div>
+  <a href="index.html">← back to the Variant Freq Explorer</a>
+</header>
+
+<div class="panel">
+  <div class="row">
+    <div class="col" style="flex:3"><label class="fl" for="q">rsIDs or GRCh38 positions (space or comma separated)</label>
+      <input type="text" id="q" value="rs2476601" placeholder="rs2476601, 1:113834946, chr1:113834946"></div>
+    <div><button class="btn btn-p" id="go">Look up</button></div>
+  </div>
+  <div class="st" id="st">rsIDs are converted to GRCh38 positions with the Ensembl REST service; positions are looked up directly.</div>
+</div>
+
+<div id="out"></div>
+
+<div class="panel doc">
+<div class="h3">What the numbers are</div>
+<ul>
+<li><b>Typed</b> = genotypes called directly from the Illumina GSA array, after QC (file <code>FULL_QC_FINAL</code>). Counts are genotypes in 1,256 people; HWE p from plink <code>--hardy</code>. 1000G frequencies are given for all 26 populations.</li>
+<li><b>Imputed</b> = Michigan Imputation Server (1000G phase 3 30x GRCh38, Eagle 2.4, Minimac 4.1.6), kept if R² ≥ 0.80 and MAF ≥ 0.001; no further MAF cut. Counts are best-guess genotypes. 1000G frequencies for the 5 superpopulations. Variants that are also on the array are marked "also typed".</li>
+<li>Every frequency is the frequency of a <b>named base on the GRCh38 + strand</b>. The GRCh38 reference sometimes carries the rare or risk allele (e.g. rs2476601: REF A = risk allele), so "ALT" is not "minor" and not "risk".</li>
+</ul>
+<details><summary>Flags on typed SNPs</summary>
+<ul>
+<li><span class="bdg bbl">ok</span> array bases match 1000G as written.</li>
+<li><span class="bdg bbl">complemented</span> the array writes the Illumina TOP strand; bases were complemented to the + strand. Normal for about half of all SNPs (checked: Uzbek-vs-EUR correlation is identical to direct matches, 0.907 vs 0.906).</li>
+<li><span class="bdg bp">ambiguous strand</span> A/T or C/G SNP: the complement is the same pair, so the strand cannot be told from the bases. The comparison with 1000G assumes the bases as written; 42 of 1,615 such SNPs look reversed (frequency f vs 1−f). Check before use.</li>
+<li><span class="bdg bv">1000G multi-record</span> 1000G has more than one SNV record at the position; no 1000G frequency given.</li>
+<li><span class="bdg bu">not in 1000G</span> / <span class="bdg bu">base mismatch</span> no comparable 1000G SNV.</li>
+</ul></details>
+<details><summary>Data and code</summary>
+<p>Built 2026-11-20 on DRAGEN. Full tables and scripts: <code>/staging/ALSU-analysis/spring2026/full_expanded_cohort/uzb_static_table_2026-11-20/</code>. Pieces in this repo: <code>data/static/{typed,imputed}/chrN/&lt;Mb&gt;.tsv.gz</code>, columns in <code>data/static/README.md</code>. The 1,256 samples are the analysis cohort (<code>keep_UZB.txt</code>); two IDs are spelled with Cyrillic letters in <code>FULL_QC_FINAL</code> (03-25м, 08-176Х-00006) and were matched by hand.</p></details>
+</div>
+</div>
+
+<script>
+const POPS = [['AFR',['ACB','ASW','ESN','GWD','LWK','MSL','YRI']],['AMR',['CLM','MXL','PEL','PUR']],['EAS',['CDX','CHB','CHS','JPT','KHV']],['EUR',['CEU','FIN','GBR','IBS','TSI']],['SAS',['BEB','GIH','ITU','PJL','STU']]];
+const POP26 = POPS.flatMap(p => p[1]);
+const COMP = {A:'T',T:'A',C:'G',G:'C'};
+const cache = new Map();
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+async function piece(kind, chr, pos) {
+  const path = `data/static/${kind}/chr${chr}/${Math.floor(pos/1e6)}.tsv.gz`;
+  if (!cache.has(path)) cache.set(path, (async () => {
+    const r = await fetch(path);
+    if (!r.ok) return [];
+    const txt = await new Response(r.body.pipeThrough(new DecompressionStream('gzip'))).text();
+    return txt.split('\n').filter(Boolean).map(l => l.split('\t'));
+  })());
+  return (await cache.get(path)).filter(f => +f[0] === pos);
+}
+
+async function resolve(tok) {
+  const m = tok.match(/^(?:chr)?([0-9]{1,2}|X|Y)[:_-](\d+)$/i);
+  if (m) return { label: tok, chr: m[1], pos: +m[2] };
+  if (!/^rs\d+$/i.test(tok)) throw new Error(`"${tok}" is neither an rsID nor chr:pos`);
+  let r = null;
+  for (let k = 0; k < 2 && !(r && r.ok); k++) {
+    try { r = await fetch(`https://rest.ensembl.org/variation/human/${tok}`, { headers: { Accept: 'application/json' } }); }
+    catch (e) { r = null; await new Promise(res => setTimeout(res, 1500)); }
+  }
+  if (!r) throw new Error(`Ensembl did not answer for ${tok}. Try again, or enter the GRCh38 position (e.g. 1:113834946).`);
+  if (!r.ok) throw new Error(`Ensembl does not know ${tok} (HTTP ${r.status}). Enter the GRCh38 position instead.`);
+  const d = await r.json();
+  const mp = (d.mappings || []).find(x => x.assembly_name === 'GRCh38' && /^([0-9]{1,2}|X|Y)$/.test(x.seq_region_name));
+  if (!mp) throw new Error(`no GRCh38 position for ${tok}`);
+  return { label: tok, chr: mp.seq_region_name, pos: mp.start, alleles: mp.allele_string, cons: d.most_severe_consequence, rs: d.name };
+}
+
+const f4 = v => v === '' || v == null ? '—' : (v/10000).toFixed(4);
+const fx = v => v == null || isNaN(v) ? '—' : v.toFixed(4);
+
+function typedHtml(f) {
+  const [pos, rsid, a1t, a2t, n11, n12, n22, nmiss, hwe, flag, ...pf] = f;
+  const flip = flag === 'flipped';
+  const a1 = flip ? COMP[a1t] : a1t, a2 = flip ? COMP[a2t] : a2t;
+  const n = +n11 + +n12 + +n22, fa1 = n ? (2*n11 + +n12) / (2*n) : NaN;
+  const badge = { ok:['bbl','ok'], flipped:['bbl','complemented'], ambig_strand:['bp','ambiguous strand'], nygc_multi:['bv','1000G multi-record'], nygc_absent:['bu','not in 1000G'], allele_mismatch:['bu','base mismatch'] }[flag] || ['bu', flag];
+  let rows = `<tr class="uzb"><td>UZB (ALSU)</td><td class="n">${2*n}</td><td class="n">${fx(fa1)}</td><td class="n">${fx(1-fa1)}</td></tr>`;
+  if (pf.length === 26) {
+    POPS.forEach(([sp, list]) => {
+      const vals = list.map(p => pf[POP26.indexOf(p)]).filter(v => v !== '').map(Number);
+      const mean = vals.length ? vals.reduce((a,b)=>a+b,0)/vals.length/10000 : NaN;
+      rows += `<tr class="sp"><td>${sp} (mean of populations)</td><td></td><td class="n">${fx(mean)}</td><td class="n">${fx(1-mean)}</td></tr>`;
+      list.forEach(p => { const v = pf[POP26.indexOf(p)]; rows += `<tr><td>&nbsp;&nbsp;${p}</td><td></td><td class="n">${f4(v)}</td><td class="n">${v===''?'—':(1-v/10000).toFixed(4)}</td></tr>`; });
+    });
+  }
+  return `<div class="h4">Typed on the GSA array</div>
+  <div class="mi">Bases (+ strand): <b>${a1}</b> / <b>${a2}</b>${flip ? ` &nbsp;(array TOP strand: ${a1t}/${a2t})` : ''} &nbsp; <span class="bdg ${badge[0]}">${badge[1]}</span><br>
+  Genotypes ${a1}${a1} / ${a1}${a2} / ${a2}${a2}: <b>${n11} / ${n12} / ${n22}</b> · missing ${nmiss} · HWE p ${(+hwe).toPrecision(3)}${rsid !== '.' ? ' · array rsID ' + esc(rsid) : ''}</div>
+  ${flag === 'ambig_strand' ? '<div class="wb"><b>A/T or C/G SNP.</b> The strand cannot be read from the bases. The 1000G column assumes the array bases are on the + strand; if the Uzbek frequency is far from every 1000G group, the two columns are probably swapped.</div>' : ''}
+  <div class="tw"><table><thead><tr><th>Group</th><th>Alleles</th><th>freq ${a1}</th><th>freq ${a2}</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+
+function imputedHtml(list) {
+  const rows = list.map(f => {
+    const [pos, ref, alt, typed, r2, nrr, nra, naa, nmiss, AFR, AMR, EAS, EUR, SAS] = f;
+    const n = +nrr + +nra + +naa, fa = n ? (2*naa + +nra) / (2*n) : NaN;
+    return `<tr><td class="mn">${esc(ref)} &gt; ${esc(alt)}</td><td>${typed === '1' ? '<span class="bdg bbl">also typed</span>' : ''}</td><td class="n">${(+r2).toFixed(3)}</td>
+      <td class="n">${nrr} / ${nra} / ${naa}</td><td class="n">${nmiss}</td><td class="n"><b>${fx(fa)}</b></td>
+      <td class="n">${f4(AFR)}</td><td class="n">${f4(AMR)}</td><td class="n">${f4(EAS)}</td><td class="n">${f4(EUR)}</td><td class="n">${f4(SAS)}</td></tr>`;
+  }).join('');
+  return `<div class="h4">Imputed (R² ≥ 0.8) · frequencies are of the ALT base</div>
+  <div class="tw"><table><thead><tr><th>REF &gt; ALT</th><th></th><th>R²</th><th>REF·REF / REF·ALT / ALT·ALT</th><th>missing</th><th>UZB ALT</th><th>AFR</th><th>AMR</th><th>EAS</th><th>EUR</th><th>SAS</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+
+async function lookOne(tok) {
+  const box = document.createElement('div'); box.className = 'panel'; box.innerHTML = `<div class="h3">${esc(tok)}</div><div class="st">looking up…</div>`;
+  $('out').appendChild(box);
+  try {
+    const v = await resolve(tok);
+    const [t, i] = await Promise.all([piece('typed', v.chr, v.pos), piece('imputed', v.chr, v.pos)]);
+    let html = `<div class="h3">${esc(v.rs || v.label)} &nbsp;<span class="sub">chr${v.chr}:${v.pos.toLocaleString('en')} (GRCh38)${v.alleles ? ' · Ensembl alleles ' + esc(v.alleles) + ' (first = GRCh38 reference)' : ''}${v.cons ? ' · ' + esc(v.cons.replace(/_/g,' ')) : ''}</span></div>`;
+    if (t.length) html += t.map(typedHtml).join('');
+    if (i.length) html += imputedHtml(i);
+    if (!t.length && !i.length) html += `<div class="wb">Not in the ALSU data at this position: not on the GSA array after QC, and not imputed with R² ≥ 0.8 and MAF ≥ 0.001.</div>`;
+    else if (!t.length) html += `<div class="st">Not on the GSA array (after QC); imputed only.</div>`;
+    box.innerHTML = html;
+  } catch (e) { box.innerHTML = `<div class="h3">${esc(tok)}</div><div class="wb">${esc(e.message)}</div>`; }
+}
+
+async function run() {
+  const toks = $('q').value.split(/[\s,;]+/).map(s => s.trim()).filter(Boolean);
+  if (!toks.length) return;
+  $('go').disabled = true; $('out').innerHTML = ''; $('st').textContent = `Looking up ${toks.length} variant(s)…`;
+  for (const t of toks) await lookOne(t);
+  $('st').textContent = 'Done.'; $('go').disabled = false;
+  try { history.replaceState(null, '', '#' + toks.join(',')); } catch (e) {}
+}
+$('go').onclick = run;
+$('q').addEventListener('keydown', e => { if (e.key === 'Enter') run(); });
+if (location.hash.length > 1) $('q').value = decodeURIComponent(location.hash.slice(1));
+run();
+</script>
+</body>
+</html>
