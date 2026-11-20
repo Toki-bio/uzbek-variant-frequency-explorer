@@ -46,7 +46,7 @@
         <div style="font-size:11px;font-weight:700;color:#374151;margin-bottom:4px">Start the frequency server on DRAGEN:</div>
         <pre style="background:#1e293b;color:#e2e8f0;padding:8px 10px;border-radius:4px;font-size:11px;overflow-x:auto;white-space:pre-wrap;word-break:break-all;margin:0">nohup python3 /staging/ALSU-analysis/admixture_analysis/uzb_freq/uzb_freq_server.py &gt; uzb_server.log 2&gt;&amp;1 &amp;</pre>
         <div style="font-size:11px;font-weight:700;color:#374151;margin:8px 0 4px">Open SSH tunnel from your PC:</div>
-        <pre style="background:#1e293b;color:#e2e8f0;padding:8px 10px;border-radius:4px;font-size:11px;overflow-x:auto;white-space:pre-wrap;word-break:break-all;margin:0">plink.exe -batch -i id_ed25519.ppk -N -L 8765:localhost:8765 copilot@100.104.25.22</pre>
+        <pre style="background:#1e293b;color:#e2e8f0;padding:8px 10px;border-radius:4px;font-size:11px;overflow-x:auto;white-space:pre-wrap;word-break:break-all;margin:0">plink.exe -batch -i id_ed25519.ppk -N -L 8765:localhost:8765 &lt;user&gt;@&lt;server&gt;</pre>
       </div>
     </div>
 
@@ -64,7 +64,7 @@
         </div>
         <div style="font-size:10px;color:#6b7280;margin-top:5px">
           Local tunnel: http://127.0.0.1:8765<br>
-          Tailscale direct: http://100.104.25.22:8765
+          Tailscale direct: http://&lt;server&gt;:8765
         </div>
       </div>
     </div>

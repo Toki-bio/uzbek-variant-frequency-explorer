@@ -46,7 +46,7 @@ Interactive clinical genomics tool for comparing allele frequencies of disease-a
 
 The tool can query a live server for UZB frequencies across all 48.9M imputed variants (not just the 179 panel variants). Requires:
 1. `uzb_freq_server.py` running on DRAGEN (port 8765)
-2. SSH tunnel: `plink -L 8765:localhost:8765 copilot@100.104.25.22`
+2. SSH tunnel: `plink -L 8765:localhost:8765 <user>@<server>`
 3. Or Tailscale direct access — set URL in the Setup Guide section of the tool
 
 See the collapsible **Connection & Setup Guide** inside the tool for full instructions.

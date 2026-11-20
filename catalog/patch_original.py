@@ -41,7 +41,7 @@ replace_once(
     '<div class="m-cell"><span class="m-k">Host</span><span class="m-v">biotech2024</span></div>',
     '<div class="m-cell"><span class="m-k">Host</span><span class="m-v" id="mh-host">…</span></div>', "meta host")
 replace_once(
-    '<div class="m-cell"><span class="m-k">IP</span><span class="m-v">100.104.25.22</span></div>',
+    '<div class="m-cell"><span class="m-k">IP</span><span class="m-v"><server></span></div>',
     '<div class="m-cell"><span class="m-k">IP</span><span class="m-v" id="mh-ip">…</span></div>', "meta ip")
 replace_once(
     '<div class="m-cell"><span class="m-k">OS</span><span class="m-v">RHEL 8.6</span></div>',

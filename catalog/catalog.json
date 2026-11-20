@@ -2,7 +2,7 @@
   "host": {
     "hostname": "Biotech2024",
     "ip_lan": "10.10.8.149",
-    "ip_tailscale": "100.104.25.22",
+    "ip_tailscale": "<server>",
     "os": "Oracle Linux Server 8.6",
     "dragen": "4.4.4 4.5.4",
     "ram_gb": "503",
