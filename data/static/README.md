@@ -18,7 +18,7 @@ Source `FULL_QC_FINAL` (1,268 samples, 452,377 SNPs), restricted to the 1,256. A
 | 5, 6, 7 | genotype counts a1a1, a1a2, a2a2 |
 | 8 | missing genotypes |
 | 9 | Hardy-Weinberg p (plink `--hardy`) |
-| 10 | flag: `ok` (bases match 1000G), `flipped` (complement matches; normal, TOP strand), `ambig_strand` (A/T or C/G, compared as written; check), `nygc_multi`, `nygc_absent`, `allele_mismatch` |
+| 10 | flag: `ok` (bases match 1000G), `flipped` (complement matches; normal, TOP strand), `pal_mixed_strand` (A/T or C/G; columns 5-9 and 11-36 empty, see below), `nygc_multi`, `nygc_absent`, `allele_mismatch` |
 | 11–36 | frequency of **a1** (complemented to + strand when flipped) ×10,000 in ACB ASW ESN GWD LWK MSL YRI CLM MXL PEL PUR CDX CHB CHS JPT KHV CEU FIN GBR IBS TSI BEB GIH ITU PJL STU (empty when no 1000G match) |
 
 ## imputed/ — every variant imputed with R² ≥ 0.80 and MAF ≥ 0.001 (9,808,764)
@@ -38,13 +38,13 @@ Source `imputation_results/hq_filtered/chr*.HQ.vcf.gz` (Michigan run 3: 1000G ph
 ## Checks done before publishing
 
 - Complemented vs direct typed SNPs: Uzbek-vs-EUR frequency correlation 0.907 vs 0.906 (reversed orientation −0.907).
-- A/T and C/G typed SNPs: correlation 0.84; 42 of 1,615 differ from EUR by > 0.4 (likely reversed) — flagged, not removed.
+- A/T and C/G typed SNPs (1,712): **counts and frequencies withheld** (version 2, 2026-11-20). The batch merge (`FULL_MERGED`, carried into `FULL_QC_FINAL`) could not detect strand differences at palindromic SNPs; ALSU-vs-DRAGEN batch allele frequencies at 8,841 palindromic SNPs correlate r = 0.009 and 4,265 look reversed (non-palindromic: r = 0.988, 6 reversed of 585,757). These SNPs were removed before imputation, so the imputed table is not affected. Version 1 of the typed pieces (commit 4835116) showed mixed-strand numbers for them.
 - Imputed chr22 test: hard-call AF vs Michigan dosage AF r = 0.99996; UZB vs EUR r = 0.968; 99.0% exact 1000G match; imputed vs typed frequency at 6,442 array SNPs r = 0.9998.
 - Row counts after splitting: 452,377 / 452,377 typed, 9,808,764 / 9,808,764 imputed. rs2476601 reads back identically.
 
 ## Where the full tables and scripts are
 
 DRAGEN `/staging/ALSU-analysis/spring2026/full_expanded_cohort/uzb_static_table_2026-11-20/`:
-`uzb_typed_1256_nygc.tsv`, `uzb_imputed_1256_nygc.tsv`, `keep1256.txt`, `scripts/` (`uzbtab.sh`, `imptab.sh`, `uzbcheck.sh`, `run3.sh`, `pack.sh`), `run3.log`, `MD5SUMS`, `static.tar`.
+`uzb_typed_1256_nygc.v2.tsv` (published typed table, palindromic rows blanked), `uzb_typed_1256_nygc.tsv` (version 1, kept for the record), `uzb_imputed_1256_nygc.tsv`, `keep1256.txt`, `scripts/` (`uzbtab.sh`, `imptab.sh`, `uzbcheck.sh`, `run3.sh`, `pack.sh`, `fixpal.sh`), `run3.log`, `MD5SUMS`, `static.tar` (v1), `static_typed_v2.tar`.
 
 Pipeline schematic and the allele-coding traps (TOP strand, palindromic SNPs, REF/ALT vs A1/A2): https://claude.ai/artifact/HwSvvnJvdJxz4Dnb9FwF4s

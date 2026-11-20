@@ -38,7 +38,7 @@
 <ul>
 <li><span class="bdg bbl">ok</span> array bases match 1000G as written.</li>
 <li><span class="bdg bbl">complemented</span> the array writes the Illumina TOP strand; bases were complemented to the + strand. Normal for about half of all SNPs (checked: Uzbek-vs-EUR correlation is identical to direct matches, 0.907 vs 0.906).</li>
-<li><span class="bdg bp">ambiguous strand</span> A/T or C/G SNP: the complement is the same pair, so the strand cannot be told from the bases. The comparison with 1000G assumes the bases as written; 42 of 1,615 such SNPs look reversed (frequency f vs 1−f). Check before use.</li>
+<li><span class="bdg bp">strand differs between batches</span> A/T or C/G SNP (1,712). The complement is the same pair, so the merge of the GenomeStudio and DRAGEN batches could not detect a strand difference, and about half of these SNPs are coded on opposite strands in the two batches (4,265 of 8,841 before QC; checked 2026-11-20). Counts and frequencies are withheld; use the imputed row.</li>
 <li><span class="bdg bv">1000G multi-record</span> 1000G has more than one SNV record at the position; no 1000G frequency given.</li>
 <li><span class="bdg bu">not in 1000G</span> / <span class="bdg bu">base mismatch</span> no comparable 1000G SNV.</li>
 </ul></details>
@@ -88,6 +88,9 @@ const fx = v => v == null || isNaN(v) ? '—' : v.toFixed(4);
 
 function typedHtml(f) {
   const [pos, rsid, a1t, a2t, n11, n12, n22, nmiss, hwe, flag, ...pf] = f;
+  if (flag === 'pal_mixed_strand') return `<div class="h4">Typed on the GSA array</div>
+  <div class="mi">Bases: <b>${esc(a1t)}</b> / <b>${esc(a2t)}</b> &nbsp; <span class="bdg bp">strand differs between batches</span>${rsid !== '.' ? ' · array rsID ' + esc(rsid) : ''}</div>
+  <div class="wb"><b>No typed frequency for this SNP.</b> It is an A/T or C/G SNP. In the merged array file the GenomeStudio batch (ALSU) and the DRAGEN batches write it on opposite strands for about half of such SNPs, so the pooled counts mix the two alleles. Use the imputed row below, which is on the GRCh38 + strand (these SNPs were removed before imputation, so the imputed values do not depend on this array call).</div>`;
   const flip = flag === 'flipped';
   const a1 = flip ? COMP[a1t] : a1t, a2 = flip ? COMP[a2t] : a2t;
   const n = +n11 + +n12 + +n22, fa1 = n ? (2*n11 + +n12) / (2*n) : NaN;
