@@ -5,7 +5,7 @@ Interactive clinical genomics tool for comparing allele frequencies of disease-a
 **Live tool:** https://toki-bio.github.io/uzbek-variant-frequency-explorer/
 
 **UZB SNP Lookup (any SNP, no server):** https://toki-bio.github.io/uzbek-variant-frequency-explorer/lookup.html
-— every typed GSA SNP (452,377) and every imputed variant with R² ≥ 0.8 (9,808,764) for the 1,256-sample ALSU cohort, with 1000 Genomes 30x frequencies. Example: [rs2476601](https://toki-bio.github.io/uzbek-variant-frequency-explorer/lookup.html#rs2476601). Data and checks: [`data/static/README.md`](data/static/README.md).
+— every typed GSA SNP (452,377) and every imputed variant with R² ≥ 0.8 (9,808,764) for the 1,256-sample ALSU cohort, with 1000 Genomes 30x frequencies. Example: [rs2476601](https://toki-bio.github.io/uzbek-variant-frequency-explorer/lookup.html#rs2476601). Data and checks: [`data/static/README.md`](data/static/README.md). How the genotypes were made and the allele-coding traps, with real cases: https://toki-bio.github.io/ALSU-analysis/steps/snp_path.html
 
 ---
 

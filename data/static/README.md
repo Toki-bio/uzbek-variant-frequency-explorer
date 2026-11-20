@@ -47,4 +47,4 @@ Source `imputation_results/hq_filtered/chr*.HQ.vcf.gz` (Michigan run 3: 1000G ph
 DRAGEN `/staging/ALSU-analysis/spring2026/full_expanded_cohort/uzb_static_table_2026-11-20/`:
 `uzb_typed_1256_nygc.v2.tsv` (published typed table, palindromic rows blanked), `uzb_typed_1256_nygc.tsv` (version 1, kept for the record), `uzb_imputed_1256_nygc.tsv`, `keep1256.txt`, `scripts/` (`uzbtab.sh`, `imptab.sh`, `uzbcheck.sh`, `run3.sh`, `pack.sh`, `fixpal.sh`), `run3.log`, `MD5SUMS`, `static.tar` (v1), `static_typed_v2.tar`.
 
-Pipeline schematic and the allele-coding traps (TOP strand, palindromic SNPs, REF/ALT vs A1/A2): https://claude.ai/artifact/HwSvvnJvdJxz4Dnb9FwF4s
+Pipeline schematic, allele-coding traps and real cases: https://toki-bio.github.io/ALSU-analysis/steps/snp_path.html
